@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
 
-// ── Tailwind config injected at runtime ──────────────────────────────────────
+
+import { useState, useEffect, useRef, forwardRef } from "react";
+
 const injectTailwindConfig = () => {
   if (window.tailwind) {
     window.tailwind.config = {
@@ -22,7 +23,6 @@ const injectTailwindConfig = () => {
   }
 };
 
-// ── Styles ───────────────────────────────────────────────────────────────────
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
@@ -42,29 +42,6 @@ const styles = `
   }
   .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
 
-  @keyframes barGrow {
-    0%, 100% { height: 10%; }
-    25%  { height: 40%; }
-    50%  { height: 80%; }
-    75%  { height: 60%; }
-  }
-  .viz-bar { animation: barGrow 1.5s ease-in-out infinite; transform-origin: bottom; }
-
-  .tech-dotted-bg {
-    background-image: radial-gradient(rgba(255,255,255,.15) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  .timeline-step {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    opacity: 0.1;
-    transform: translateY(40px);
-    transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
-  }
-  .timeline-step.active { opacity: 1; transform: translateY(0); }
-
   .marquee-item {
     display: flex; align-items: center; justify-content: center;
     padding: 0 64px; height: 80px;
@@ -82,14 +59,12 @@ const styles = `
   .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
 `;
 
-// ── Icon helper ───────────────────────────────────────────────────────────────
 const Icon = ({ name, className = "" }) => (
   <span className={`material-symbols-outlined ${className}`} style={{ fontFamily: "Material Symbols Outlined" }}>
     {name}
   </span>
 );
 
-// ── Nav ───────────────────────────────────────────────────────────────────────
 const Nav = () => (
   <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#f4f4f4", borderBottom: "1px solid #000", width: "100%" }}>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", width: "100%" }}>
@@ -119,9 +94,8 @@ const Nav = () => (
   </nav>
 );
 
-// ── Hero ──────────────────────────────────────────────────────────────────────
 const Hero = () => (
-  <section style={{ borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }} >
+  <section style={{ borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}>
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
       <div style={{ display: "inline-block", border: "1px solid #000", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px" }}>
         V4.2.0 STABLE RELEASE
@@ -144,7 +118,6 @@ const Hero = () => (
   </section>
 );
 
-// ── Marquee Bar ───────────────────────────────────────────────────────────────
 const MarqueeBar = () => {
   const LOGOS = ["SALESFORCE", "SLACK", "STRIPE", "GITHUB", "TWILIO", "HUBSPOT"];
   return (
@@ -158,141 +131,328 @@ const MarqueeBar = () => {
   );
 };
 
-// ── Viz Bars ──────────────────────────────────────────────────────────────────
-const VizBars = () => {
-  const delays = [0.1, 0.3, 0.5, 0.2, 0.6, 0.4, 0.8, 0.1, 0.5, 0.3, 0.7, 0.2, 0.9, 0.4, 0.6, 0.1];
+// ── Improved PlayerCard ───────────────────────────────────────────────────────
+// Drop-in replacement. Same props, same theme, better design.
+//
+// Key upgrades:
+//  - Animated waveform bars (live while playing, idle resting state)
+//  - "PLAYING" badge that pulses green on active card
+//  - Active dot indicator at the bottom
+//  - Cleaner controls bar with a solid-black pill play button
+//  - Progress bar with thumb dot (center card only)
+//  - Side cards are shorter, center card taller — proper visual hierarchy
+//  - Hover: art cover brightens + play circle turns mint
+
+// ── Waveform visualiser ───────────────────────────────────────────────────────
+const SEED_SM = [10,28,18,42,22,35,12,48,30,20,38,15,44,25,10,18,32,8];
+const SEED_LG = [12,22,40,18,55,30,15,60,22,48,10,38,25,55,18,30,48,20,35,12,50,28,15,40];
+
+const Waveform = ({ isPlaying, barCount = 18, seeds = SEED_SM }) => {
+  const barsRef = useRef([]);
+  const heightsRef = useRef(Array(barCount).fill(3));
+  const rafRef = useRef(null);
+
+  useEffect(() => {
+    const animate = () => {
+      barsRef.current.forEach((bar, i) => {
+        if (!bar) return;
+        let target;
+        if (isPlaying) {
+          const t = Date.now() / 1000;
+          const phase = (i / barCount) * Math.PI * 2;
+          const wave = Math.sin(t * 2.5 + phase) * 0.4 + Math.sin(t * 1.3 + phase * 1.7) * 0.3 + 0.3;
+          target = Math.max(3, seeds[i % seeds.length] * wave);
+        } else {
+          target = 3 + (seeds[i % seeds.length] / 55) * 6;
+        }
+        heightsRef.current[i] = heightsRef.current[i] * (isPlaying ? 0.7 : 0.85) + target * (isPlaying ? 0.3 : 0.15);
+        bar.style.height = heightsRef.current[i] + "px";
+        bar.style.background = isPlaying ? "#80f9c8" : "#000";
+      });
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    rafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [isPlaying, barCount, seeds]);
+
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 4, height: 96, width: "100%", maxWidth: 512, padding: "0 16px" }}>
-      {delays.map((d, i) => (
-        <div key={i} className="viz-bar" style={{ flex: 1, background: "#6EE7B7", border: "1px solid rgba(0,0,0,.1)", animationDelay: `${d}s` }} />
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: barCount === SEED_LG.length ? 44 : 36, overflow: "hidden" }}>
+      {Array.from({ length: barCount }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => (barsRef.current[i] = el)}
+          style={{ flex: 1, background: "#000", minHeight: 3, borderRadius: 1, transition: "height 0.08s linear" }}
+        />
       ))}
     </div>
   );
 };
 
-// ── Player Card ───────────────────────────────────────────────────────────────
-const PlayerCard = ({ title, subtitle, gradient, isCenter, audioSrc }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef(null);
+// ── PlayerCard ────────────────────────────────────────────────────────────────
+export const PlayerCard = forwardRef(
+  ({ title, subtitle, langTag, gradient, isCenter, audioSrc, onPlay }, ref) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const audioRef = useRef(null);
+    const [artHovered, setArtHovered] = useState(false);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    useEffect(() => { if (ref) ref.current = audioRef.current; }, [ref]);
 
-    const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-    const handleEnded = () => setIsPlaying(false);
+    useEffect(() => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      const onTime = () => setCurrentTime(audio.currentTime);
+      const onMeta = () => setDuration(audio.duration);
+      const onEnd  = () => setIsPlaying(false);
+      audio.addEventListener("timeupdate", onTime);
+      audio.addEventListener("loadedmetadata", onMeta);
+      audio.addEventListener("ended", onEnd);
+      return () => {
+        audio.removeEventListener("timeupdate", onTime);
+        audio.removeEventListener("loadedmetadata", onMeta);
+        audio.removeEventListener("ended", onEnd);
+      };
+    }, []);
 
-    audio.addEventListener("timeupdate", updateTime);
-    audio.addEventListener("loadedmetadata", updateDuration);
-    audio.addEventListener("ended", handleEnded);
-
-    return () => {
-      audio.removeEventListener("timeupdate", updateTime);
-      audio.removeEventListener("loadedmetadata", updateDuration);
-      audio.removeEventListener("ended", handleEnded);
-    };
-  }, []);
-
-  const togglePlay = () => {
-    if (audioRef.current) {
+    const togglePlay = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
       if (isPlaying) {
-        audioRef.current.pause();
+        audio.pause();
+        setIsPlaying(false);
       } else {
-        audioRef.current.play();
+        onPlay?.(audio);
+        audio.play().then(() => setIsPlaying(true)).catch(() => {});
       }
-      setIsPlaying(!isPlaying);
-    }
-  };
+    };
 
-  const handleProgressClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    if (audioRef.current) {
-      audioRef.current.currentTime = percent * duration;
-    }
-  };
+    const handleSeek = (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      if (audioRef.current) audioRef.current.currentTime = pct * duration;
+    };
 
-  const formatTime = (time) => {
-    if (!time || isNaN(time)) return "00:00";
-    const mins = Math.floor(time / 60);
-    const secs = Math.floor(time % 60);
-    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  };
+    const fmt = (t) => {
+      if (!t || isNaN(t)) return "00:00";
+      return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+    };
 
-  const size = isCenter ? { width: "17rem", padding: "20px", shadow: "8px 8px 0 #000", border: "2px solid #000" }
-                        : { width: "14rem", padding: "16px", shadow: "4px 4px 0 #000", border: "2px solid #000" };
+    const pct = duration ? (currentTime / duration) * 100 : 0;
+
+    // Sizing
+    const W   = isCenter ? "248px" : "200px";
+    const AH  = isCenter ? "248px" : "200px";
+    const SHD = isCenter ? "8px 8px 0 #000" : "5px 5px 0 #000";
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          background: "#fff",
+          width: W,
+          border: "2px solid #000",
+          boxShadow: SHD,
+          flexShrink: 0,
+        }}
+      >
+        <audio ref={audioRef} src={audioSrc} />
+
+        {/* ── Art cover ── */}
+        <div
+          style={{ position: "relative", width: "100%", height: AH, cursor: "pointer", flexShrink: 0, overflow: "hidden" }}
+          onClick={togglePlay}
+          onMouseEnter={() => setArtHovered(true)}
+          onMouseLeave={() => setArtHovered(false)}
+        >
+          {/* gradient bg */}
+          <div style={{ position: "absolute", inset: 0, background: gradient }} />
+          {/* dark overlay — lifts on hover */}
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0," + (artHovered ? "0.08" : "0.20") + ")", transition: "background 0.2s" }} />
+
+          {/* PLAYING badge */}
+          <div
+            style={{
+              position: "absolute", top: 10, left: 10,
+              background: isPlaying ? "#80f9c8" : "#000",
+              color: isPlaying ? "#000" : "#fff",
+              fontFamily: "'Space Grotesk',monospace",
+              fontSize: 9, letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              padding: "3px 8px",
+              transition: "background 0.2s, color 0.2s",
+            }}
+          >
+            {isPlaying ? "LIVE" : title.slice(0, 4).toUpperCase()}
+          </div>
+
+          {/* play circle */}
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div
+              style={{
+                width: isCenter ? 60 : 48,
+                height: isCenter ? 60 : 48,
+                background: artHovered ? "#80f9c8" : "#fff",
+                border: "2px solid #000",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "background 0.18s, transform 0.15s",
+                transform: artHovered ? "scale(1.08)" : "scale(1)",
+              }}
+            >
+              <Icon name={isPlaying ? "pause" : "play_arrow"} className="" />
+            </div>
+          </div>
+        </div>
+
+        {/* ── Body ── */}
+        <div style={{ padding: isCenter ? "16px 18px" : "14px 16px", display: "flex", flexDirection: "column", gap: isCenter ? 12 : 10, flex: 1 }}>
+
+          {/* title + sub */}
+          <div>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: isCenter ? 18 : 15, letterSpacing: "-0.03em", textTransform: "uppercase", color: "#000" }}>
+              {title}
+            </div>
+            <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: 9, color: "rgba(20,27,43,0.45)", letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 2 }}>
+              {subtitle}
+            </div>
+          </div>
+
+          {/* waveform */}
+          <Waveform
+            isPlaying={isPlaying}
+            barCount={isCenter ? 24 : 18}
+            seeds={isCenter ? SEED_LG : SEED_SM}
+          />
+
+          {/* progress bar (center only) */}
+          {isCenter && (
+            <>
+              <div
+                style={{ width: "100%", height: 3, background: "#e0e0e0", position: "relative", cursor: "pointer" }}
+                onClick={handleSeek}
+              >
+                <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: `${pct}%`, background: "#000", transition: "width 0.1s linear" }} />
+                <div style={{ position: "absolute", top: "50%", left: `${pct}%`, transform: "translate(-50%,-50%)", width: 10, height: 10, background: "#000", border: "2px solid #fff", outline: "2px solid #000", borderRadius: "50%", transition: "left 0.1s linear" }} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Space Grotesk',monospace", fontSize: 8, color: "rgba(20,27,43,0.4)", letterSpacing: "0.1em", marginTop: -4 }}>
+                <span>{fmt(currentTime)}</span><span>{fmt(duration)}</span>
+              </div>
+            </>
+          )}
+
+          {/* divider */}
+          <div style={{ height: 1, background: "#e8e8e8", margin: `0 ${isCenter ? -18 : -16}px` }} />
+
+          {/* controls */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <button style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(20,27,43,0.3)", display: "flex", padding: 4 }} onClick={() => {}}>
+              <Icon name="shuffle" />
+            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <button style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(20,27,43,0.3)", display: "flex", padding: 4 }}>
+                <Icon name="skip_previous" />
+              </button>
+              {/* primary play button */}
+              <button
+                onClick={togglePlay}
+                style={{
+                  background: "#000", border: "none", cursor: "pointer",
+                  width: isCenter ? 44 : 36, height: isCenter ? 44 : 36,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#222")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#000")}
+              >
+                <Icon name={isPlaying ? "pause" : "play_arrow"} className="" style={{ color: "#80f9c8", fontSize: isCenter ? 24 : 20 }} />
+              </button>
+              <button style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(20,27,43,0.3)", display: "flex", padding: 4 }}>
+                <Icon name="skip_next" />
+              </button>
+            </div>
+            <button style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(20,27,43,0.3)", display: "flex", padding: 4 }}>
+              <Icon name="repeat" />
+            </button>
+          </div>
+
+          {/* lang tag + live dot */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontFamily: "'Space Grotesk',monospace", fontSize: 8, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: isPlaying ? "#007353" : "rgba(20,27,43,0.35)" }}>
+              {langTag}
+            </span>
+            <div style={{
+              width: 6, height: 6, borderRadius: "50%",
+              background: isPlaying ? "#80f9c8" : "#ccc",
+              animation: isPlaying ? "pulse 1.6s ease-in-out infinite" : "none",
+            }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+PlayerCard.displayName = "PlayerCard";
+
+// ── Updated TalkToAgent section ───────────────────────────────────────────────
+export const TalkToAgent = () => {
+  const leftRef  = useRef(null);
+  const centerRef = useRef(null);
+  const rightRef = useRef(null);
+
+  // Stop others when one starts
+  const handlePlay = (activeAudio) => {
+    [leftRef, centerRef, rightRef].forEach(({ current }) => {
+      if (current && current !== activeAudio) current.pause();
+    });
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", background: "#fff", ...size, boxShadow: size.shadow }}>
-      <audio ref={audioRef} src={audioSrc} />
-      <div style={{ width: "100%", aspectRatio: "1", position: "relative", marginBottom: isCenter ? "16px" : "12px", cursor: "pointer" }} onClick={togglePlay}>
-        <div style={{ position: "absolute", inset: 0, background: gradient }} />
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ width: isCenter ? 56 : 40, height: isCenter ? 56 : 40, background: "#fff", border: "2px solid #000", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Icon name={isPlaying ? "pause" : "play_arrow"} className="" />
-          </div>
-        </div>
+    <section style={{ background: "#f4f4f4", borderBottom: "1px solid #000" }}>
+      <div style={{ padding: "48px", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>
+          Product Feature
+        </h2>
+        <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,5vw,56px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.04em" }}>
+          Talk To Our Agent
+        </h3>
       </div>
-      <div style={{ marginBottom: isCenter ? "16px" : "12px" }}>
-        <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: isCenter ? "20px" : "16px", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", marginBottom: "4px" }}>{title}</h4>
-        <p style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "8px", color: "rgba(20,27,43,.6)", textTransform: "uppercase", letterSpacing: "0.2em" }}>{subtitle}</p>
+      <div style={{ padding: "32px 64px 64px", display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 16 }}>
+        <PlayerCard
+          ref={leftRef}
+          title="Characters"
+          subtitle="Voice Profiles v1.4"
+          langTag="ENG"
+          gradient="linear-gradient(145deg,#a855f7,#2563eb)"
+          isCenter={false}
+          audioSrc="/assets/audio/english%20final.mp4"
+          onPlay={handlePlay}
+        />
+        <PlayerCard
+          ref={centerRef}
+          title="Narration"
+          subtitle="Synthetic Storytelling v2.0"
+          langTag="HIN"
+          gradient="linear-gradient(145deg,#fb923c,#ec4899)"
+          isCenter={true}
+          audioSrc="/assets/audio/hindi%20final.mp4"
+          onPlay={handlePlay}
+        />
+        <PlayerCard
+          ref={rightRef}
+          title="Conversational"
+          subtitle="Dynamic Interaction v3.2"
+          langTag="TEL"
+          gradient="linear-gradient(145deg,#4ade80,#facc15)"
+          isCenter={false}
+          audioSrc="/assets/audio/telugu%20final.mp4"
+          onPlay={handlePlay}
+        />
       </div>
-      {isCenter && (
-        <div style={{ marginBottom: "16px" }}>
-          <div style={{ width: "100%", height: 4, background: "#dce2f7", position: "relative", marginBottom: "8px", cursor: "pointer" }} onClick={handleProgressClick}>
-            <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: `${duration ? (currentTime / duration) * 100 : 0}%`, background: "#000", transition: "width 0.1s linear" }} />
-            <div style={{ position: "absolute", top: "50%", left: `${duration ? (currentTime / duration) * 100 : 0}%`, transform: "translateY(-50%)", width: 8, height: 8, background: "#000", borderRadius: "50%" }} />
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Space Grotesk',monospace", fontSize: "8px", color: "rgba(20,27,43,.4)" }}>
-            <span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span>
-          </div>
-        </div>
-      )}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", opacity: isCenter ? 1 : 0.4 }}>
-        <Icon name="shuffle" />
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
-          <Icon name="skip_previous" /><Icon name={isPlaying ? "pause" : "play_arrow"} onClick={togglePlay} /><Icon name="skip_next" />
-        </div>
-        <Icon name="repeat" />
-      </div>
-    </div>
+    </section>
   );
 };
 
-// ── Talk To Agent ─────────────────────────────────────────────────────────────
-const TalkToAgent = () => (
-  <section style={{ background: "#f4f4f4", borderBottom: "1px solid #000" }}>
-    <div style={{ borderBottom: "1px solid #000", padding: "48px", textAlign: "center" }}>
-      <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Product Feature</h2>
-      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,5vw,56px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.04em" }}>Talk To Our Agent</h3>
-    </div>
-    <div style={{ padding: "32px 64px", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", width: "100%", maxWidth: "900px" }}>
-        <PlayerCard title="Characters" subtitle="Voice Profiles v1.4" gradient="linear-gradient(135deg,#a855f7,#2563eb)" isCenter={false} audioSrc="/assets/audio/english%20final.mp4" />
-        <PlayerCard title="Narration" subtitle="Synthetic Storytelling v2.0" gradient="linear-gradient(135deg,#fb923c,#ec4899)" isCenter={true} audioSrc="/assets/audio/hindi%20final.mp4" />
-        <PlayerCard title="Conversational" subtitle="Dynamic Interaction v3.2" gradient="linear-gradient(135deg,#4ade80,#facc15)" isCenter={false} audioSrc="/assets/audio/telugu%20final.mp4" />
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-        <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "9px", color: "rgba(20,27,43,.4)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: "16px", display: "flex", alignItems: "center", gap: "16px" }}>
-          <span style={{ width: 32, height: 1, background: "rgba(20,27,43,.2)" }} />
-          Live Audio Processing Stream
-          <span style={{ width: 32, height: 1, background: "rgba(20,27,43,.2)" }} />
-        </div>
-        <VizBars />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", width: "100%", maxWidth: 512, marginTop: "16px", fontFamily: "'Space Grotesk',monospace", fontSize: "8px", color: "rgba(20,27,43,.3)" }}>
-          <span style={{ gridColumn: "span 3" }}>20Hz</span>
-          <span style={{ gridColumn: "span 6", textAlign: "center" }}>SUB-100MS LATENCY STREAM</span>
-          <span style={{ gridColumn: "span 3", textAlign: "right" }}>20kHz</span>
-        </div>
-      </div>
-    </div>
-  </section>
-);
-
-// ── Mission ───────────────────────────────────────────────────────────────────
 const Mission = () => (
   <section style={{ padding: "96px 48px", borderBottom: "1px solid #000" }}>
     <div style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px" }}>
@@ -308,7 +468,6 @@ const Mission = () => (
   </section>
 );
 
-// ── Product Cards ─────────────────────────────────────────────────────────────
 const products = [
   { icon: "call", title: "Call Handling Agent", desc: "Autonomous inbound and outbound call management with human-level natural language processing.", no: "01" },
   { icon: "calendar_today", title: "Appointment Booking Agent", desc: "Syncs directly with your CRM and calendar to schedule, reschedule, and confirm consultations.", no: "02" },
@@ -320,9 +479,12 @@ const products = [
 const ProductCard = ({ icon, title, desc, no }) => {
   const [hovered, setHovered] = useState(false);
   return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ borderRight: "1px solid #000", borderTop: parseInt(no) > 3 ? "1px solid #000" : "none", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "background .2s", display: "flex", flexDirection: "column", minHeight: "340px", cursor: "default" }}>
-      <div style={{ marginBottom: "48px" }}><Icon name={icon} className="" style={{ fontSize: 40 }} /></div>
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ borderRight: "1px solid #000", borderTop: parseInt(no) > 3 ? "1px solid #000" : "none", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "background .2s", display: "flex", flexDirection: "column", minHeight: "340px", cursor: "default" }}
+    >
+      <div style={{ marginBottom: "48px" }}><Icon name={icon} /></div>
       <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "32px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.2, letterSpacing: "-0.01em", marginBottom: "16px" }}>{title}</h3>
       <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.5, marginBottom: "32px" }}>{desc}</p>
       <div style={{ marginTop: "auto", paddingTop: "32px", borderTop: "1px solid #000" }}>
@@ -361,7 +523,6 @@ const ProductGrid = () => (
   </section>
 );
 
-// ── Timeline / Logic Flow ─────────────────────────────────────────────────────
 const timelineSteps = [
   { num: "01", label: "UNDERSTANDS", title: "Real-time Audio Processing", desc: "Captures the nuances of human speech and emotional intent with sub-100ms processing cycles.", icon: "settings_voice", align: "right" },
   { num: "02", label: "PROCESSES", title: "Proprietary LLM Analysis", desc: "Multi-layer analysis modules determine context, intent, and the optimal response strategy in parallel.", icon: "neurology", align: "left" },
@@ -369,177 +530,8 @@ const timelineSteps = [
   { num: "04", label: "INTEGRATES", title: "Deep System Sync", desc: "Direct synchronization with CRMs, databases, and enterprise toolchains via high-security API endpoints.", icon: "api", align: "left" },
 ];
 
-const LogicFlow = () => {
-  const sectionRef = useRef(null);
-  const trackRef = useRef(null);
-  const stepsRef = useRef([]);
-  const progressRef = useRef(null);
-  const nodeRefs = useRef([]);
-
-  useEffect(() => {
-    const handler = () => {
-      const track = trackRef.current;
-      if (!track || !progressRef.current) return;
-
-      const trackRect = track.getBoundingClientRect();
-      const vh = window.innerHeight;
-
-      // Progress = how far the CENTER of the viewport has traveled through the track
-      const traveled = vh / 2 - trackRect.top;
-      const pct = Math.max(0, Math.min(1, traveled / trackRect.height));
-      progressRef.current.style.transform = `scaleY(${pct})`;
-
-      stepsRef.current.forEach((step, i) => {
-        if (!step) return;
-        const sr = step.getBoundingClientRect();
-        const active = sr.top < vh * 0.62;
-        step.style.opacity = active ? "1" : "0.1";
-        step.style.transform = active ? "translateY(0)" : "translateY(40px)";
-
-        // Light up the dot node
-        const node = nodeRefs.current[i];
-        if (node) {
-          node.style.background = active ? "#80f9c8" : "#000";
-          node.style.boxShadow = active ? "0 0 12px rgba(128,249,200,.9)" : "none";
-        }
-      });
-    };
-
-    window.addEventListener("scroll", handler, { passive: true });
-    handler(); // run once on mount
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  return (
-    <section
-      ref={sectionRef}
-      id="logic-flow-section"
-      style={{
-        background: "#000",
-        color: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        // dotted background
-        backgroundImage: "radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)",
-        backgroundSize: "24px 24px",
-      }}
-    >
-      {/* Section header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid rgba(255,255,255,.1)", paddingTop: "128px", paddingBottom: "64px" }}>
-        <div style={{ textAlign: "center" }}>
-          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8" }}>Architecture</span>
-          <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginTop: "16px" }}>The Logic Flow</h2>
-        </div>
-      </div>
-
-      {/* Scrollable track — the line lives here */}
-      <div ref={trackRef} style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "0 48px 128px", width: "100%" }}>
-
-        {/* Track line — faint rail */}
-        <div style={{
-          position: "absolute",
-          left: "50%",
-          top: 0,
-          bottom: 0,
-          width: 2,
-          transform: "translateX(-50%)",
-          background: "rgba(255,255,255,0.08)",
-          zIndex: 0,
-        }} />
-
-        {/* Progress fill — grows via scaleY from top */}
-        <div style={{
-          position: "absolute",
-          left: "50%",
-          top: 0,
-          width: 2,
-          height: "100%",
-          transform: "translateX(-50%)",
-          transformOrigin: "top",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}>
-          <div
-            ref={progressRef}
-            style={{
-              width: "100%",
-              height: "100%",
-              background: "linear-gradient(to bottom, #80f9c8, #00e5a0)",
-              boxShadow: "0 0 18px rgba(128,249,200,0.7)",
-              transformOrigin: "top",
-              transform: "scaleY(0)",
-              transition: "transform 0.25s ease-out",
-            }}
-          />
-        </div>
-
-        {/* Steps */}
-        {timelineSteps.map((step, i) => {
-          const isRight = step.align === "right";
-          return (
-            <div
-              key={step.num}
-              ref={(el) => (stepsRef.current[i] = el)}
-              style={{
-                position: "relative",
-                display: "grid",
-                gridTemplateColumns: "1fr 48px 1fr",
-                alignItems: "center",
-                minHeight: "80vh",
-                paddingTop: "64px",
-                paddingBottom: "64px",
-                opacity: 0.1,
-                transform: "translateY(40px)",
-                transition: "opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1)",
-              }}
-            >
-              {/* Left slot */}
-              <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "40px" }}>
-                {!isRight && (
-                  <StepCard step={step} align="right" />
-                )}
-              </div>
-
-              {/* Center dot node */}
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", zIndex: 10 }}>
-                <div
-                  ref={(el) => (nodeRefs.current[i] = el)}
-                  style={{
-                    width: 14,
-                    height: 14,
-                    borderRadius: "50%",
-                    border: "2px solid #80f9c8",
-                    background: "#000",
-                    transition: "background 0.4s, box-shadow 0.4s",
-                    flexShrink: 0,
-                  }}
-                />
-              </div>
-
-              {/* Right slot */}
-              <div style={{ paddingLeft: "40px" }}>
-                {isRight && (
-                  <StepCard step={step} align="left" />
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
-  );
-};
-
 const StepCard = ({ step, align }) => (
-  <div style={{
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    padding: "40px",
-    backdropFilter: "blur(8px)",
-    textAlign: align,
-    maxWidth: 460,
-    width: "100%",
-  }}>
+  <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "40px", backdropFilter: "blur(8px)", textAlign: align, maxWidth: 460, width: "100%" }}>
     <div style={{ marginBottom: "24px", display: "flex", justifyContent: align === "right" ? "flex-end" : "flex-start" }}>
       <span className="material-symbols-outlined" style={{ fontSize: 44, color: "#80f9c8", fontFamily: "Material Symbols Outlined" }}>{step.icon}</span>
     </div>
@@ -553,7 +545,77 @@ const StepCard = ({ step, align }) => (
   </div>
 );
 
-// ── Use Cases ─────────────────────────────────────────────────────────────────
+const LogicFlow = () => {
+  const trackRef = useRef(null);
+  const stepsRef = useRef([]);
+  const progressRef = useRef(null);
+  const nodeRefs = useRef([]);
+
+  useEffect(() => {
+    const handler = () => {
+      const track = trackRef.current;
+      if (!track || !progressRef.current) return;
+      const trackRect = track.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const traveled = vh / 2 - trackRect.top;
+      const pct = Math.max(0, Math.min(1, traveled / trackRect.height));
+      progressRef.current.style.transform = `scaleY(${pct})`;
+      stepsRef.current.forEach((step, i) => {
+        if (!step) return;
+        const sr = step.getBoundingClientRect();
+        const active = sr.top < vh * 0.62;
+        step.style.opacity = active ? "1" : "0.1";
+        step.style.transform = active ? "translateY(0)" : "translateY(40px)";
+        const node = nodeRefs.current[i];
+        if (node) {
+          node.style.background = active ? "#80f9c8" : "#000";
+          node.style.boxShadow = active ? "0 0 12px rgba(128,249,200,.9)" : "none";
+        }
+      });
+    };
+    window.addEventListener("scroll", handler, { passive: true });
+    handler();
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  return (
+    <section style={{ background: "#000", color: "#fff", display: "flex", flexDirection: "column", backgroundImage: "radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)", backgroundSize: "24px 24px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid rgba(255,255,255,.1)", paddingTop: "128px", paddingBottom: "64px" }}>
+        <div style={{ textAlign: "center" }}>
+          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8" }}>Architecture</span>
+          <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginTop: "16px" }}>The Logic Flow</h2>
+        </div>
+      </div>
+      <div ref={trackRef} style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "0 48px 128px", width: "100%" }}>
+        <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, transform: "translateX(-50%)", background: "rgba(255,255,255,0.08)", zIndex: 0 }} />
+        <div style={{ position: "absolute", left: "50%", top: 0, width: 2, height: "100%", transform: "translateX(-50%)", transformOrigin: "top", zIndex: 1, pointerEvents: "none" }}>
+          <div ref={progressRef} style={{ width: "100%", height: "100%", background: "linear-gradient(to bottom, #80f9c8, #00e5a0)", boxShadow: "0 0 18px rgba(128,249,200,0.7)", transformOrigin: "top", transform: "scaleY(0)", transition: "transform 0.25s ease-out" }} />
+        </div>
+        {timelineSteps.map((step, i) => {
+          const isRight = step.align === "right";
+          return (
+            <div
+              key={step.num}
+              ref={(el) => (stepsRef.current[i] = el)}
+              style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 48px 1fr", alignItems: "center", minHeight: "80vh", paddingTop: "64px", paddingBottom: "64px", opacity: 0.1, transform: "translateY(40px)", transition: "opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1)" }}
+            >
+              <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "40px" }}>
+                {!isRight && <StepCard step={step} align="right" />}
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", zIndex: 10 }}>
+                <div ref={(el) => (nodeRefs.current[i] = el)} style={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid #80f9c8", background: "#000", transition: "background 0.4s, box-shadow 0.4s", flexShrink: 0 }} />
+              </div>
+              <div style={{ paddingLeft: "40px" }}>
+                {isRight && <StepCard step={step} align="left" />}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
 const UseCases = () => (
   <section style={{ borderBottom: "1px solid #000" }}>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px", padding: "48px" }}>
@@ -563,8 +625,10 @@ const UseCases = () => (
           Deploying specialized voice agents across critical industries to optimize workflow and customer experience.
         </p>
       </div>
-      {[{ n: "01", t: "Healthcare", d: "Automated appointment handling and transcription for clinics and hospitals." },
-        { n: "02", t: "Real Estate", d: "Lead qualification calls that filter serious buyers from cold traffic." }].map((uc) => (
+      {[
+        { n: "01", t: "Healthcare", d: "Automated appointment handling and transcription for clinics and hospitals." },
+        { n: "02", t: "Real Estate", d: "Lead qualification calls that filter serious buyers from cold traffic." },
+      ].map((uc) => (
         <div key={uc.n} style={{ gridColumn: "span 4", background: "#fff", border: "1px solid #000", padding: "32px" }}>
           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "12px", color: "rgba(20,27,43,.3)", marginBottom: "16px" }}>{uc.n}</div>
           <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>{uc.t}</h3>
@@ -602,50 +666,13 @@ const UseCases = () => (
   </section>
 );
 
-// ── Why Different ─────────────────────────────────────────────────────────────
 const comparisonRows = [
-  {
-    feature: "Response Latency",
-    legacy: ">2,000ms",
-    nexov: "<200ms",
-    detail: "10× faster end-to-end",
-    icon: "speed",
-  },
-  {
-    feature: "Reasoning Model",
-    legacy: "Static decision tree",
-    nexov: "Real-time LLM",
-    detail: "Adapts to any conversation",
-    icon: "neurology",
-  },
-  {
-    feature: "Interface",
-    legacy: "Text & chat only",
-    nexov: "Voice-first + omnichannel",
-    detail: "Phone, web, API, SMS",
-    icon: "settings_voice",
-  },
-  {
-    feature: "CRM Integration",
-    legacy: "Manual export / CSV",
-    nexov: "Live bidirectional sync",
-    detail: "Salesforce, HubSpot & more",
-    icon: "sync_alt",
-  },
-  {
-    feature: "Personality",
-    legacy: "Fixed, scripted tone",
-    nexov: "Modular AI personas",
-    detail: "Tune per brand & use-case",
-    icon: "face",
-  },
-  {
-    feature: "Scale",
-    legacy: "Limited concurrency",
-    nexov: "10,000+ simultaneous calls",
-    detail: "Auto-scales with demand",
-    icon: "lan",
-  },
+  { feature: "Response Latency", legacy: ">2,000ms", nexov: "<200ms", detail: "10× faster end-to-end", icon: "speed" },
+  { feature: "Reasoning Model", legacy: "Static decision tree", nexov: "Real-time LLM", detail: "Adapts to any conversation", icon: "neurology" },
+  { feature: "Interface", legacy: "Text & chat only", nexov: "Voice-first + omnichannel", detail: "Phone, web, API, SMS", icon: "settings_voice" },
+  { feature: "CRM Integration", legacy: "Manual export / CSV", nexov: "Live bidirectional sync", detail: "Salesforce, HubSpot & more", icon: "sync_alt" },
+  { feature: "Personality", legacy: "Fixed, scripted tone", nexov: "Modular AI personas", detail: "Tune per brand & use-case", icon: "face" },
+  { feature: "Scale", legacy: "Limited concurrency", nexov: "10,000+ simultaneous calls", detail: "Auto-scales with demand", icon: "lan" },
 ];
 
 const ComparisonRow = ({ row, index }) => {
@@ -654,125 +681,28 @@ const ComparisonRow = ({ row, index }) => {
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        borderBottom: "1px solid #000",
-        background: hovered ? "#000" : index % 2 === 0 ? "#fff" : "#fafafa",
-        transition: "background 0.2s",
-        cursor: "default",
-      }}
+      style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", background: hovered ? "#000" : index % 2 === 0 ? "#fff" : "#fafafa", transition: "background 0.2s", cursor: "default" }}
     >
-      {/* Feature label */}
-      <div style={{
-        padding: "28px 32px",
-        borderRight: "1px solid #000",
-        display: "flex",
-        alignItems: "center",
-        gap: "14px",
-      }}>
-        <div style={{
-          width: 36,
-          height: 36,
-          background: hovered ? "rgba(128,249,200,0.12)" : "#f1f3ff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          transition: "background 0.2s",
-        }}>
-          <span className="material-symbols-outlined" style={{
-            fontFamily: "Material Symbols Outlined",
-            fontSize: 18,
-            color: hovered ? "#80f9c8" : "#141b2b",
-            transition: "color 0.2s",
-          }}>{row.icon}</span>
+      <div style={{ padding: "28px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "14px" }}>
+        <div style={{ width: 36, height: 36, background: hovered ? "rgba(128,249,200,0.12)" : "#f1f3ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 18, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.icon}</span>
         </div>
         <div>
-          <div style={{
-            fontFamily: "'Inter',sans-serif",
-            fontSize: "13px",
-            fontWeight: 700,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            color: hovered ? "#fff" : "#141b2b",
-            transition: "color 0.2s",
-          }}>{row.feature}</div>
-          <div style={{
-            fontFamily: "'Space Grotesk',monospace",
-            fontSize: "10px",
-            color: hovered ? "rgba(128,249,200,0.7)" : "rgba(20,27,43,0.4)",
-            marginTop: "2px",
-            transition: "color 0.2s",
-          }}>{row.detail}</div>
+          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: hovered ? "#fff" : "#141b2b", transition: "color 0.2s" }}>{row.feature}</div>
+          <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: hovered ? "rgba(128,249,200,0.7)" : "rgba(20,27,43,0.4)", marginTop: "2px", transition: "color 0.2s" }}>{row.detail}</div>
         </div>
       </div>
-
-      {/* Legacy */}
-      <div style={{
-        padding: "28px 32px",
-        borderRight: "1px solid " + (hovered ? "rgba(255,255,255,0.1)" : "#000"),
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-        transition: "border-color 0.2s",
-      }}>
-        <div style={{
-          width: 22,
-          height: 22,
-          border: "1.5px solid rgba(20,27,43,0.2)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}>
-          <span className="material-symbols-outlined" style={{
-            fontFamily: "Material Symbols Outlined",
-            fontSize: 14,
-            color: "rgba(20,27,43,0.3)",
-          }}>close</span>
+      <div style={{ padding: "28px 32px", borderRight: "1px solid " + (hovered ? "rgba(255,255,255,0.1)" : "#000"), display: "flex", alignItems: "center", gap: "12px", transition: "border-color 0.2s" }}>
+        <div style={{ width: 22, height: 22, border: "1.5px solid rgba(20,27,43,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 14, color: "rgba(20,27,43,0.3)" }}>close</span>
         </div>
-        <span style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "14px",
-          color: hovered ? "rgba(255,255,255,0.3)" : "rgba(20,27,43,0.4)",
-          textDecoration: "line-through",
-          textDecorationColor: hovered ? "rgba(255,255,255,0.15)" : "rgba(20,27,43,0.2)",
-          transition: "color 0.2s",
-        }}>{row.legacy}</span>
+        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", color: hovered ? "rgba(255,255,255,0.3)" : "rgba(20,27,43,0.4)", textDecoration: "line-through", textDecorationColor: hovered ? "rgba(255,255,255,0.15)" : "rgba(20,27,43,0.2)", transition: "color 0.2s" }}>{row.legacy}</span>
       </div>
-
-      {/* Nexov */}
-      <div style={{
-        padding: "28px 32px",
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-      }}>
-        <div style={{
-          width: 22,
-          height: 22,
-          background: hovered ? "#80f9c8" : "#141b2b",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          transition: "background 0.2s",
-        }}>
-          <span className="material-symbols-outlined" style={{
-            fontFamily: "Material Symbols Outlined",
-            fontSize: 14,
-            color: hovered ? "#000" : "#80f9c8",
-            transition: "color 0.2s",
-          }}>check</span>
+      <div style={{ padding: "28px 32px", display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ width: 22, height: 22, background: hovered ? "#80f9c8" : "#141b2b", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 14, color: hovered ? "#000" : "#80f9c8", transition: "color 0.2s" }}>check</span>
         </div>
-        <span style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "14px",
-          fontWeight: 600,
-          color: hovered ? "#80f9c8" : "#141b2b",
-          transition: "color 0.2s",
-        }}>{row.nexov}</span>
+        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", fontWeight: 600, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.nexov}</span>
       </div>
     </div>
   );
@@ -780,54 +710,15 @@ const ComparisonRow = ({ row, index }) => {
 
 const WhyDifferent = () => (
   <section style={{ border: "1px solid #000", borderTop: "none", background: "#fff", overflow: "hidden" }}>
-
-    {/* Hero header row */}
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      borderBottom: "1px solid #000",
-    }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #000" }}>
       <div style={{ padding: "64px 48px", borderRight: "1px solid #000" }}>
-        <div style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "11px",
-          fontWeight: 700,
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-          color: "rgba(20,27,43,0.4)",
-          marginBottom: "20px",
-        }}>Competitive Analysis</div>
-        <h2 style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "clamp(52px,6vw,96px)",
-          fontWeight: 900,
-          textTransform: "uppercase",
-          letterSpacing: "-0.04em",
-          lineHeight: 0.92,
-          marginBottom: "28px",
-        }}>Why Our<br />Agents Are<br />Different</h2>
-        <p style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "16px",
-          lineHeight: 1.7,
-          color: "rgba(20,27,43,0.55)",
-          maxWidth: "380px",
-        }}>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)", marginBottom: "20px" }}>Competitive Analysis</div>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(52px,6vw,96px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", lineHeight: 0.92, marginBottom: "28px" }}>Why Our<br />Agents Are<br />Different</h2>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.7, color: "rgba(20,27,43,0.55)", maxWidth: "380px" }}>
           Legacy chatbots were built for text. Nexov was built for the full complexity of live human voice — a fundamentally harder problem, solved.
         </p>
       </div>
-
-      {/* Right: big stat callout */}
-      <div style={{
-        background: "#000",
-        padding: "64px 48px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        {/* faint grid bg */}
+      <div style={{ background: "#000", padding: "64px 48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.06 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse">
@@ -836,196 +727,53 @@ const WhyDifferent = () => (
             <rect fill="url(#wd-grid)" width="100%" height="100%"/>
           </svg>
         </div>
-
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{
-            fontFamily: "'Space Grotesk',monospace",
-            fontSize: "10px",
-            color: "rgba(128,249,200,0.6)",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            marginBottom: "16px",
-          }}>Performance delta</div>
-
-          {/* Big number */}
-          <div style={{
-            fontFamily: "'Inter',sans-serif",
-            fontSize: "clamp(72px,9vw,120px)",
-            fontWeight: 900,
-            letterSpacing: "-0.05em",
-            lineHeight: 1,
-            color: "#80f9c8",
-          }}>10×</div>
-          <div style={{
-            fontFamily: "'Inter',sans-serif",
-            fontSize: "18px",
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "-0.01em",
-            color: "#fff",
-            marginTop: "8px",
-          }}>Faster than legacy</div>
-          <div style={{
-            fontFamily: "'Inter',sans-serif",
-            fontSize: "14px",
-            color: "rgba(255,255,255,0.4)",
-            marginTop: "8px",
-          }}>Sub-200ms vs. industry avg. 2,000ms+</div>
+          <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,0.6)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "16px" }}>Performance delta</div>
+          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(72px,9vw,120px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, color: "#80f9c8" }}>10×</div>
+          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "-0.01em", color: "#fff", marginTop: "8px" }}>Faster than legacy</div>
+          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", color: "rgba(255,255,255,0.4)", marginTop: "8px" }}>Sub-200ms vs. industry avg. 2,000ms+</div>
         </div>
-
-        {/* Divider + 3 mini stats */}
-        <div style={{
-          position: "relative",
-          zIndex: 1,
-          borderTop: "1px solid rgba(255,255,255,0.1)",
-          paddingTop: "32px",
-          display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gap: "0",
-        }}>
-          {[
-            { v: "99.9%", l: "Uptime SLA" },
-            { v: "SOC2", l: "Compliant" },
-            { v: "<48h", l: "Deployment" },
-          ].map((s, i) => (
-            <div key={s.l} style={{
-              borderRight: i < 2 ? "1px solid rgba(255,255,255,0.1)" : "none",
-              paddingRight: i < 2 ? "16px" : 0,
-              paddingLeft: i > 0 ? "16px" : 0,
-            }}>
-              <div style={{
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "clamp(18px,2vw,24px)",
-                fontWeight: 900,
-                letterSpacing: "-0.03em",
-                color: "#fff",
-              }}>{s.v}</div>
-              <div style={{
-                fontFamily: "'Space Grotesk',monospace",
-                fontSize: "9px",
-                color: "rgba(255,255,255,0.35)",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                marginTop: "4px",
-              }}>{s.l}</div>
+        <div style={{ position: "relative", zIndex: 1, borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "32px", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0" }}>
+          {[{ v: "99.9%", l: "Uptime SLA" }, { v: "SOC2", l: "Compliant" }, { v: "<48h", l: "Deployment" }].map((s, i) => (
+            <div key={s.l} style={{ borderRight: i < 2 ? "1px solid rgba(255,255,255,0.1)" : "none", paddingRight: i < 2 ? "16px" : 0, paddingLeft: i > 0 ? "16px" : 0 }}>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(18px,2vw,24px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#fff" }}>{s.v}</div>
+              <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "9px", color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px" }}>{s.l}</div>
             </div>
           ))}
         </div>
       </div>
     </div>
-
-    {/* Table heading section */}
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      borderBottom: "1px solid #000",
-      padding: "64px 48px",
-      background: "#fff",
-    }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #000", padding: "64px 48px", background: "#fff" }}>
       <div style={{ textAlign: "center", maxWidth: 800 }}>
-        <div style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "11px",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "rgba(20,27,43,.5)",
-          marginBottom: "16px",
-        }}>
-          Feature Matrix
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Feature Matrix</div>
+        <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(32px,4vw,48px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.04em" }}>Head-to-Head Comparison</h3>
+      </div>
+    </div>
+    <div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", borderTop: "1px solid #000", background: "#f9f9ff" }}>
+        <div style={{ padding: "16px 32px", borderRight: "1px solid #000", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>Capability</div>
+        <div style={{ padding: "16px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13 }}>history</span>
+          Legacy Chatbots
         </div>
-        <h3 style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "clamp(32px,4vw,48px)",
-          fontWeight: 900,
-          textTransform: "uppercase",
-          lineHeight: 1.1,
-          letterSpacing: "-0.04em",
-        }}>
-          Head-to-Head Comparison
-        </h3>
+        <div style={{ padding: "16px 32px", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#006c4e", fontWeight: 700 }}>
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13, color: "#006c4e" }}>bolt</span>
+          Nexov Voice Agents
+        </div>
       </div>
-    </div>
-
-    <div className="tableContainer ">
-      {/* Table header */}
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr",
-      borderBottom: "1px solid #000",
-      borderTop: "1px solid #000",
-      background: "#f9f9ff",
-    }}>
-      <div style={{
-        padding: "16px 32px",
-        borderRight: "1px solid #000",
-        fontFamily: "'Space Grotesk',monospace",
-        fontSize: "9px",
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        color: "rgba(20,27,43,0.35)",
-      }}>Capability</div>
-      <div style={{
-        padding: "16px 32px",
-        borderRight: "1px solid #000",
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        fontFamily: "'Space Grotesk',monospace",
-        fontSize: "9px",
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        color: "rgba(20,27,43,0.35)",
-      }}>
-        <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13 }}>history</span>
-        Legacy Chatbots
+      {comparisonRows.map((row, i) => <ComparisonRow key={row.feature} row={row} index={i} />)}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 32px", background: "#141b2b", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.3)" }}>
+        {["Architecture: Neural-Flash", "//", "Security: SOC2 Type II", "//", "Regions: 14 Global PoPs", "//", "Latency: <200ms p99"].map((t, i) => (
+          <span key={i} style={{ color: t === "//" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.3)" }}>{t}</span>
+        ))}
       </div>
-      <div style={{
-        padding: "16px 32px",
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        fontFamily: "'Space Grotesk',monospace",
-        fontSize: "9px",
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        color: "#006c4e",
-        fontWeight: 700,
-      }}>
-        <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13, color: "#006c4e" }}>bolt</span>
-        Nexov Voice Agents
-      </div>
-    </div>
-
-    {/* Comparison rows */}
-    {comparisonRows.map((row, i) => <ComparisonRow key={row.feature} row={row} index={i} />)}
-
-    {/* Footer bar */}
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "20px 32px",
-      background: "#141b2b",
-      fontFamily: "'Space Grotesk',monospace",
-      fontSize: "10px",
-      textTransform: "uppercase",
-      letterSpacing: "0.18em",
-      color: "rgba(255,255,255,0.3)",
-    }}>
-      {["Architecture: Neural-Flash", "//", "Security: SOC2 Type II", "//", "Regions: 14 Global PoPs", "//", "Latency: <200ms p99"].map((t, i) => (
-        <span key={i} style={{ color: t === "//" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.3)" }}>{t}</span>
-      ))}
-    </div>
     </div>
   </section>
 );
 
-// ── Metrics ───────────────────────────────────────────────────────────────────
 const Metrics = () => (
-  <section style={{ borderBottom: "1px solid #000" }} className="mt-[100px] ">
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", divideX: "1px solid #000" }}>
+  <section style={{ borderBottom: "1px solid #000", marginTop: "100px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
       {[
         { val: "90%", label: "Reduction in Wait Times", dark: false },
         { val: "10K+", label: "Daily Concurrent Calls", dark: true },
@@ -1040,7 +788,6 @@ const Metrics = () => (
   </section>
 );
 
-// ── Vision Quote ──────────────────────────────────────────────────────────────
 const Vision = () => (
   <section style={{ padding: "128px 48px", borderBottom: "1px solid #000", overflow: "hidden", position: "relative" }}>
     <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
@@ -1056,7 +803,6 @@ const Vision = () => (
   </section>
 );
 
-// ── Wall of Love ──────────────────────────────────────────────────────────────
 const testimonials = [
   { quote: "The latency is actually unbelievable. We've replaced our entire front-line phone support with Nexov agents and customer satisfaction hasn't dropped a single point.", name: "Sarah Jenkins", role: "CTO, Global Logistics Inc.", stars: 5, dark: false },
   { quote: "Integrating the API was straightforward. We had a working prototype in three days. The human-like inflection is the best in the industry.", name: "Marcus Thorne", role: "Product Lead, FinTech Pro", stars: 4, dark: true },
@@ -1089,7 +835,6 @@ const WallOfLove = () => (
   </section>
 );
 
-// ── CTA ───────────────────────────────────────────────────────────────────────
 const CTA = () => (
   <section style={{ borderBottom: "1px solid #000", background: "#6EE7B7" }}>
     <div style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
@@ -1108,7 +853,6 @@ const CTA = () => (
   </section>
 );
 
-// ── Footer ────────────────────────────────────────────────────────────────────
 const Footer = () => (
   <footer style={{ background: "#fff", borderTop: "1px solid #000" }}>
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-end" }}>
@@ -1129,31 +873,28 @@ const Footer = () => (
   </footer>
 );
 
-// ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
-  useEffect(() => {
-    injectTailwindConfig();
-  }, []);
+  useEffect(() => { injectTailwindConfig(); }, []);
 
   return (
     <>
       <style>{styles}</style>
       <Nav />
-      <div className="mx-[200px] " style={{   borderLeft: "1px solid #dddddd",  borderRight: "1px solid #dddddd"}}>
-        <main className="mx-[15px] pt-[15px]" >
-        <Hero />
-        <MarqueeBar />
-        <TalkToAgent />
-        <Mission />
-        <ProductGrid />
-        <LogicFlow />
-        <UseCases />
-        <WhyDifferent />
-        <Metrics />
-        <Vision />
-        <WallOfLove />
-        <CTA />
-      </main>
+      <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
+        <main style={{ margin: "0 15px", paddingTop: "15px" }}>
+          <Hero />
+          <MarqueeBar />
+          <TalkToAgent />
+          <Mission />
+          <ProductGrid />
+          <LogicFlow />
+          <UseCases />
+          <WhyDifferent />
+          <Metrics />
+          <Vision />
+          <WallOfLove />
+          <CTA />
+        </main>
       </div>
       <Footer />
     </>
