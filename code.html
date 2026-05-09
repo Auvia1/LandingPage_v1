@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#007353",
+                        "on-background": "#141b2b",
+                        "surface-container-highest": "#dce2f7",
+                        "on-secondary": "#ffffff",
+                        "primary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1b1b1b",
+                        "outline-variant": "#cfc4c5",
+                        "surface-tint": "#5e5e5e",
+                        "inverse-surface": "#293040",
+                        "surface-container-low": "#f1f3ff",
+                        "surface": "#f9f9ff",
+                        "outline": "#7e7576",
+                        "secondary": "#006c4e",
+                        "tertiary-fixed-dim": "#c5c7c8",
+                        "on-primary-fixed-variant": "#474747",
+                        "on-primary-fixed": "#1b1b1b",
+                        "background": "#f9f9ff",
+                        "tertiary-container": "#191c1d",
+                        "on-primary-container": "#848484",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#62dcad",
+                        "secondary-container": "#80f9c8",
+                        "tertiary-fixed": "#e1e3e4",
+                        "surface-bright": "#f9f9ff",
+                        "on-surface-variant": "#4c4546",
+                        "inverse-primary": "#c6c6c6",
+                        "on-tertiary-fixed-variant": "#454748",
+                        "surface-dim": "#d3daef",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-tertiary-fixed": "#191c1d",
+                        "surface-container-high": "#e1e8fd",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#00513a",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary-fixed": "#80f9c8",
+                        "inverse-on-surface": "#edf0ff",
+                        "on-tertiary-container": "#828485",
+                        "tertiary": "#000000",
+                        "surface-container": "#e9edff",
+                        "on-surface": "#141b2b",
+                        "on-secondary-fixed": "#002115",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#dce2f7",
+                        "error": "#ba1a1a",
+                        "nexov-mint": "#80f9c8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "columns": "12",
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin": "48px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "mono": ["Space Grotesk"],
+                        "display": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "mono": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display": ["72px", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        .swiss-grid-overlay {
+            background-size: 8.333333% 100%;
+            background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-container {
+            display: flex;
+            width: max-content;
+            animation: marquee 40s linear infinite;
+        }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 64px;
+            height: 80px;
+            color: #000000;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+        .marquee-item::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #000000 50%, transparent);
+        }
+        @keyframes barGrow {
+            0%, 100% { height: 10%; }
+            25% { height: 40%; }
+            50% { height: 80%; }
+            75% { height: 60%; }
+        }
+        .viz-bar {
+            animation: barGrow 1.5s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+        /* Parallax Timeline Styles */
+        .timeline-container {
+            position: relative;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-50%);
+        }
+        .timeline-line-progress {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            background: #80f9c8;
+            transform: translateX(-50%);
+            transition: height 0.3s ease-out;
+            box-shadow: 0 0 15px rgba(128, 249, 200, 0.5);
+        }
+        .timeline-node {
+            position: sticky;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: black;
+            border: 2px solid #80f9c8;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+        }
+        .timeline-step {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            opacity: 0.2;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(20px);
+        }
+        .timeline-step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+        .tech-dotted-bg {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<nav class="sticky top-0 z-50 bg-white border-b border-black w-full">
+<div class="grid grid-cols-12 w-full">
+<div class="col-span-3 md:col-span-2 border-r border-black p-4 flex items-center">
+<span class="font-display text-xl font-black uppercase tracking-tight leading-none">Nexov<br/>AI</span>
+</div>
+<div class="hidden md:flex col-span-7 items-stretch">
+<a class="flex-1 flex items-center justify-center border-r border-black font-label-caps text-[11px] hover:bg-surface-container-low transition-colors px-2 text-center" href="#">INFRASTRUCTURE</a>
+<a class="flex-1 flex items-center justify-center border-r border-black font-label-caps text-[11px] hover:bg-surface-container-low transition-colors px-2 text-center" href="#">VOICE MODELS</a>
+<a class="flex-1 flex items-center justify-center border-r border-black font-label-caps text-[11px] hover:bg-surface-container-low transition-colors px-2 text-center" href="#">API DOCS</a>
+<a class="flex-1 flex items-center justify-center border-r border-black font-label-caps text-[11px] hover:bg-surface-container-low transition-colors px-2 text-center" href="#">PRICING</a>
+<div class="flex-[2]"></div>
+</div>
+<div class="col-span-9 md:col-span-3 flex items-stretch">
+<div class="hidden md:block flex-1"></div>
+<a class="flex items-center px-6 border-l border-black font-label-caps text-[11px] hover:bg-surface-container-low transition-colors" href="#">LOGIN</a>
+<button class="bg-black text-white px-8 flex items-center font-label-caps text-[11px] hover:bg-secondary transition-colors whitespace-nowrap">GET STARTED</button>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="border-b border-black bg-white overflow-hidden">
+<div class="grid grid-cols-12">
+<div class="col-span-12 p-8 md:p-16 xl:p-24 border-black flex flex-col justify-center items-center text-center">
+<div class="mb-12">
+<div class="inline-block border border-black px-3 py-1 font-mono text-[10px] uppercase tracking-wider mb-8">
+                            V4.2.0 STABLE RELEASE
+                        </div>
+<h1 class="font-display text-[48px] md:text-[64px] lg:text-[80px] font-black uppercase leading-[0.95] tracking-tight mb-8">
+                            The infrastructure<br/>for AI Voice<br/>Agents
+                        </h1>
+<p class="font-body-lg text-lg md:text-xl max-w-xl text-on-surface/80 mb-12 mx-auto">
+                            Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.
+                        </p>
+<div class="flex flex-col sm:flex-row gap-0 border border-black w-fit mx-auto">
+<button class="bg-black text-white px-10 py-5 font-label-caps text-[12px] uppercase hover:bg-secondary transition-colors border-r border-black">
+                                Start Building
+                            </button>
+<button class="bg-white text-black px-10 py-5 font-label-caps text-[12px] uppercase hover:bg-surface-container-low transition-colors">
+                                View Docs
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof Bar -->
+<section class="border-y border-black bg-white overflow-hidden w-full relative flex items-center h-20">
+<div class="marquee-container">
+<div class="flex">
+<div class="marquee-item uppercase">SALESFORCE</div>
+<div class="marquee-item uppercase">SLACK</div>
+<div class="marquee-item uppercase">STRIPE</div>
+<div class="marquee-item uppercase">GITHUB</div>
+<div class="marquee-item uppercase">TWILIO</div>
+<div class="marquee-item uppercase">HUBSPOT</div>
+</div>
+<div class="flex">
+<div class="marquee-item uppercase">SALESFORCE</div>
+<div class="marquee-item uppercase">SLACK</div>
+<div class="marquee-item uppercase">STRIPE</div>
+<div class="marquee-item uppercase">GITHUB</div>
+<div class="marquee-item uppercase">TWILIO</div>
+<div class="marquee-item uppercase">HUBSPOT</div>
+</div>
+</div>
+</section>
+<!-- Talk To Our Agent Section -->
+<section class="bg-surface border-b border-black">
+<div class="border-b border-black p-12 text-center">
+<h2 class="font-label-caps text-label-caps uppercase text-on-surface/50 mb-4">Product Feature</h2>
+<h3 class="font-display text-[40px] md:text-[56px] font-black uppercase leading-tight">Talk To Our Agent</h3>
+</div>
+<div class="bg-[#f8f9fa] border-b border-black py-8 px-8 md:px-16 flex flex-col items-center overflow-hidden">
+<div class="w-full max-w-7xl relative flex items-center justify-center gap-2 md:gap-4 overflow-hidden">
+<!-- Left Player -->
+<div class="relative z-0 flex flex-col w-[14rem] bg-white border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:scale-105 hidden lg:flex">
+<div class="w-full aspect-square relative mb-3">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-600"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-10 h-10 bg-white border-2 border-black flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="mb-3">
+<h4 class="font-display text-base font-black uppercase mb-1 tracking-tight">Characters</h4>
+<p class="text-[8px] text-on-surface/60 uppercase tracking-widest font-mono">Voice Profiles v1.4</p>
+</div>
+<div class="space-y-2 mb-3">
+<div class="w-full h-1 bg-surface-container-highest relative">
+<div class="absolute top-0 left-0 h-full w-1/4 bg-black"></div>
+</div>
+</div>
+<div class="flex items-center justify-between opacity-40">
+<span class="material-symbols-outlined text-base">shuffle</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">skip_previous</span>
+<span class="material-symbols-outlined text-lg">pause</span>
+<span class="material-symbols-outlined text-base">skip_next</span>
+</div>
+<span class="material-symbols-outlined text-base">repeat</span>
+</div>
+</div>
+<!-- Center Player -->
+<div class="relative z-10 flex flex-col w-64 md:w-[17rem] bg-white border-2 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+<div class="w-full aspect-square relative mb-4 group cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-br from-orange-400 to-pink-500"></div>
+<div class="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform">
+<div class="w-14 h-14 bg-white border-2 border-black flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h4 class="font-display text-lg md:text-xl font-black uppercase mb-1 tracking-tight">Narration</h4>
+<p class="text-[10px] text-on-surface/60 uppercase tracking-widest font-mono">Synthetic Storytelling v2.0</p>
+</div>
+<div class="space-y-2 mb-4">
+<div class="w-full h-1 bg-surface-container-highest relative">
+<div class="absolute top-0 left-0 h-full w-1/3 bg-black"></div>
+<div class="absolute top-1/2 left-1/3 -translate-y-1/2 w-2 h-2 bg-black rounded-none"></div>
+</div>
+<div class="flex justify-between font-mono text-[8px] text-on-surface/40">
+<span>01:42</span>
+<span>04:15</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-lg">shuffle</span>
+<div class="flex items-center gap-3 md:gap-5">
+<span class="material-symbols-outlined text-xl md:text-2xl">skip_previous</span>
+<span class="material-symbols-outlined text-2xl md:text-3xl">pause</span>
+<span class="material-symbols-outlined text-xl md:text-2xl">skip_next</span>
+</div>
+<span class="material-symbols-outlined text-lg">repeat</span>
+</div>
+</div>
+<!-- Right Player -->
+<div class="relative z-0 flex flex-col w-[14rem] bg-white border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:scale-105 hidden lg:flex">
+<div class="w-full aspect-square relative mb-3">
+<div class="absolute inset-0 bg-gradient-to-br from-green-400 to-yellow-400"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-10 h-10 bg-white border-2 border-black flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">play_arrow</span>
+</div>
+</div>
+</div>
+<div class="mb-3">
+<h4 class="font-display text-base font-black uppercase mb-1 tracking-tight">Conversational</h4>
+<p class="text-[8px] text-on-surface/60 uppercase tracking-widest font-mono">Dynamic Interaction v3.2</p>
+</div>
+<div class="space-y-2 mb-3">
+<div class="w-full h-1 bg-surface-container-highest relative">
+<div class="absolute top-0 left-0 h-full w-1/2 bg-black"></div>
+</div>
+</div>
+<div class="flex items-center justify-between opacity-40">
+<span class="material-symbols-outlined text-base">shuffle</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">skip_previous</span>
+<span class="material-symbols-outlined text-lg">pause</span>
+<span class="material-symbols-outlined text-base">skip_next</span>
+</div>
+<span class="material-symbols-outlined text-base">repeat</span>
+</div>
+</div>
+</div>
+<div class="w-full mt-8 flex flex-col items-center">
+<div class="font-mono text-[9px] text-on-surface/40 uppercase tracking-[0.2em] mb-4 flex items-center gap-4">
+<span class="w-8 h-px bg-on-surface/20"></span>
+                        Live Audio Processing Stream
+                        <span class="w-8 h-px bg-on-surface/20"></span>
+</div>
+<div class="flex items-end justify-center gap-1 h-24 w-full max-w-2xl px-4">
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.1s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.3s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.5s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.2s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.6s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.4s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.8s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.1s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.5s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.3s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.7s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.2s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.9s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.4s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.6s;"></div>
+<div class="viz-bar flex-1 bg-[#6EE7B7] border border-black/10" style="animation-delay: 0.1s;"></div>
+</div>
+<div class="mt-4 grid grid-cols-12 w-full max-w-2xl text-[8px] font-mono text-on-surface/30">
+<div class="col-span-3 text-left">20Hz</div>
+<div class="col-span-6 text-center">SUB-100MS LATENCY STREAM</div>
+<div class="col-span-3 text-right">20kHz</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Company Mission -->
+<section class="py-24 px-6 md:px-12 border-b border-black">
+<div class="max-w-[1440px] mx-auto grid grid-cols-12 gap-gutter">
+<div class="col-span-12 md:col-span-4 border-l border-black pl-6">
+<h2 class="font-label-caps text-label-caps uppercase text-on-surface/50 mb-4">The Mission</h2>
+</div>
+<div class="col-span-12 md:col-span-8">
+<p class="font-headline-lg text-headline-lg uppercase">
+                        We are an AI agents company building a suite of voice-based AI applications designed to automate real-world business operations.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Product Ecosystem -->
+<section class="border-b border-black">
+<div class="grid grid-cols-1 md:grid-cols-3">
+<!-- Card 1 -->
+<div class="border-r border-black p-12 hover:bg-secondary-container transition-colors group cursor-default h-full flex flex-col">
+<div class="mb-12">
+<span class="material-symbols-outlined text-4xl" data-icon="call">call</span>
+</div>
+<h3 class="font-headline-md text-headline-md uppercase mb-4">Call Handling Agent</h3>
+<p class="font-body-md text-body-md mb-8">Autonomous inbound and outbound call management with human-level natural language processing.</p>
+<div class="mt-auto pt-8 border-t border-black group-hover:border-black/30">
+<span class="font-label-caps text-label-caps uppercase">Agent No. 01</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="border-r border-black p-12 hover:bg-secondary-container transition-colors group cursor-default h-full flex flex-col">
+<div class="mb-12">
+<span class="material-symbols-outlined text-4xl" data-icon="calendar_today">calendar_today</span>
+</div>
+<h3 class="font-headline-md text-headline-md uppercase mb-4">Appointment Booking Agent</h3>
+<p class="font-body-md text-body-md mb-8">Syncs directly with your CRM and calendar to schedule, reschedule, and confirm consultations.</p>
+<div class="mt-auto pt-8 border-t border-black group-hover:border-black/30">
+<span class="font-label-caps text-label-caps uppercase">Agent No. 02</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-12 hover:bg-secondary-container transition-colors group cursor-default h-full flex flex-col">
+<div class="mb-12">
+<span class="material-symbols-outlined text-4xl" data-icon="support_agent">support_agent</span>
+</div>
+<h3 class="font-headline-md text-headline-md uppercase mb-4">Customer Support Agent</h3>
+<p class="font-body-md text-body-md mb-8">Instant resolution for Tier 1 and Tier 2 queries across voice and omnichannel interfaces.</p>
+<div class="mt-auto pt-8 border-t border-black group-hover:border-black/30">
+<span class="font-label-caps text-label-caps uppercase">Agent No. 03</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="border-t border-r border-black p-12 hover:bg-secondary-container transition-colors group cursor-default h-full flex flex-col">
+<div class="mb-12">
+<span class="material-symbols-outlined text-4xl" data-icon="leaderboard">leaderboard</span>
+</div>
+<h3 class="font-headline-md text-headline-md uppercase mb-4">Lead Qualification Agent</h3>
+<p class="font-body-md text-body-md mb-8">Screens potential customers through intelligent dialogue to ensure high-quality pipeline growth.</p>
+<div class="mt-auto pt-8 border-t border-black group-hover:border-black/30">
+<span class="font-label-caps text-label-caps uppercase">Agent No. 04</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="border-t border-r border-black p-12 hover:bg-secondary-container transition-colors group cursor-default h-full flex flex-col">
+<div class="mb-12">
+<span class="material-symbols-outlined text-4xl" data-icon="medical_services">medical_services</span>
+</div>
+<h3 class="font-headline-md text-headline-md uppercase mb-4">Doctor Transcription Tool</h3>
+<p class="font-body-md text-body-md mb-8">Real-time medical transcription with specialized terminology support and HIPAA compliance.</p>
+<div class="mt-auto pt-8 border-t border-black group-hover:border-black/30">
+<span class="font-label-caps text-label-caps uppercase">Agent No. 05</span>
+</div>
+</div>
+<!-- Image Placeholder -->
+<div class="border-t border-black bg-primary p-12 overflow-hidden flex flex-col justify-between relative group h-full min-h-[400px]">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<div class="grid grid-cols-6 h-full w-full divide-x divide-secondary-container/30">
+<div></div><div></div><div></div><div></div><div></div><div></div>
+</div>
+</div>
+<div class="relative z-10">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-4 block">Infrastructure Node</span>
+<div class="space-y-2">
+<div class="h-1 w-full bg-secondary/20"></div>
+<div class="h-1 w-2/3 bg-secondary/40"></div>
+<div class="h-1 w-3/4 bg-secondary/10"></div>
+</div>
+</div>
+<div class="relative z-10 flex flex-col gap-2 font-mono text-[10px] text-secondary/60">
+<span class="">// GLOBAL_MESH_ACTIVE</span>
+<span class="">// LATENCY_OPTIMIZED</span>
+<span class="">// 100% UPTIME_PROTOCOL</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Logic Flow Parallax Timeline Section -->
+<section class="bg-black text-white flex flex-col tech-dotted-bg" id="logic-flow-section">
+<div class="flex items-center justify-center bg-black border-b border-white/10 pt-32 pb-16 w-full">
+<div class="max-w-[1440px] w-full px-6 md:px-12 flex flex-col items-center text-center">
+<div class="mb-8 flex flex-col items-center">
+<span class="font-label-caps text-label-caps uppercase text-secondary">Architecture</span>
+<h2 class="font-headline-lg text-headline-lg uppercase mt-4">The Logic Flow</h2>
+</div>
+</div>
+</div>
+<div class="timeline-container relative max-w-[1440px] mx-auto px-6 md:px-12">
+<div class="timeline-line !top-0">
+<div class="timeline-line-progress shadow-[0_0_20px_rgba(128,249,200,0.8)]" id="timeline-progress" style="height: 0%"></div>
+</div>
+<!-- Node Marker -->
+<div class="timeline-node"></div>
+<!-- Step 01 -->
+<div class="timeline-step grid grid-cols-12 w-full py-32" data-step="1" style="transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.1; transform: translateY(40px);">
+<div class="col-span-12 md:col-span-5 md:col-start-7 bg-white/5 border border-white/10 p-12 backdrop-blur-sm">
+<div class="mb-8">
+<span class="material-symbols-outlined text-secondary text-5xl" data-icon="settings_voice">settings_voice</span>
+</div>
+<div class="font-mono text-secondary mb-2">01. UNDERSTANDS</div>
+<h4 class="font-display text-3xl uppercase mb-6">Real-time Audio Processing</h4>
+<p class="text-white/60 text-lg leading-relaxed">Captures the nuances of human speech and emotional intent with sub-100ms processing cycles.</p>
+</div>
+</div>
+<!-- Step 02 -->
+<div class="timeline-step grid grid-cols-12 w-full py-32" data-step="2" style="transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.1; transform: translateY(40px);">
+<div class="col-span-12 md:col-span-5 md:col-start-1 bg-white/5 border border-white/10 p-12 backdrop-blur-sm text-right">
+<div class="mb-8 flex justify-end">
+<span class="material-symbols-outlined text-secondary text-5xl" data-icon="neurology">neurology</span>
+</div>
+<div class="font-mono text-secondary mb-2">02. PROCESSES</div>
+<h4 class="font-display text-3xl uppercase mb-6">Proprietary LLM Analysis</h4>
+<p class="text-white/60 text-lg leading-relaxed">Multi-layer analysis modules determine context, intent, and the optimal response strategy in parallel.</p>
+</div>
+</div>
+<!-- Step 03 -->
+<div class="timeline-step grid grid-cols-12 w-full py-32" data-step="3" style="transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.1; transform: translateY(40px);">
+<div class="col-span-12 md:col-span-5 md:col-start-7 bg-white/5 border border-white/10 p-12 backdrop-blur-sm">
+<div class="mb-8">
+<span class="material-symbols-outlined text-secondary text-5xl" data-icon="bolt">bolt</span>
+</div>
+<div class="font-mono text-secondary mb-2">03. EXECUTES</div>
+<h4 class="font-display text-3xl uppercase mb-6">Instant Response Action</h4>
+<p class="text-white/60 text-lg leading-relaxed">Perform complex operations—booking, routing, or transcribing—within the live call stream seamlessly.</p>
+</div>
+</div>
+<!-- Step 04 -->
+<div class="timeline-step grid grid-cols-12 w-full py-32" data-step="4" style="transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.1; transform: translateY(40px);">
+<div class="col-span-12 md:col-span-5 md:col-start-1 bg-white/5 border border-white/10 p-12 backdrop-blur-sm text-right">
+<div class="mb-8 flex justify-end">
+<span class="material-symbols-outlined text-secondary text-5xl" data-icon="api">api</span>
+</div>
+<div class="font-mono text-secondary mb-2">04. INTEGRATES</div>
+<h4 class="font-display text-3xl uppercase mb-6">Deep System Sync</h4>
+<p class="text-white/60 text-lg leading-relaxed">Direct synchronization with CRMs, databases, and enterprise toolchains via high-security API endpoints.</p>
+</div>
+</div>
+</div>
+<script>
+                document.addEventListener('scroll', () => {
+                    const section = document.getElementById('logic-flow-section');
+                    const steps = document.querySelectorAll('.timeline-step');
+                    const progressBar = document.getElementById('timeline-progress');
+                    
+                    const rect = section.getBoundingClientRect();
+                    const viewHeight = window.innerHeight;
+                    
+                    // Progress bar calculation based on section scroll depth
+                    // We start the progress when the section enters the viewport
+                    const scrollDistance = -rect.top + (viewHeight / 2);
+                    const totalScrollable = rect.height;
+                    const progress = Math.max(0, Math.min(100, (scrollDistance / totalScrollable) * 100));
+                    progressBar.style.height = `${progress}%`;
+
+                    // Active state detection with improved threshold for high-fidelity feel
+                    steps.forEach((step, index) => {
+                        const stepRect = step.getBoundingClientRect();
+                        const triggerPoint = viewHeight * 0.7; // Card starts appearing when it's at 70% of viewport
+                        
+                        if (stepRect.top < triggerPoint) {
+                            // Added small delay based on index for staggered effect
+                            setTimeout(() => {
+                                step.classList.add('active');
+                                step.style.opacity = '1';
+                                step.style.transform = 'translateY(0)';
+                            }, index * 100);
+                        } else {
+                            step.classList.remove('active');
+                            step.style.opacity = '0.1';
+                            step.style.transform = 'translateY(40px)';
+                        }
+                    });
+                });
+            </script>
+</section>
+<!-- Use Cases Asymmetric Layout -->
+<section class="border-b border-black">
+<div class="grid grid-cols-12 gap-6 p-6 md:p-12 lg:p-16">
+<div class="col-span-12 lg:col-span-8 bg-white border border-black p-8 flex flex-col justify-center min-h-[300px]">
+<h2 class="font-display text-headline-lg uppercase">Applied Intelligence</h2>
+<p class="font-body-lg text-on-surface/60 mt-4 max-w-xl">Deploying specialized voice agents across critical industries to optimize workflow and customer experience.</p>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white border border-black p-8 hover:bg-surface-container-low transition-colors">
+<div class="font-mono text-on-surface/30 mb-4">01</div>
+<h3 class="font-headline-md uppercase mb-2 text-xl">Healthcare</h3>
+<p class="font-body-md text-on-surface/60">Automated appointment handling and transcription for clinics and hospitals.</p>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white border border-black p-8 hover:bg-surface-container-low transition-colors">
+<div class="font-mono text-on-surface/30 mb-4">02</div>
+<h3 class="font-headline-md uppercase mb-2 text-xl">Real Estate</h3>
+<p class="font-body-md text-on-surface/60">Lead qualification calls that filter serious buyers from cold traffic.</p>
+</div>
+<div class="col-span-12 md:col-span-8 lg:col-span-4 bg-black p-8 flex flex-col justify-center items-center relative overflow-hidden min-h-[250px]">
+<div class="absolute inset-0 opacity-10">
+<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="20" id="grid-bento" patternunits="userSpaceOnUse" width="20">
+<path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" stroke-width="0.5"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid-bento)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<div class="relative z-10 text-center">
+<div class="w-12 h-12 border border-secondary flex items-center justify-center mb-4 mx-auto">
+<div class="w-6 h-6 bg-secondary animate-pulse"></div>
+</div>
+<div class="font-mono text-[9px] text-secondary uppercase tracking-widest">Core_v4_Live</div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 lg:col-span-4 bg-white border border-black p-8 hover:bg-surface-container-low transition-colors">
+<div class="font-mono text-on-surface/30 mb-4">03</div>
+<h3 class="font-headline-md uppercase mb-2 text-xl">E-commerce</h3>
+<p class="font-body-md text-on-surface/60">Order support and tracking updates handled via conversational voice agents.</p>
+</div>
+<div class="col-span-12 md:col-span-12 lg:col-span-8 bg-secondary-container p-8 border border-black flex flex-col justify-center">
+<h4 class="font-headline-md uppercase mb-2 text-on-secondary-container text-lg">Case Study: SaaS</h4>
+<p class="font-body-md text-on-secondary-container/80 max-w-2xl">90% reduction in customer onboarding friction through proactive agent-led setup calls, resulting in a 15% increase in month-one retention.</p>
+</div>
+</div>
+</section>
+<!-- Differentiation -->
+<section class="py-24 px-6 md:px-12 border-b border-black bg-surface-container-low">
+<div class="max-w-[1440px] mx-auto">
+<h2 class="uppercase mb-16 text-center text-5xl md:text-7xl font-black tracking-tighter">Why Our Agents Are Different</h2>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<div class="md:col-span-5 bg-white border border-black p-8 shadow-sm">
+<h3 class="font-label-caps uppercase text-on-surface/60 mb-8 flex items-center gap-2 font-bold">
+<span class="material-symbols-outlined text-sm">history</span>
+                            Legacy Chatbots
+                        </h3>
+<ul class="space-y-4">
+<li class="flex items-center gap-4 text-on-surface/70 line-through text-sm font-medium">
+<span class="material-symbols-outlined font-bold" data-icon="close">close</span>
+                                Static Decision Trees
+                            </li>
+<li class="flex items-center gap-4 text-on-surface/70 line-through text-sm font-medium">
+<span class="material-symbols-outlined font-bold" data-icon="close">close</span>
+                                High Latency (&gt;2s)
+                            </li>
+<li class="flex items-center gap-4 text-on-surface/70 line-through text-sm font-medium">
+<span class="material-symbols-outlined font-bold" data-icon="close">close</span>
+                                Text-Only Interfaces
+                            </li>
+<li class="flex items-center gap-4 text-on-surface/70 line-through text-sm font-medium">
+<span class="material-symbols-outlined font-bold" data-icon="close">close</span>
+                                Limited CRM Integration
+                            </li>
+</ul>
+</div>
+<div class="hidden md:flex md:col-span-2 items-center justify-center">
+<span class="material-symbols-outlined text-black/20 text-4xl">trending_flat</span>
+</div>
+<div class="md:col-span-5 bg-black text-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border border-black">
+<h3 class="font-label-caps uppercase text-secondary mb-8 flex items-center gap-2 font-bold">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                            Nexov Voice Agents
+                        </h3>
+<ul class="space-y-4">
+<li class="flex items-center gap-4 text-sm font-medium">
+<span class="material-symbols-outlined text-secondary" data-icon="check">check</span>
+                                Real-time Action Framework
+                            </li>
+<li class="flex items-center gap-4 text-sm font-medium">
+<span class="material-symbols-outlined text-secondary" data-icon="check">check</span>
+                                Ultra-low Latency (&lt;200ms)
+                            </li>
+<li class="flex items-center gap-4 text-sm font-medium">
+<span class="material-symbols-outlined text-secondary" data-icon="check">check</span>
+                                Modular AI Personalities
+                            </li>
+<li class="flex items-center gap-4 text-sm font-medium">
+<span class="material-symbols-outlined text-secondary" data-icon="check">check</span>
+                                Full-Stack System Access
+                            </li>
+</ul>
+</div>
+<div class="md:col-span-12 bg-white border border-black p-6 flex items-center justify-between text-xs font-mono uppercase tracking-widest text-on-surface/40">
+<span>Architecture: Neural-Flash</span>
+<span class="hidden md:block">//</span>
+<span>Security: SOC2 compliant</span>
+<span class="hidden md:block">//</span>
+<span>Deployment: &lt; 100ms globally</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Impact Metrics -->
+<section class="border-b border-black">
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-black">
+<div class="p-12 md:p-24 flex flex-col items-center justify-center text-center">
+<div class="font-display text-display mb-4">90%</div>
+<div class="font-label-caps text-label-caps uppercase text-on-surface/50">Reduction in Wait Times</div>
+</div>
+<div class="p-12 md:p-24 flex flex-col items-center justify-center text-center bg-black text-white">
+<div class="font-display text-display mb-4 text-secondary">10K+</div>
+<div class="font-label-caps text-label-caps uppercase text-white/50">Daily Concurrent Calls</div>
+</div>
+<div class="p-12 md:p-24 flex flex-col items-center justify-center text-center">
+<div class="font-display text-display mb-4">&lt;200ms</div>
+<div class="font-label-caps text-label-caps uppercase text-on-surface/50">End-to-End Latency</div>
+</div>
+</div>
+</section>
+<!-- Vision -->
+<section class="py-32 px-6 md:px-12 border-b border-black overflow-hidden relative">
+<div class="max-w-[1000px] mx-auto text-center relative z-10">
+<span class="material-symbols-outlined text-secondary text-6xl mb-12" data-icon="format_quote">format_quote</span>
+<blockquote class="font-headline-lg text-headline-lg uppercase leading-tight mb-12">
+                    “We believe AI agents will replace repetitive human workflows. We’re building the infrastructure for that future.”
+                </blockquote>
+<div class="font-label-caps text-label-caps uppercase tracking-widest">— Nexov Core Vision</div>
+</div>
+<div class="absolute -bottom-20 -left-10 text-[20vw] font-black text-black/5 uppercase select-none leading-none pointer-events-none">
+                FUTURE
+            </div>
+</section>
+<!-- Wall of Love -->
+<section class="border-b border-black bg-white">
+<div class="border-b border-black py-12 px-6 text-center">
+<h2 class="font-display text-[48px] md:text-[64px] font-black uppercase tracking-tighter">Wall of Love</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-black">
+<div class="p-12 flex flex-col">
+<div class="flex gap-1 mb-8">
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+</div>
+<blockquote class="font-body-lg italic mb-12">
+                        "The latency is actually unbelievable. We've replaced our entire front-line phone support with Nexov agents and customer satisfaction hasn't dropped a single point."
+                    </blockquote>
+<div class="mt-auto">
+<div class="font-label-caps text-label-caps uppercase">Sarah Jenkins</div>
+<div class="font-mono text-[10px] text-on-surface/50 uppercase">CTO, Global Logistics Inc.</div>
+</div>
+</div>
+<div class="p-12 bg-black text-white flex flex-col">
+<div class="flex gap-1 mb-8">
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-white/20"></div>
+</div>
+<blockquote class="font-body-lg italic mb-12">
+                        "Integrating the API was straightforward. We had a working prototype in three days. The human-like inflection is the best in the industry."
+                    </blockquote>
+<div class="mt-auto">
+<div class="font-label-caps text-label-caps uppercase text-white">Marcus Thorne</div>
+<div class="font-mono text-[10px] text-white/50 uppercase">Product Lead, FinTech Pro</div>
+</div>
+</div>
+<div class="p-12 flex flex-col">
+<div class="flex gap-1 mb-8">
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+<div class="w-4 h-4 bg-nexov-mint"></div>
+</div>
+<blockquote class="font-body-lg italic mb-12">
+                        "Nexov solved our scalability problem overnight. We can now handle seasonal spikes without hiring temporary staff. Revolutionary for retail."
+                    </blockquote>
+<div class="mt-auto">
+<div class="font-label-caps text-label-caps uppercase">Elena Rodriguez</div>
+<div class="font-mono text-[10px] text-on-surface/50 uppercase">Head of Ops, Retail Stream</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="border-b border-black" style="background-color: #6EE7B7;">
+<div class="grid grid-cols-12">
+<div class="col-span-12 py-24 px-6 md:px-12 flex flex-col items-center text-center">
+<h2 class="font-display text-[48px] md:text-[72px] lg:text-[80px] font-black uppercase leading-[0.9] tracking-tighter mb-12 max-w-4xl">
+                        Start Automating Conversations Today
+                    </h2>
+<div class="flex flex-col sm:flex-row gap-0 border border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+<button class="bg-black text-white px-10 py-5 font-label-caps text-[12px] uppercase hover:bg-secondary transition-colors border-r border-black">
+                            Deploy Now
+                        </button>
+<button class="bg-transparent text-black px-10 py-5 font-label-caps text-[12px] uppercase hover:bg-white/20 transition-colors">
+                            Talk to an Engineer
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-white border-t border-black w-full">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-6 md:px-12 py-16 w-full max-w-[1440px] mx-auto items-end">
+<div class="space-y-12">
+<div class="text-xl font-black text-black uppercase font-['Inter']">Nexov AI</div>
+<div class="font-['Inter'] text-[10px] md:text-xs uppercase tracking-[0.2em] text-black/40">
+                    © 2024 NEXOV AI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS
+                </div>
+</div>
+<div class="flex flex-wrap gap-8 md:justify-end">
+<a class="font-['Inter'] text-[10px] md:text-xs uppercase tracking-[0.2em] text-black/40 hover:text-secondary transition-colors" href="#">Documentation</a>
+<a class="font-['Inter'] text-[10px] md:text-xs uppercase tracking-[0.2em] text-black/40 hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-[10px] md:text-xs uppercase tracking-[0.2em] text-black/40 hover:text-secondary transition-colors" href="#">System Status</a>
+<a class="font-['Inter'] text-[10px] md:text-xs uppercase tracking-[0.2em] text-black/40 hover:text-secondary transition-colors" href="#">Twitter/X</a>
+</div>
+</div>
+</footer>
+</body></html>
