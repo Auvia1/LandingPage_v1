@@ -8,8 +8,9 @@ const SONGS = [
     title: "Characters",
     artist: "Voice Profiles v1.4",
     duration: 214,
-    accentColor: "#1db954",
-    ambientColor: "rgba(29,185,84,0.20)",
+    accentColor: "#ec4899",
+    gradient: "radial-gradient(at 100% 0%, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))",
+    ambientColor: "rgba(236, 72, 153, 0.15)",
     langTag: "ENGLISH",
     audioSrc: "/assets/audio/english final.mp4",
   },
@@ -17,8 +18,9 @@ const SONGS = [
     title: "Narration",
     artist: "Synthetic Storytelling v2.0",
     duration: 187,
-    accentColor: "#e91e8c",
-    ambientColor: "rgba(233,30,140,0.18)",
+    accentColor: "#60a5fa",
+    gradient: "radial-gradient(at 100% 100%, rgb(134, 239, 172), rgb(59, 130, 246), rgb(147, 51, 234))",
+    ambientColor: "rgba(59, 130, 246, 0.12)",
     langTag: "HINDI",
     audioSrc: "/assets/audio/hindi final.mp4",
   },
@@ -26,8 +28,9 @@ const SONGS = [
     title: "Conversational",
     artist: "Dynamic Interaction v3.2",
     duration: 243,
-    accentColor: "#6c63ff",
-    ambientColor: "rgba(108,99,255,0.20)",
+    accentColor: "#22c55e",
+    gradient: "radial-gradient(at 100% 100%, rgb(239, 68, 68), rgb(34, 197, 94))",
+    ambientColor: "rgba(34, 197, 94, 0.12)",
     langTag: "TELUGU",
     audioSrc: "/assets/audio/telugu final.mp4",
   },
@@ -76,7 +79,7 @@ const RepeatIcon = () => (
 );
 
 const HeartIcon = ({ filled, color }) => (
-  <svg viewBox="0 0 24 24" fill={filled ? color : "none"} stroke={filled ? color : "rgba(255,255,255,0.6)"} strokeWidth="2" width="16" height="16">
+  <svg viewBox="0 0 24 24" fill={filled ? color : "none"} stroke={filled ? color : "rgba(0,0,0,0.4)"} strokeWidth="2" width="16" height="16">
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
   </svg>
 );
@@ -104,7 +107,7 @@ const Waveform = ({ isPlaying, barCount = 18, seeds = SEED_SM, accentColor = "#1
         }
         heightsRef.current[i] = heightsRef.current[i] * 0.65 + target * 0.35;
         bar.style.height = heightsRef.current[i] + "px";
-        bar.style.background = isPlaying ? accentColor : "rgba(255,255,255,0.15)";
+        bar.style.background = isPlaying ? accentColor : "rgba(0,0,0,0.12)";
       });
       rafRef.current = requestAnimationFrame(animate);
     };
@@ -129,7 +132,7 @@ const Waveform = ({ isPlaying, barCount = 18, seeds = SEED_SM, accentColor = "#1
           ref={(el) => (barsRef.current[i] = el)}
           style={{
             flex: 1,
-            background: "rgba(255,255,255,0.15)",
+            background: "rgba(0,0,0,0.10)",
             minHeight: 3,
             borderRadius: 2,
             transition: "height 0.08s linear",
@@ -200,15 +203,15 @@ export const PlayerCard = forwardRef(
       <div
         style={{
           width: "100%",
-          background: "rgba(255,255,255,0.06)",
-          border: `1px solid ${isCenter ? accentColor + "55" : "rgba(255,255,255,0.10)"}`,
+          background: "rgba(255,255,255,0.7)",
+          border: `1px solid ${isCenter ? accentColor + "40" : "rgba(0,0,0,0.10)"}`,
           borderRadius: 28,
           backdropFilter: "blur(30px)",
           WebkitBackdropFilter: "blur(30px)",
           overflow: "hidden",
           boxShadow: isCenter
-            ? `0 32px 80px rgba(0,0,0,0.7), 0 0 60px ${accentColor}22`
-            : "0 24px 60px rgba(0,0,0,0.5)",
+            ? `0 8px 32px rgba(0,0,0,0.08), 0 0 40px ${accentColor}20`
+            : "0 8px 24px rgba(0,0,0,0.06)",
           transition: "border 0.5s ease, box-shadow 0.5s ease",
           fontFamily: "'DM Sans', sans-serif",
         }}
@@ -233,7 +236,7 @@ export const PlayerCard = forwardRef(
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.82))",
+              background: `radial-gradient(circle at 50% 50%, ${accentColor}30 0%, transparent 70%)`,
             }}
           />
 
@@ -242,8 +245,8 @@ export const PlayerCard = forwardRef(
               position: "absolute",
               top: 14,
               left: 14,
-              background: isPlaying ? accentColor : "rgba(0,0,0,0.55)",
-              color: isPlaying ? "#000" : "#fff",
+              background: isPlaying ? accentColor : "rgba(255,255,255,0.85)",
+              color: isPlaying ? "#fff" : "#141b2b",
               fontFamily: "'Syne', sans-serif",
               fontSize: 9,
               fontWeight: 700,
@@ -267,8 +270,8 @@ export const PlayerCard = forwardRef(
               width: 36,
               height: 36,
               borderRadius: "50%",
-              background: liked ? accentColor + "33" : "rgba(0,0,0,0.45)",
-              border: `1px solid ${liked ? accentColor : "rgba(255,255,255,0.15)"}`,
+              background: liked ? accentColor + "20" : "rgba(255,255,255,0.6)",
+              border: `1px solid ${liked ? accentColor : "rgba(0,0,0,0.10)"}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -303,12 +306,12 @@ export const PlayerCard = forwardRef(
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  boxShadow: `0 0 32px ${accentColor}88`,
+                  boxShadow: `0 0 32px ${accentColor}60`,
                   transform: artHovered ? "scale(1)" : "scale(0.85)",
                   transition: "transform 0.25s cubic-bezier(0.34,1.56,0.64,1)",
                 }}
               >
-                <span style={{ color: "#000" }}>
+                <span style={{ color: "#fff" }}>
                   {isPlaying ? <PauseIcon /> : <PlayIcon />}
                 </span>
               </div>
@@ -323,7 +326,7 @@ export const PlayerCard = forwardRef(
                 fontFamily: "'Syne', sans-serif",
                 fontWeight: 800,
                 fontSize: isCenter ? 20 : 16,
-                color: "#fff",
+                color: "#141b2b",
                 letterSpacing: "-0.02em",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -335,7 +338,7 @@ export const PlayerCard = forwardRef(
             <div
               style={{
                 fontSize: 12,
-                color: "rgba(255,255,255,0.45)",
+                color: "rgba(20,27,43,0.55)",
                 marginTop: 3,
                 fontWeight: 400,
                 letterSpacing: "0.02em",
@@ -358,7 +361,7 @@ export const PlayerCard = forwardRef(
                 style={{
                   width: "100%",
                   height: progressHovered ? 5 : 3,
-                  background: "rgba(255,255,255,0.12)",
+                  background: "rgba(0,0,0,0.10)",
                   borderRadius: 99,
                   position: "relative",
                   cursor: "pointer",
@@ -391,7 +394,7 @@ export const PlayerCard = forwardRef(
                       height: 12,
                       borderRadius: "50%",
                       background: "#fff",
-                      boxShadow: `0 0 0 3px ${accentColor}55`,
+                      boxShadow: `0 0 0 3px ${accentColor}40`,
                       opacity: progressHovered ? 1 : 0,
                       transition: "opacity 0.2s",
                     }}
@@ -403,7 +406,7 @@ export const PlayerCard = forwardRef(
                   display: "flex",
                   justifyContent: "space-between",
                   fontSize: 10,
-                  color: "rgba(255,255,255,0.35)",
+                  color: "rgba(20,27,43,0.45)",
                   letterSpacing: "0.08em",
                   marginBottom: 14,
                   fontVariantNumeric: "tabular-nums",
@@ -418,7 +421,7 @@ export const PlayerCard = forwardRef(
           <div
             style={{
               height: "0.5px",
-              background: "rgba(255,255,255,0.08)",
+              background: "rgba(0,0,0,0.08)",
               marginBottom: 14,
             }}
           />
@@ -439,17 +442,17 @@ export const PlayerCard = forwardRef(
                   width: isCenter ? 52 : 40,
                   height: isCenter ? 52 : 40,
                   borderRadius: "50%",
-                  background: isCenter ? accentColor : "rgba(255,255,255,0.12)",
+                  background: isCenter ? accentColor : "rgba(0,0,0,0.08)",
                   border: "none",
                   cursor: isCenter ? "pointer" : "default",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: isCenter ? "#000" : "rgba(255,255,255,0.4)",
+                  color: isCenter ? "#fff" : "rgba(0,0,0,0.4)",
                   boxShadow: isCenter && isPlaying
-                    ? `0 0 28px ${accentColor}88`
+                    ? `0 0 28px ${accentColor}40`
                     : isCenter
-                    ? `0 0 16px ${accentColor}44`
+                    ? `0 0 16px ${accentColor}20`
                     : "none",
                   transition: "all 0.2s ease",
                   flexShrink: 0,
@@ -483,7 +486,7 @@ export const PlayerCard = forwardRef(
                 fontWeight: 700,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: isPlaying ? accentColor : "rgba(255,255,255,0.25)",
+                color: isPlaying ? accentColor : "rgba(0,0,0,0.35)",
                 fontFamily: "'Syne', sans-serif",
                 transition: "color 0.3s",
               }}
@@ -495,7 +498,7 @@ export const PlayerCard = forwardRef(
                 width: 6,
                 height: 6,
                 borderRadius: "50%",
-                background: isPlaying ? accentColor : "rgba(255,255,255,0.2)",
+                background: isPlaying ? accentColor : "rgba(0,0,0,0.15)",
                 boxShadow: isPlaying ? `0 0 8px ${accentColor}` : "none",
                 transition: "background 0.3s, box-shadow 0.3s",
               }}
@@ -516,7 +519,7 @@ const CtrlBtn = ({ children, disabled, onClick }) => (
       background: "none",
       border: "none",
       cursor: disabled ? "default" : "pointer",
-      color: disabled ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.40)",
+      color: disabled ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.40)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -525,8 +528,8 @@ const CtrlBtn = ({ children, disabled, onClick }) => (
       transition: "color 0.18s, transform 0.15s",
       outline: "none",
     }}
-    onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.color = "#fff"; }}
-    onMouseLeave={(e) => { e.currentTarget.style.color = disabled ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.40)"; }}
+    onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.color = "#141b2b"; }}
+    onMouseLeave={(e) => { e.currentTarget.style.color = disabled ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.40)"; }}
   >
     {children}
   </button>
@@ -601,7 +604,7 @@ export default function MusicCarousel() {
         position: "relative",
         width: "100%",
         minHeight: "100vh",
-        background: "#0a0a0a",
+        background: "#f4f4f4",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -614,8 +617,8 @@ export default function MusicCarousel() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
         @keyframes ambientPulse {
-          0%, 100% { opacity: 0.7; }
-          50%       { opacity: 1;   }
+          0%, 100% { opacity: 0.4; }
+          50%       { opacity: 0.6;   }
         }
       `}</style>
 
@@ -623,7 +626,7 @@ export default function MusicCarousel() {
         style={{
           position: "absolute",
           inset: 0,
-          background: `radial-gradient(ellipse 80% 60% at 50% 85%, ${activeSong.ambientColor}, rgba(10,10,10,0.97))`,
+          background: `radial-gradient(ellipse 80% 60% at 50% 85%, ${activeSong.ambientColor}, rgba(244,244,244,0.97))`,
           transition: "background 1.2s ease",
           pointerEvents: "none",
           animation: "ambientPulse 4s ease-in-out infinite",
@@ -680,7 +683,7 @@ export default function MusicCarousel() {
                 title={song.title}
                 subtitle={song.artist}
                 langTag={song.langTag}
-                gradient={`linear-gradient(135deg, ${song.accentColor}44, #111)`}
+                gradient={song.gradient}
                 isCenter={isCenter}
                 audioSrc={song.audioSrc}
                 accentColor={song.accentColor}
@@ -701,7 +704,7 @@ export default function MusicCarousel() {
               width: i === activeIndex ? 24 : 6,
               height: 6,
               borderRadius: 99,
-              background: i === activeIndex ? activeSong.accentColor : "rgba(255,255,255,0.2)",
+              background: i === activeIndex ? activeSong.accentColor : "rgba(0,0,0,0.2)",
               border: "none",
               cursor: "pointer",
               padding: 0,
@@ -715,7 +718,7 @@ export default function MusicCarousel() {
         style={{
           marginTop: 18,
           fontSize: 11,
-          color: "rgba(255,255,255,0.18)",
+          color: "rgba(0,0,0,0.35)",
           letterSpacing: "0.12em",
           textTransform: "uppercase",
           fontFamily: "'DM Sans', sans-serif",
