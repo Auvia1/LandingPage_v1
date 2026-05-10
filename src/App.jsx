@@ -1463,7 +1463,7 @@
 //   return (
 //     <>
 //       <style>{styles}</style>
-      
+
 //       <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
 //         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
 //           <Navbar />
@@ -1490,6 +1490,7 @@ import { useState, useEffect, useRef } from "react";
 import MusicCarousel from "./components/MusicCarousel";
 import Navbar from "./components/Navbar";
 import InteractiveMissionDiagram, { ProcessFlow } from "./components/InteractiveMissionDiagram";
+import DotGrid from "./components/DotGrid";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -1643,7 +1644,7 @@ const Grainient = ({
     return () => {
       if (raf) cancelAnimationFrame(raf);
       if (ro) ro.disconnect();
-      try { const c = containerRef.current?.querySelector('canvas'); if (c) containerRef.current.removeChild(c); } catch {}
+      try { const c = containerRef.current?.querySelector('canvas'); if (c) containerRef.current.removeChild(c); } catch { }
     };
   }, [timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed, warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale, grainAmount, grainScale, grainAnimated, contrast, gamma, saturation, centerX, centerY, zoom, color1, color2, color3]);
   return <div ref={containerRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', ...style }} />;
@@ -1749,7 +1750,7 @@ const Hero = () => (
     <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
       <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>V4.2.0 STABLE RELEASE</div>
       <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
-      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p>
+      {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
       <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)" }}>
         <button style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer" }}>Start Building</button>
         <button style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>View Docs</button>
@@ -1774,7 +1775,7 @@ const MarqueeBar = () => {
 export const TalkToAgent = () => <MusicCarousel />;
 
 const Mission = () => (
-  <section style={{ padding: "96px 48px", borderBottom: "1px solid #000" }}>
+  <section style={{ padding: "96px 48px" }}>
     <div style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start" }}>
       {/* Left: ProcessFlow Diagram */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
@@ -1812,10 +1813,10 @@ const Mission = () => (
           borderTop: "1px solid #000",
         }}>
           {[
-            { label: "Founded",          val: "2024"                      },
-            { label: "Agents deployed",  val: "5+"                        },
-            { label: "Industries served",val: "Healthcare · SaaS · RE"    },
-            { label: "Infrastructure",   val: "14 Global PoPs"            },
+            { label: "Founded", val: "2024" },
+            { label: "Agents deployed", val: "5+" },
+            { label: "Industries served", val: "Healthcare · SaaS · RE" },
+            { label: "Infrastructure", val: "14 Global PoPs" },
           ].map((stat, i, arr) => (
             <div key={stat.label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "4px" }}>
               <span style={{ fontFamily: "'Space Grotesk', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)" }}>{stat.label}</span>
@@ -1850,13 +1851,13 @@ const ProductCard = ({ icon, title, desc, no }) => {
       const wf = document.getElementById('waveform-card');
       if (wf && !wf.dataset.populated) {
         wf.dataset.populated = 'true';
-        const originalHeights = [12,18,26,34,40,48,42,36,28,22,30,44,48,38,24,16,28,42,48,40,30,20,34,46,44,32,18,24,38,48,44,30,16,22,36,46,40,26,14,20,32,44,48,36,22,18,30,42,46,34];
+        const originalHeights = [12, 18, 26, 34, 40, 48, 42, 36, 28, 22, 30, 44, 48, 38, 24, 16, 28, 42, 48, 40, 30, 20, 34, 46, 44, 32, 18, 24, 38, 48, 44, 30, 16, 22, 36, 46, 40, 26, 14, 20, 32, 44, 48, 36, 22, 18, 30, 42, 46, 34];
         const heights = originalHeights.map(h => h * 0.5);
-        heights.forEach((h,i)=>{
-          const b=document.createElement('div');
-          b.className='bar'+(h<12.5?' dim':'');
-          b.style.height=h+'px';
-          b.style.animationDelay=(i*0.04)+'s';
+        heights.forEach((h, i) => {
+          const b = document.createElement('div');
+          b.className = 'bar' + (h < 12.5 ? ' dim' : '');
+          b.style.height = h + 'px';
+          b.style.animationDelay = (i * 0.04) + 's';
           wf.appendChild(b);
         });
       }
@@ -1865,14 +1866,14 @@ const ProductCard = ({ icon, title, desc, no }) => {
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ borderRight: "1px solid #000", borderTop: parseInt(no) > 3 ? "1px solid #000" : "none", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "background .2s", display: "flex", flexDirection: "column", minHeight: "440px", cursor: "default", overflow: "hidden" }}>
-      
+      style={{ border: "none", borderRadius: "24px", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "all .2s ease-in-out", boxShadow: hovered ? "0 10px 30px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "440px", cursor: "default", overflow: "hidden" }}>
+
       <div style={{ marginBottom: "32px" }}><Icon name={icon} /></div>
       <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "28px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.2, letterSpacing: "-0.01em", marginBottom: "16px" }}>{title}</h3>
       <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "15px", color: "rgba(20,27,43,0.8)", lineHeight: 1.5, marginBottom: "32px" }}>{desc}</p>
 
       <div style={{ marginTop: "auto", height: "160px", display: "flex", flexDirection: "column", justifyContent: "center", marginBottom: "32px" }}>
-        
+
         {isCallAgent && (
           <>
             <style>{`
@@ -1895,7 +1896,7 @@ const ProductCard = ({ icon, title, desc, no }) => {
                 </div>
                 <div className="phone-center">☎️</div>
                 <div className="call-block right">
-                  <div className="call-label" style={{justifyContent:"flex-end"}}>OUT 📞</div>
+                  <div className="call-label" style={{ justifyContent: "flex-end" }}>OUT 📞</div>
                 </div>
               </div>
               <div className="divider"></div>
@@ -1986,7 +1987,7 @@ const ProductCard = ({ icon, title, desc, no }) => {
                   <div className="c-value">1.2s</div>
                 </div>
                 <div className="c-graph">
-                  <svg viewBox="0 0 100 50"><path d="M5 35 L20 20 L35 30 L50 10 L65 28 L80 35 L95 18"/></svg>
+                  <svg viewBox="0 0 100 50"><path d="M5 35 L20 20 L35 30 L50 10 L65 28 L80 35 L95 18" /></svg>
                 </div>
               </div>
             </div>
@@ -2018,8 +2019,8 @@ const ProductCard = ({ icon, title, desc, no }) => {
                   <div className="l-count">2,346</div>
                   <div className="l-icon-box">
                     <div className="l-users">
-                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
-                      <svg viewBox="0 0 24 24" fill="none" className="l-gray"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
+                      <svg viewBox="0 0 24 24" fill="none" className="l-gray"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
                     </div>
                   </div>
                 </div>
@@ -2030,7 +2031,7 @@ const ProductCard = ({ icon, title, desc, no }) => {
                   <div className="l-count">842</div>
                   <div className="l-icon-box">
                     <div className="l-users">
-                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
                     </div>
                   </div>
                 </div>
@@ -2040,7 +2041,7 @@ const ProductCard = ({ icon, title, desc, no }) => {
                 <div className="l-right">
                   <div className="l-count">278</div>
                   <div className="l-icon-box">
-                    <svg viewBox="0 0 24 24" fill="none" className="l-green l-single"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" className="l-green l-single"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
                   </div>
                 </div>
               </div>
@@ -2068,7 +2069,7 @@ const ProductCard = ({ icon, title, desc, no }) => {
                 <div className="d-progress-wrapper">
                   <div className="d-progress"></div>
                 </div>
-                <div className="d-time" style={{textAlign:"right"}}>03:42</div>
+                <div className="d-time" style={{ textAlign: "right" }}>03:42</div>
               </div>
               <div className="d-transcript">
                 Patient reports persistent <span className="d-highlight">headaches</span> and mild <span className="d-highlight">dizziness</span> for the past 3 days. Prescribing rest.
@@ -2087,10 +2088,10 @@ const ProductCard = ({ icon, title, desc, no }) => {
 };
 
 const ProductGrid = () => (
-  <section style={{ borderBottom: "1px solid #000" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridAutoRows: "1fr", minHeight: "680px" }}>
+  <section style={{ padding: "96px 15px", background: "transparent" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
       {products.map((p) => <ProductCard key={p.no} {...p} />)}
-      <div style={{ borderTop: "1px solid #000", background: "#000", padding: "48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
+      <div style={{ border: "none", borderRadius: "24px", background: "#000", padding: "48px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs>
@@ -2100,7 +2101,7 @@ const ProductGrid = () => (
         <div style={{ position: "relative", zIndex: 1 }}>
           <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8", display: "block", marginBottom: "16px" }}>Infrastructure Node</span>
           {[null, null, null].map((_, i) => (
-            <div key={i} style={{ height: 4, width: ["100%", "66%", "75%"][i], background: `rgba(128,249,200,${[.2,.4,.1][i]})`, marginBottom: 8 }} />
+            <div key={i} style={{ height: 4, width: ["100%", "66%", "75%"][i], background: `rgba(128,249,200,${[.2, .4, .1][i]})`, marginBottom: 8 }} />
           ))}
         </div>
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 8, fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,.6)" }}>
@@ -2146,14 +2147,14 @@ const timelineSteps = [
 ];
 
 const LogicFlow = () => {
-  const trackRef    = useRef(null);
-  const fillRef     = useRef(null);
-  const cardRefs    = useRef([]);
-  const dotRefs     = useRef([]);
-  const outerRefs   = useRef([]);
-  const beamRefs    = useRef([]);
-  const floatRefs   = useRef([]);
-  const scanRef     = useRef(null);
+  const trackRef = useRef(null);
+  const fillRef = useRef(null);
+  const cardRefs = useRef([]);
+  const dotRefs = useRef([]);
+  const outerRefs = useRef([]);
+  const beamRefs = useRef([]);
+  const floatRefs = useRef([]);
+  const scanRef = useRef(null);
 
   useEffect(() => {
     const TRIGGER = 0.62;
@@ -2176,31 +2177,31 @@ const LogicFlow = () => {
         const r = card.getBoundingClientRect();
         const active = r.top < vh * TRIGGER;
 
-        const dot   = dotRefs.current[i];
+        const dot = dotRefs.current[i];
         const outer = outerRefs.current[i];
-        const beam  = beamRefs.current[i];
+        const beam = beamRefs.current[i];
 
         if (active) {
           card.style.opacity = "1";
           card.style.transform = "translateX(0) translateY(0)";
           card.style.filter = "none";
-          if (dot)  { dot.style.background = "#80f9c8"; dot.style.boxShadow = "0 0 20px rgba(128,249,200,1), 0 0 40px rgba(128,249,200,0.4)"; dot.style.borderColor = "#80f9c8"; }
-          if (outer){ outer.style.borderColor = "rgba(128,249,200,0.5)"; outer.style.background = "rgba(128,249,200,0.06)"; }
+          if (dot) { dot.style.background = "#80f9c8"; dot.style.boxShadow = "0 0 20px rgba(128,249,200,1), 0 0 40px rgba(128,249,200,0.4)"; dot.style.borderColor = "#80f9c8"; }
+          if (outer) { outer.style.borderColor = "rgba(128,249,200,0.5)"; outer.style.background = "rgba(128,249,200,0.06)"; }
           if (beam) { beam.style.opacity = "1"; beam.style.transform = "scaleX(1)"; }
         } else {
           const step = timelineSteps[i];
           card.style.opacity = "0.06";
           card.style.transform = step.side === "left" ? "translateX(-32px) translateY(16px)" : "translateX(32px) translateY(16px)";
           card.style.filter = "blur(1px)";
-          if (dot)  { dot.style.background = "#0d0d0d"; dot.style.boxShadow = "none"; dot.style.borderColor = "rgba(128,249,200,0.25)"; }
-          if (outer){ outer.style.borderColor = "rgba(128,249,200,0.1)"; outer.style.background = "transparent"; }
+          if (dot) { dot.style.background = "#0d0d0d"; dot.style.boxShadow = "none"; dot.style.borderColor = "rgba(128,249,200,0.25)"; }
+          if (outer) { outer.style.borderColor = "rgba(128,249,200,0.1)"; outer.style.background = "transparent"; }
           if (beam) { beam.style.opacity = "0"; beam.style.transform = "scaleX(0)"; }
         }
       });
 
       // ── Parallax on floating data labels
       const scrollY = window.scrollY || window.pageYOffset;
-      const speeds  = [0.06, -0.04, 0.08, -0.06, 0.05, -0.07, 0.04, -0.05];
+      const speeds = [0.06, -0.04, 0.08, -0.06, 0.05, -0.07, 0.04, -0.05];
       floatRefs.current.forEach((el, i) => {
         if (!el) return;
         el.style.transform = `translateY(${scrollY * speeds[i % speeds.length]}px)`;
@@ -2218,14 +2219,14 @@ const LogicFlow = () => {
   }, []);
 
   const FLOAT_DATA = [
-    { label: "LATENCY: 87ms",        top: "8%",  left: "3%",  speed: 0 },
-    { label: "LLM_LAYER: ACTIVE",    top: "22%", right: "2%", speed: 1 },
-    { label: "QUEUE_DEPTH: 0",       top: "42%", left: "2%",  speed: 2 },
-    { label: "CRM_SYNC: LIVE",       top: "58%", right: "3%", speed: 3 },
-    { label: "NODE_ID: NX-04",       top: "12%", right: "5%", speed: 4 },
-    { label: "UPTIME: 99.98%",       top: "75%", left: "4%",  speed: 5 },
-    { label: "SESSIONS: 10,241",     top: "88%", right: "3%", speed: 6 },
-    { label: "REGIONS: 14 PoPs",     top: "33%", left: "3%",  speed: 7 },
+    { label: "LATENCY: 87ms", top: "8%", left: "3%", speed: 0 },
+    { label: "LLM_LAYER: ACTIVE", top: "22%", right: "2%", speed: 1 },
+    { label: "QUEUE_DEPTH: 0", top: "42%", left: "2%", speed: 2 },
+    { label: "CRM_SYNC: LIVE", top: "58%", right: "3%", speed: 3 },
+    { label: "NODE_ID: NX-04", top: "12%", right: "5%", speed: 4 },
+    { label: "UPTIME: 99.98%", top: "75%", left: "4%", speed: 5 },
+    { label: "SESSIONS: 10,241", top: "88%", right: "3%", speed: 6 },
+    { label: "REGIONS: 14 PoPs", top: "33%", left: "3%", speed: 7 },
   ];
 
   return (
@@ -2263,7 +2264,7 @@ const LogicFlow = () => {
         <div key={i} ref={el => floatRefs.current[i] = el} style={{
           position: "absolute",
           top: f.top,
-          ...(f.left  ? { left:  f.left  } : {}),
+          ...(f.left ? { left: f.left } : {}),
           ...(f.right ? { right: f.right } : {}),
           fontFamily: "'Space Grotesk', monospace",
           fontSize: "9px",
@@ -2491,9 +2492,9 @@ const LogicFlow = () => {
         maxWidth: 1100, margin: "0 auto",
       }}>
         {[
-          { val: "<87ms",   label: "Audio Capture" },
-          { val: "4-Layer", label: "LLM Pipeline"  },
-          { val: "<200ms",  label: "End-to-End"    },
+          { val: "<87ms", label: "Audio Capture" },
+          { val: "4-Layer", label: "LLM Pipeline" },
+          { val: "<200ms", label: "End-to-End" },
           { val: "14 PoPs", label: "Global Regions" },
         ].map((s, i) => (
           <div key={s.label} style={{
@@ -2695,7 +2696,7 @@ const WhyDifferent = () => (
       </div>
       <div style={{ background: "#000", padding: "64px 48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.06 }}>
-          <svg width="100%" height="100%"><defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#80f9c8" strokeWidth="0.8"/></pattern></defs><rect fill="url(#wd-grid)" width="100%" height="100%"/></svg>
+          <svg width="100%" height="100%"><defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#80f9c8" strokeWidth="0.8" /></pattern></defs><rect fill="url(#wd-grid)" width="100%" height="100%" /></svg>
         </div>
         <div style={{ position: "relative", zIndex: 1 }}>
           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,0.6)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "16px" }}>Performance delta</div>
@@ -2827,16 +2828,29 @@ export default function App() {
   return (
     <>
       <style>{styles}</style>
+      <div style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
+        <DotGrid
+          dotSize={4}
+          gap={15}
+          baseColor="#eaeaea"
+          activeColor="#80f9c8"
+          proximity={120}
+          shockRadius={250}
+          shockStrength={5}
+          resistance={750}
+          returnDuration={1.5}
+        />
+      </div>
       <Navbar />
-      
-      <div className="mx-[20px]">
-          <Hero />
-          <MarqueeBar />
+
+      <div className="mx-[40px] mt-[20px]">
+        <Hero />
+        <MarqueeBar />
       </div>
       <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
-          
-          
+
+
           <TalkToAgent />
           <Mission />
           <ProductGrid />
