@@ -1744,7 +1744,7 @@ const Icon = ({ name, className = "" }) => (
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 const Hero = () => (
-  <section style={{ borderBottom: "1px solid #000", overflow: "hidden", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", position: "relative" }}>
+  <section style={{ borderBottom: "1px solid #000", overflow: "hidden", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", position: "relative" }}>
     <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.8} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={6.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 1 }} />
     <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
@@ -1762,7 +1762,7 @@ const Hero = () => (
 const MarqueeBar = () => {
   const LOGOS = ["SALESFORCE", "SLACK", "STRIPE", "GITHUB", "TWILIO", "HUBSPOT"];
   return (
-    <section style={{ borderTop: "1px solid #000", borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", height: 50, display: "flex", alignItems: "center" }}>
+    <section style={{ borderTop: "1px solid #000", borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", height: 50, display: "flex", alignItems: "center", maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
       <div className="marquee-track">
         {[...LOGOS, ...LOGOS].map((name, i) => (
           <div key={i} className="marquee-item" style={{ textTransform: "uppercase" }}>{name}</div>
@@ -2843,10 +2843,10 @@ export default function App() {
       </div>
       <Navbar />
 
-      <div className="mx-[40px] mt-[20px]">
+      <div className="mx-[40px] mt-[10px]">
         <Hero />
-        <MarqueeBar />
       </div>
+      <MarqueeBar />
       <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
 
