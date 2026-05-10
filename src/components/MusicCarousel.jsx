@@ -1159,7 +1159,7 @@ export const PlayerCard = forwardRef(
         overflow: "hidden",
         boxShadow: isCenter
           ? `0 8px 40px rgba(0,0,0,0.10), 0 0 60px ${accentColor}25`
-          : "0 8px 24px rgba(0,0,0,0.06)",
+          : "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)",
         transition: "border 0.5s ease, box-shadow 0.5s ease",
         fontFamily: "'DM Sans', sans-serif",
       }}>
@@ -1271,7 +1271,7 @@ export const PlayerCard = forwardRef(
         <div style={{ padding: isCenter ? "18px 20px 16px" : "14px 16px 14px" }}>
           <div style={{ marginBottom: 12 }}>
             <div style={{
-              fontFamily: "'Syne', sans-serif", fontWeight: 800,
+              fontFamily: "'Syne', sans-serif", fontWeight: 400,
               fontSize: isCenter ? 20 : 16, color: "#141b2b",
               letterSpacing: "-0.02em", whiteSpace: "nowrap",
               overflow: "hidden", textOverflow: "ellipsis",
@@ -1460,7 +1460,7 @@ export default function MusicCarousel() {
                 transform: `translateX(${cfg.x}px) translateZ(${cfg.z}px) scale(${cfg.scale}) rotateY(${cfg.rot}deg)`,
                 opacity: cfg.opacity,
                 zIndex: 100 - Math.abs(adjRel) * 20,
-                transition: "all 0.65s cubic-bezier(0.34,1.2,0.64,1)",
+                transition: "transform 0.65s cubic-bezier(0.34,1.2,0.64,1), scale 0.65s cubic-bezier(0.34,1.2,0.64,1), opacity 0.65s ease-out 0.15s",
                 cursor: isCenter ? "default" : "pointer",
                 transformOrigin: "center bottom",
                 userSelect: "none",

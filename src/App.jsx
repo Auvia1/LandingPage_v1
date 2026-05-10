@@ -587,9 +587,909 @@
 // ------------------------------------------------------------------------------
 
 
+// import { useState, useEffect, useRef } from "react";
+// import MusicCarousel from "./components/MusicCarousel";
+// import Navbar from "./components/Navbar";
+
+// // ─── Grainient (inlined from react-bits) ────────────────────────────────────
+// const hexToRgb = hex => {
+//   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+//   if (!result) return [1, 1, 1];
+//   return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255];
+// };
+
+// const vertex = `#version 300 es
+// in vec2 position;
+// void main() {
+//   gl_Position = vec4(position, 0.0, 1.0);
+// }
+// `;
+
+// const fragment = `#version 300 es
+// precision highp float;
+// uniform vec2 iResolution;
+// uniform float iTime;
+// uniform float uTimeSpeed;
+// uniform float uColorBalance;
+// uniform float uWarpStrength;
+// uniform float uWarpFrequency;
+// uniform float uWarpSpeed;
+// uniform float uWarpAmplitude;
+// uniform float uBlendAngle;
+// uniform float uBlendSoftness;
+// uniform float uRotationAmount;
+// uniform float uNoiseScale;
+// uniform float uGrainAmount;
+// uniform float uGrainScale;
+// uniform float uGrainAnimated;
+// uniform float uContrast;
+// uniform float uGamma;
+// uniform float uSaturation;
+// uniform vec2 uCenterOffset;
+// uniform float uZoom;
+// uniform vec3 uColor1;
+// uniform vec3 uColor2;
+// uniform vec3 uColor3;
+// out vec4 fragColor;
+// #define S(a,b,t) smoothstep(a,b,t)
+// mat2 Rot(float a){float s=sin(a),c=cos(a);return mat2(c,-s,s,c);}
+// vec2 hash(vec2 p){p=vec2(dot(p,vec2(2127.1,81.17)),dot(p,vec2(1269.5,283.37)));return fract(sin(p)*43758.5453);}
+// float noise(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.0-2.0*f);float n=mix(mix(dot(-1.0+2.0*hash(i+vec2(0.0,0.0)),f-vec2(0.0,0.0)),dot(-1.0+2.0*hash(i+vec2(1.0,0.0)),f-vec2(1.0,0.0)),u.x),mix(dot(-1.0+2.0*hash(i+vec2(0.0,1.0)),f-vec2(0.0,1.0)),dot(-1.0+2.0*hash(i+vec2(1.0,1.0)),f-vec2(1.0,1.0)),u.x),u.y);return 0.5+0.5*n;}
+// void mainImage(out vec4 o, vec2 C){
+//   float t=iTime*uTimeSpeed;
+//   vec2 uv=C/iResolution.xy;
+//   float ratio=iResolution.x/iResolution.y;
+//   vec2 tuv=uv-0.5+uCenterOffset;
+//   tuv/=max(uZoom,0.001);
+//   float degree=noise(vec2(t*0.1,tuv.x*tuv.y)*uNoiseScale);
+//   tuv.y*=1.0/ratio;
+//   tuv*=Rot(radians((degree-0.5)*uRotationAmount+180.0));
+//   tuv.y*=ratio;
+//   float frequency=uWarpFrequency;
+//   float ws=max(uWarpStrength,0.001);
+//   float amplitude=uWarpAmplitude/ws;
+//   float warpTime=t*uWarpSpeed;
+//   tuv.x+=sin(tuv.y*frequency+warpTime)/amplitude;
+//   tuv.y+=sin(tuv.x*(frequency*1.5)+warpTime)/(amplitude*0.5);
+//   vec3 colLav=uColor1;
+//   vec3 colOrg=uColor2;
+//   vec3 colDark=uColor3;
+//   float b=uColorBalance;
+//   float s=max(uBlendSoftness,0.0);
+//   mat2 blendRot=Rot(radians(uBlendAngle));
+//   float blendX=(tuv*blendRot).x;
+//   float edge0=-0.3-b-s;
+//   float edge1=0.2-b+s;
+//   float v0=0.5-b+s;
+//   float v1=-0.3-b-s;
+//   vec3 layer1=mix(colDark,colOrg,S(edge0,edge1,blendX));
+//   vec3 layer2=mix(colOrg,colLav,S(edge0,edge1,blendX));
+//   vec3 col=mix(layer1,layer2,S(v0,v1,tuv.y));
+//   vec2 grainUv=uv*max(uGrainScale,0.001);
+//   if(uGrainAnimated>0.5){grainUv+=vec2(iTime*0.05);}
+//   float grain=fract(sin(dot(grainUv,vec2(12.9898,78.233)))*43758.5453);
+//   col+=(grain-0.5)*uGrainAmount;
+//   col=(col-0.5)*uContrast+0.5;
+//   float luma=dot(col,vec3(0.2126,0.7152,0.0722));
+//   col=mix(vec3(luma),col,uSaturation);
+//   col=pow(max(col,0.0),vec3(1.0/max(uGamma,0.001)));
+//   col=clamp(col,0.0,1.0);
+//   o=vec4(col,1.0);
+// }
+// void main(){
+//   vec4 o=vec4(0.0);
+//   mainImage(o,gl_FragCoord.xy);
+//   fragColor=o;
+// }
+// `;
+
+// const Grainient = ({
+//   timeSpeed = 0.25,
+//   colorBalance = 0.0,
+//   warpStrength = 1.0,
+//   warpFrequency = 5.0,
+//   warpSpeed = 2.0,
+//   warpAmplitude = 50.0,
+//   blendAngle = 0.0,
+//   blendSoftness = 0.05,
+//   rotationAmount = 500.0,
+//   noiseScale = 2.0,
+//   grainAmount = 0.1,
+//   grainScale = 2.0,
+//   grainAnimated = false,
+//   contrast = 1.5,
+//   gamma = 1.0,
+//   saturation = 1.0,
+//   centerX = 0.0,
+//   centerY = 0.0,
+//   zoom = 0.9,
+//   color1 = '#FF9FFC',
+//   color2 = '#5227FF',
+//   color3 = '#B497CF',
+//   style = {},
+// }) => {
+//   const containerRef = useRef(null);
+
+//   useEffect(() => {
+//     if (!containerRef.current) return;
+
+//     let renderer, raf, ro;
+
+//     const init = async () => {
+//       try {
+//         const { Renderer, Program, Mesh, Triangle } = await import('ogl');
+
+//         renderer = new Renderer({
+//           webgl: 2,
+//           alpha: true,
+//           antialias: false,
+//           dpr: Math.min(window.devicePixelRatio || 1, 2),
+//         });
+
+//         const gl = renderer.gl;
+//         const canvas = gl.canvas;
+//         canvas.style.width = '100%';
+//         canvas.style.height = '100%';
+//         canvas.style.display = 'block';
+//         canvas.style.position = 'absolute';
+//         canvas.style.inset = '0';
+
+//         const container = containerRef.current;
+//         container.appendChild(canvas);
+
+//         const geometry = new Triangle(gl);
+//         const program = new Program(gl, {
+//           vertex,
+//           fragment,
+//           uniforms: {
+//             iTime: { value: 0 },
+//             iResolution: { value: new Float32Array([1, 1]) },
+//             uTimeSpeed: { value: timeSpeed },
+//             uColorBalance: { value: colorBalance },
+//             uWarpStrength: { value: warpStrength },
+//             uWarpFrequency: { value: warpFrequency },
+//             uWarpSpeed: { value: warpSpeed },
+//             uWarpAmplitude: { value: warpAmplitude },
+//             uBlendAngle: { value: blendAngle },
+//             uBlendSoftness: { value: blendSoftness },
+//             uRotationAmount: { value: rotationAmount },
+//             uNoiseScale: { value: noiseScale },
+//             uGrainAmount: { value: grainAmount },
+//             uGrainScale: { value: grainScale },
+//             uGrainAnimated: { value: grainAnimated ? 1.0 : 0.0 },
+//             uContrast: { value: contrast },
+//             uGamma: { value: gamma },
+//             uSaturation: { value: saturation },
+//             uCenterOffset: { value: new Float32Array([centerX, centerY]) },
+//             uZoom: { value: zoom },
+//             uColor1: { value: new Float32Array(hexToRgb(color1)) },
+//             uColor2: { value: new Float32Array(hexToRgb(color2)) },
+//             uColor3: { value: new Float32Array(hexToRgb(color3)) },
+//           },
+//         });
+
+//         const mesh = new Mesh(gl, { geometry, program });
+
+//         const setSize = () => {
+//           const rect = container.getBoundingClientRect();
+//           const width = Math.max(1, Math.floor(rect.width));
+//           const height = Math.max(1, Math.floor(rect.height));
+//           renderer.setSize(width, height);
+//           const res = program.uniforms.iResolution.value;
+//           res[0] = gl.drawingBufferWidth;
+//           res[1] = gl.drawingBufferHeight;
+//           renderer.render({ scene: mesh });
+//         };
+
+//         ro = new ResizeObserver(setSize);
+//         ro.observe(container);
+//         setSize();
+
+//         const t0 = performance.now();
+//         const loop = t => {
+//           program.uniforms.iTime.value = (t - t0) * 0.001;
+//           renderer.render({ scene: mesh });
+//           raf = requestAnimationFrame(loop);
+//         };
+//         raf = requestAnimationFrame(loop);
+//       } catch (err) {
+//         console.error('Grainient init error:', err);
+//       }
+//     };
+
+//     init();
+
+//     return () => {
+//       if (raf) cancelAnimationFrame(raf);
+//       if (ro) ro.disconnect();
+//       try {
+//         const canvas = containerRef.current?.querySelector('canvas');
+//         if (canvas) containerRef.current.removeChild(canvas);
+//       } catch {}
+//     };
+//   }, [
+//     timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed,
+//     warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
+//     grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
+//     centerX, centerY, zoom, color1, color2, color3,
+//   ]);
+
+//   return (
+//     <div
+//       ref={containerRef}
+//       style={{
+//         position: 'absolute',
+//         inset: 0,
+//         width: '100%',
+//         height: '100%',
+//         overflow: 'hidden',
+//         ...style,
+//       }}
+//     />
+//   );
+// };
+
+// // ─── App config / styles ────────────────────────────────────────────────────
+// const injectTailwindConfig = () => {
+//   if (window.tailwind) {
+//     window.tailwind.config = {
+//       darkMode: "class",
+//       theme: {
+//         extend: {
+//           colors: {
+//             "secondary": "#006c4e",
+//             "secondary-container": "#80f9c8",
+//             "on-secondary-container": "#007353",
+//             "nexov-mint": "#80f9c8",
+//             "surface-container-low": "#f1f3ff",
+//             "surface-container-highest": "#dce2f7",
+//             "on-surface": "#141b2b",
+//           },
+//         },
+//       },
+//     };
+//   }
+// };
+
+// const styles = `
+//   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500&display=swap');
+//   @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+//   * { box-sizing: border-box; margin: 0; padding: 0; }
+//   body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #f4f4f4; color: #141b2b; }
+
+//   .material-symbols-outlined {
+//     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+//     font-size: 20px;
+//     font-family: 'Material Symbols Outlined';
+//   }
+
+//   @keyframes marquee {
+//     0% { transform: translateX(0); }
+//     100% { transform: translateX(-50%); }
+//   }
+//   .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+
+//   .marquee-item {
+//     display: flex; align-items: center; justify-content: center;
+//     padding: 0 64px; height: 80px;
+//     font-family: 'Inter', sans-serif; font-weight: 400; font-size: 24px;
+//     letter-spacing: -0.02em; position: relative;
+//   }
+//   .marquee-item::after {
+//     content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+//     width: 1px; background: linear-gradient(to bottom, transparent, #000 50%, transparent);
+//   }
+
+//   nav a, nav button { cursor: pointer; }
+
+//   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+//   .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+// `;
+
+// const Icon = ({ name, className = "" }) => (
+//   <span className={`material-symbols-outlined ${className}`} style={{ fontFamily: "Material Symbols Outlined" }}>
+//     {name}
+//   </span>
+// );
+
+// // ─── Hero with Grainient background ─────────────────────────────────────────
+// const Hero = () => (
+//   <section style={{
+//     borderBottom: "1px solid #000",
+//     overflow: "hidden",
+//     borderTopLeftRadius: "12px",
+//     borderTopRightRadius: "12px",
+//     boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+//     position: "relative",
+//   }}>
+//     {/* Grainient canvas sits behind all content */}
+//     <Grainient
+//       color1="#80f9c8"
+//       color2="#006c4e"
+//       color3="#90EE90"
+//       timeSpeed={0.4}
+//       colorBalance={0.1}
+//       warpStrength={1.2}
+//       warpFrequency={4}
+//       warpSpeed={3.0}
+//       warpAmplitude={60}
+//       blendAngle={20}
+//       blendSoftness={0.08}
+//       rotationAmount={400}
+//       noiseScale={2.5}
+//       grainAmount={0.08}
+//       grainScale={2}
+//       grainAnimated={false}
+//       contrast={1.4}
+//       gamma={1}
+//       saturation={0.9}
+//       centerX={0}
+//       centerY={0}
+//       zoom={0.85}
+//     />
+
+//     {/* Subtle dark overlay so text stays legible */}
+//     <div style={{
+//       position: "absolute",
+//       inset: 0,
+//       background: "rgba(0,0,0,0.35)",
+//       zIndex: 1,
+//     }} />
+
+//     {/* Content */}
+//     <div style={{
+//       position: "relative",
+//       zIndex: 2,
+//       display: "flex",
+//       flexDirection: "column",
+//       alignItems: "center",
+//       justifyContent: "center",
+//       textAlign: "center",
+//       padding: "96px 48px",
+//     }}>
+//       <div style={{
+//         display: "inline-block",
+//         border: "1px solid rgba(128,249,200,0.6)",
+//         background: "rgba(128,249,200,0.1)",
+//         padding: "4px 12px",
+//         fontFamily: "'Space Grotesk',monospace",
+//         fontSize: "10px",
+//         letterSpacing: "0.1em",
+//         textTransform: "uppercase",
+//         marginBottom: "32px",
+//         color: "#80f9c8",
+//       }}>
+//         V4.2.0 STABLE RELEASE
+//       </div>
+
+//       <h1 style={{
+//         fontFamily: "'Inter',sans-serif",
+//         fontSize: "clamp(48px,8vw,80px)",
+//         fontWeight: 900,
+//         textTransform: "uppercase",
+//         lineHeight: 0.95,
+//         letterSpacing: "-0.04em",
+//         marginBottom: "32px",
+//         color: "#ffffff",
+//       }}>
+//         The infrastructure<br />for AI Voice<br />Agents
+//       </h1>
+
+//       <p style={{
+//         fontFamily: "'Inter',sans-serif",
+//         fontSize: "18px",
+//         lineHeight: 1.6,
+//         color: "rgba(255,255,255,0.75)",
+//         maxWidth: "480px",
+//         marginBottom: "48px",
+//       }}>
+//         Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.
+//       </p>
+
+//       <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)" }}>
+//         <button style={{
+//           background: "#80f9c8",
+//           color: "#000",
+//           padding: "20px 40px",
+//           fontSize: "12px",
+//           fontWeight: 700,
+//           letterSpacing: "0.1em",
+//           textTransform: "uppercase",
+//           border: "none",
+//           borderRight: "1px solid rgba(0,0,0,0.2)",
+//           cursor: "pointer",
+//         }}>
+//           Start Building
+//         </button>
+//         <button style={{
+//           background: "transparent",
+//           color: "#fff",
+//           padding: "20px 40px",
+//           fontSize: "12px",
+//           fontWeight: 700,
+//           letterSpacing: "0.1em",
+//           textTransform: "uppercase",
+//           border: "none",
+//           cursor: "pointer",
+//         }}>
+//           View Docs
+//         </button>
+//       </div>
+//     </div>
+//   </section>
+// );
+
+// const MarqueeBar = () => {
+//   const LOGOS = ["SALESFORCE", "SLACK", "STRIPE", "GITHUB", "TWILIO", "HUBSPOT"];
+//   return (
+//     <section style={{ borderTop: "1px solid #000", borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", height: 80, display: "flex", alignItems: "center" }}>
+//       <div className="marquee-track">
+//         {[...LOGOS, ...LOGOS].map((name, i) => (
+//           <div key={i} className="marquee-item" style={{ textTransform: "uppercase" }}>{name}</div>
+//         ))}
+//       </div>
+//     </section>
+//   );
+// };
+
+// export const TalkToAgent = () => {
+//   return <MusicCarousel />;
+// };
+
+// const Mission = () => (
+//   <section style={{ padding: "96px 48px", borderBottom: "1px solid #000" }}>
+//     <div style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px" }}>
+//       <div style={{ gridColumn: "span 4", borderLeft: "1px solid #000", paddingLeft: "24px" }}>
+//         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)" }}>The Mission</p>
+//       </div>
+//       <div style={{ gridColumn: "span 8" }}>
+//         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+//           We are an AI agents company building a suite of voice-based AI applications designed to automate real-world business operations.
+//         </p>
+//       </div>
+//     </div>
+//   </section>
+// );
+
+// const products = [
+//   { icon: "call", title: "Call Handling Agent", desc: "Autonomous inbound and outbound call management with human-level natural language processing.", no: "01" },
+//   { icon: "calendar_today", title: "Appointment Booking Agent", desc: "Syncs directly with your CRM and calendar to schedule, reschedule, and confirm consultations.", no: "02" },
+//   { icon: "support_agent", title: "Customer Support Agent", desc: "Instant resolution for Tier 1 and Tier 2 queries across voice and omnichannel interfaces.", no: "03" },
+//   { icon: "leaderboard", title: "Lead Qualification Agent", desc: "Screens potential customers through intelligent dialogue to ensure high-quality pipeline growth.", no: "04" },
+//   { icon: "medical_services", title: "Doctor Transcription Tool", desc: "Real-time medical transcription with specialized terminology support and HIPAA compliance.", no: "05" },
+// ];
+
+// const ProductCard = ({ icon, title, desc, no }) => {
+//   const [hovered, setHovered] = useState(false);
+//   return (
+//     <div
+//       onMouseEnter={() => setHovered(true)}
+//       onMouseLeave={() => setHovered(false)}
+//       style={{ borderRight: "1px solid #000", borderTop: parseInt(no) > 3 ? "1px solid #000" : "none", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "background .2s", display: "flex", flexDirection: "column", minHeight: "340px", cursor: "default" }}
+//     >
+//       <div style={{ marginBottom: "48px" }}><Icon name={icon} /></div>
+//       <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "32px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.2, letterSpacing: "-0.01em", marginBottom: "16px" }}>{title}</h3>
+//       <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.5, marginBottom: "32px" }}>{desc}</p>
+//       <div style={{ marginTop: "auto", paddingTop: "32px", borderTop: "1px solid #000" }}>
+//         <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Agent No. {no}</span>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const ProductGrid = () => (
+//   <section style={{ borderBottom: "1px solid #000" }}>
+//     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
+//       {products.map((p) => <ProductCard key={p.no} {...p} />)}
+//       <div style={{ borderTop: "1px solid #000", background: "#000", padding: "48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden", minHeight: "340px" }}>
+//         <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
+//           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+//             <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse">
+//               <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" />
+//             </pattern></defs>
+//             <rect fill="url(#pg)" width="100%" height="100%" />
+//           </svg>
+//         </div>
+//         <div style={{ position: "relative", zIndex: 1 }}>
+//           <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8", display: "block", marginBottom: "16px" }}>Infrastructure Node</span>
+//           {[null, null, null].map((_, i) => (
+//             <div key={i} style={{ height: 4, width: ["100%", "66%", "75%"][i], background: `rgba(128,249,200,${[.2,.4,.1][i]})`, marginBottom: 8 }} />
+//           ))}
+//         </div>
+//         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 8, fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,.6)" }}>
+//           <span>// GLOBAL_MESH_ACTIVE</span>
+//           <span>// LATENCY_OPTIMIZED</span>
+//           <span>// 100% UPTIME_PROTOCOL</span>
+//         </div>
+//       </div>
+//     </div>
+//   </section>
+// );
+
+// const timelineSteps = [
+//   { num: "01", label: "UNDERSTANDS", title: "Real-time Audio Processing", desc: "Captures the nuances of human speech and emotional intent with sub-100ms processing cycles.", icon: "settings_voice", align: "right" },
+//   { num: "02", label: "PROCESSES", title: "Proprietary LLM Analysis", desc: "Multi-layer analysis modules determine context, intent, and the optimal response strategy in parallel.", icon: "neurology", align: "left" },
+//   { num: "03", label: "EXECUTES", title: "Instant Response Action", desc: "Perform complex operations—booking, routing, or transcribing—within the live call stream seamlessly.", icon: "bolt", align: "right" },
+//   { num: "04", label: "INTEGRATES", title: "Deep System Sync", desc: "Direct synchronization with CRMs, databases, and enterprise toolchains via high-security API endpoints.", icon: "api", align: "left" },
+// ];
+
+// const StepCard = ({ step, align }) => (
+//   <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "40px", backdropFilter: "blur(8px)", textAlign: align, maxWidth: 460, width: "100%" }}>
+//     <div style={{ marginBottom: "24px", display: "flex", justifyContent: align === "right" ? "flex-end" : "flex-start" }}>
+//       <span className="material-symbols-outlined" style={{ fontSize: 44, color: "#80f9c8", fontFamily: "Material Symbols Outlined" }}>{step.icon}</span>
+//     </div>
+//     <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "11px", letterSpacing: "0.15em", color: "#80f9c8", marginBottom: "10px", textTransform: "uppercase" }}>
+//       {step.num}. {step.label}
+//     </div>
+//     <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(20px,2vw,26px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: "16px" }}>
+//       {step.title}
+//     </h4>
+//     <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "16px", lineHeight: 1.7 }}>{step.desc}</p>
+//   </div>
+// );
+
+// const LogicFlow = () => {
+//   const trackRef = useRef(null);
+//   const stepsRef = useRef([]);
+//   const progressRef = useRef(null);
+//   const nodeRefs = useRef([]);
+
+//   useEffect(() => {
+//     const handler = () => {
+//       const track = trackRef.current;
+//       if (!track || !progressRef.current) return;
+//       const trackRect = track.getBoundingClientRect();
+//       const vh = window.innerHeight;
+//       const traveled = vh / 2 - trackRect.top;
+//       const pct = Math.max(0, Math.min(1, traveled / trackRect.height));
+//       progressRef.current.style.transform = `scaleY(${pct})`;
+//       stepsRef.current.forEach((step, i) => {
+//         if (!step) return;
+//         const sr = step.getBoundingClientRect();
+//         const active = sr.top < vh * 0.62;
+//         step.style.opacity = active ? "1" : "0.1";
+//         step.style.transform = active ? "translateY(0)" : "translateY(40px)";
+//         const node = nodeRefs.current[i];
+//         if (node) {
+//           node.style.background = active ? "#80f9c8" : "#000";
+//           node.style.boxShadow = active ? "0 0 12px rgba(128,249,200,.9)" : "none";
+//         }
+//       });
+//     };
+//     window.addEventListener("scroll", handler, { passive: true });
+//     handler();
+//     return () => window.removeEventListener("scroll", handler);
+//   }, []);
+
+//   return (
+//     <section style={{ background: "#000", color: "#fff", display: "flex", flexDirection: "column", backgroundImage: "radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)", backgroundSize: "24px 24px" }}>
+//       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid rgba(255,255,255,.1)", paddingTop: "128px", paddingBottom: "64px" }}>
+//         <div style={{ textAlign: "center" }}>
+//           <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8" }}>Architecture</span>
+//           <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginTop: "16px" }}>The Logic Flow</h2>
+//         </div>
+//       </div>
+//       <div ref={trackRef} style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "0 48px 128px", width: "100%" }}>
+//         <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, transform: "translateX(-50%)", background: "rgba(255,255,255,0.08)", zIndex: 0 }} />
+//         <div style={{ position: "absolute", left: "50%", top: 0, width: 2, height: "100%", transform: "translateX(-50%)", transformOrigin: "top", zIndex: 1, pointerEvents: "none" }}>
+//           <div ref={progressRef} style={{ width: "100%", height: "100%", background: "linear-gradient(to bottom, #80f9c8, #00e5a0)", boxShadow: "0 0 18px rgba(128,249,200,0.7)", transformOrigin: "top", transform: "scaleY(0)", transition: "transform 0.25s ease-out" }} />
+//         </div>
+//         {timelineSteps.map((step, i) => {
+//           const isRight = step.align === "right";
+//           return (
+//             <div
+//               key={step.num}
+//               ref={(el) => (stepsRef.current[i] = el)}
+//               style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 48px 1fr", alignItems: "center", minHeight: "80vh", paddingTop: "64px", paddingBottom: "64px", opacity: 0.1, transform: "translateY(40px)", transition: "opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1)" }}
+//             >
+//               <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "40px" }}>
+//                 {!isRight && <StepCard step={step} align="right" />}
+//               </div>
+//               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", zIndex: 10 }}>
+//                 <div ref={(el) => (nodeRefs.current[i] = el)} style={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid #80f9c8", background: "#000", transition: "background 0.4s, box-shadow 0.4s", flexShrink: 0 }} />
+//               </div>
+//               <div style={{ paddingLeft: "40px" }}>
+//                 {isRight && <StepCard step={step} align="left" />}
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </section>
+//   );
+// };
+
+// const UseCases = () => (
+//   <section style={{ borderBottom: "1px solid #000" }}>
+//     <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px", padding: "48px" }}>
+//       <div style={{ gridColumn: "span 8", background: "#fff", border: "1px solid #000", padding: "32px", display: "flex", flexDirection: "column", justifyContent: "center", minHeight: 300 }}>
+//         <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em" }}>Applied Intelligence</h2>
+//         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", color: "rgba(20,27,43,.6)", marginTop: "16px", maxWidth: 480, lineHeight: 1.6 }}>
+//           Deploying specialized voice agents across critical industries to optimize workflow and customer experience.
+//         </p>
+//       </div>
+//       {[
+//         { n: "01", t: "Healthcare", d: "Automated appointment handling and transcription for clinics and hospitals." },
+//         { n: "02", t: "Real Estate", d: "Lead qualification calls that filter serious buyers from cold traffic." },
+//       ].map((uc) => (
+//         <div key={uc.n} style={{ gridColumn: "span 4", background: "#fff", border: "1px solid #000", padding: "32px" }}>
+//           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "12px", color: "rgba(20,27,43,.3)", marginBottom: "16px" }}>{uc.n}</div>
+//           <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>{uc.t}</h3>
+//           <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(20,27,43,.6)", lineHeight: 1.5 }}>{uc.d}</p>
+//         </div>
+//       ))}
+//       <div style={{ gridColumn: "span 4", background: "#fff", border: "1px solid #000", padding: "32px" }}>
+//         <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "12px", color: "rgba(20,27,43,.3)", marginBottom: "16px" }}>03</div>
+//         <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>E-commerce</h3>
+//         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(20,27,43,.6)", lineHeight: 1.5 }}>Order support and tracking updates handled via conversational voice agents.</p>
+//       </div>
+//       <div style={{ gridColumn: "span 4", background: "#000", border: "1px solid #000", padding: "32px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", minHeight: 250 }}>
+//         <div style={{ position: "absolute", inset: 0, opacity: 0.1 }}>
+//           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+//             <defs><pattern id="gb" width="20" height="20" patternUnits="userSpaceOnUse">
+//               <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" />
+//             </pattern></defs>
+//             <rect fill="url(#gb)" width="100%" height="100%" />
+//           </svg>
+//         </div>
+//         <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
+//           <div style={{ width: 48, height: 48, border: "1px solid #80f9c8", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+//             <div className="animate-pulse" style={{ width: 24, height: 24, background: "#80f9c8" }} />
+//           </div>
+//           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "9px", color: "#80f9c8", textTransform: "uppercase", letterSpacing: "0.2em" }}>Core_v4_Live</div>
+//         </div>
+//       </div>
+//       <div style={{ gridColumn: "span 8", background: "#80f9c8", border: "1px solid #000", padding: "32px" }}>
+//         <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", color: "#007353", marginBottom: "8px" }}>Case Study: SaaS</h4>
+//         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(0,115,83,.8)", lineHeight: 1.5, maxWidth: 600 }}>
+//           90% reduction in customer onboarding friction through proactive agent-led setup calls, resulting in a 15% increase in month-one retention.
+//         </p>
+//       </div>
+//     </div>
+//   </section>
+// );
+
+// const comparisonRows = [
+//   { feature: "Response Latency", legacy: ">2,000ms", nexov: "<200ms", detail: "10× faster end-to-end", icon: "speed" },
+//   { feature: "Reasoning Model", legacy: "Static decision tree", nexov: "Real-time LLM", detail: "Adapts to any conversation", icon: "neurology" },
+//   { feature: "Interface", legacy: "Text & chat only", nexov: "Voice-first + omnichannel", detail: "Phone, web, API, SMS", icon: "settings_voice" },
+//   { feature: "CRM Integration", legacy: "Manual export / CSV", nexov: "Live bidirectional sync", detail: "Salesforce, HubSpot & more", icon: "sync_alt" },
+//   { feature: "Personality", legacy: "Fixed, scripted tone", nexov: "Modular AI personas", detail: "Tune per brand & use-case", icon: "face" },
+//   { feature: "Scale", legacy: "Limited concurrency", nexov: "10,000+ simultaneous calls", detail: "Auto-scales with demand", icon: "lan" },
+// ];
+
+// const ComparisonRow = ({ row, index }) => {
+//   const [hovered, setHovered] = useState(false);
+//   return (
+//     <div
+//       onMouseEnter={() => setHovered(true)}
+//       onMouseLeave={() => setHovered(false)}
+//       style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", background: hovered ? "#000" : index % 2 === 0 ? "#fff" : "#fafafa", transition: "background 0.2s", cursor: "default" }}
+//     >
+//       <div style={{ padding: "28px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "14px" }}>
+//         <div style={{ width: 36, height: 36, background: hovered ? "rgba(128,249,200,0.12)" : "#f1f3ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
+//           <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 18, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.icon}</span>
+//         </div>
+//         <div>
+//           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: hovered ? "#fff" : "#141b2b", transition: "color 0.2s" }}>{row.feature}</div>
+//           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: hovered ? "rgba(128,249,200,0.7)" : "rgba(20,27,43,0.4)", marginTop: "2px", transition: "color 0.2s" }}>{row.detail}</div>
+//         </div>
+//       </div>
+//       <div style={{ padding: "28px 32px", borderRight: "1px solid " + (hovered ? "rgba(255,255,255,0.1)" : "#000"), display: "flex", alignItems: "center", gap: "12px", transition: "border-color 0.2s" }}>
+//         <div style={{ width: 22, height: 22, border: "1.5px solid rgba(20,27,43,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+//           <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 14, color: "rgba(20,27,43,0.3)" }}>close</span>
+//         </div>
+//         <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", color: hovered ? "rgba(255,255,255,0.3)" : "rgba(20,27,43,0.4)", textDecoration: "line-through", textDecorationColor: hovered ? "rgba(255,255,255,0.15)" : "rgba(20,27,43,0.2)", transition: "color 0.2s" }}>{row.legacy}</span>
+//       </div>
+//       <div style={{ padding: "28px 32px", display: "flex", alignItems: "center", gap: "12px" }}>
+//         <div style={{ width: 22, height: 22, background: hovered ? "#80f9c8" : "#141b2b", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
+//           <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 14, color: hovered ? "#000" : "#80f9c8", transition: "color 0.2s" }}>check</span>
+//         </div>
+//         <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", fontWeight: 600, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.nexov}</span>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const WhyDifferent = () => (
+//   <section style={{ border: "1px solid #000", borderTop: "none", background: "#fff", overflow: "hidden" }}>
+//     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #000" }}>
+//       <div style={{ padding: "64px 48px", borderRight: "1px solid #000" }}>
+//         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)", marginBottom: "20px" }}>Competitive Analysis</div>
+//         <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(52px,6vw,96px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", lineHeight: 0.92, marginBottom: "28px" }}>Why Our<br />Agents Are<br />Different</h2>
+//         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.7, color: "rgba(20,27,43,0.55)", maxWidth: "380px" }}>
+//           Legacy chatbots were built for text. Nexov was built for the full complexity of live human voice — a fundamentally harder problem, solved.
+//         </p>
+//       </div>
+//       <div style={{ background: "#000", padding: "64px 48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
+//         <div style={{ position: "absolute", inset: 0, opacity: 0.06 }}>
+//           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+//             <defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+//               <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#80f9c8" strokeWidth="0.8"/>
+//             </pattern></defs>
+//             <rect fill="url(#wd-grid)" width="100%" height="100%"/>
+//           </svg>
+//         </div>
+//         <div style={{ position: "relative", zIndex: 1 }}>
+//           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,0.6)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "16px" }}>Performance delta</div>
+//           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(72px,9vw,120px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, color: "#80f9c8" }}>10×</div>
+//           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "-0.01em", color: "#fff", marginTop: "8px" }}>Faster than legacy</div>
+//           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", color: "rgba(255,255,255,0.4)", marginTop: "8px" }}>Sub-200ms vs. industry avg. 2,000ms+</div>
+//         </div>
+//         <div style={{ position: "relative", zIndex: 1, borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "32px", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0" }}>
+//           {[{ v: "99.9%", l: "Uptime SLA" }, { v: "SOC2", l: "Compliant" }, { v: "<48h", l: "Deployment" }].map((s, i) => (
+//             <div key={s.l} style={{ borderRight: i < 2 ? "1px solid rgba(255,255,255,0.1)" : "none", paddingRight: i < 2 ? "16px" : 0, paddingLeft: i > 0 ? "16px" : 0 }}>
+//               <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(18px,2vw,24px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#fff" }}>{s.v}</div>
+//               <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "9px", color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px" }}>{s.l}</div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #000", padding: "64px 48px", background: "#fff" }}>
+//       <div style={{ textAlign: "center", maxWidth: 800 }}>
+//         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Feature Matrix</div>
+//         <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(32px,4vw,48px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.04em" }}>Head-to-Head Comparison</h3>
+//       </div>
+//     </div>
+//     <div>
+//       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", borderTop: "1px solid #000", background: "#f9f9ff" }}>
+//         <div style={{ padding: "16px 32px", borderRight: "1px solid #000", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>Capability</div>
+//         <div style={{ padding: "16px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>
+//           <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13 }}>history</span>
+//           Legacy Chatbots
+//         </div>
+//         <div style={{ padding: "16px 32px", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#006c4e", fontWeight: 700 }}>
+//           <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13, color: "#006c4e" }}>bolt</span>
+//           Nexov Voice Agents
+//         </div>
+//       </div>
+//       {comparisonRows.map((row, i) => <ComparisonRow key={row.feature} row={row} index={i} />)}
+//       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 32px", background: "#141b2b", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.3)" }}>
+//         {["Architecture: Neural-Flash", "//", "Security: SOC2 Type II", "//", "Regions: 14 Global PoPs", "//", "Latency: <200ms p99"].map((t, i) => (
+//           <span key={i} style={{ color: t === "//" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.3)" }}>{t}</span>
+//         ))}
+//       </div>
+//     </div>
+//   </section>
+// );
+
+// const Metrics = () => (
+//   <section style={{ borderBottom: "1px solid #000", marginTop: "100px" }}>
+//     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
+//       {[
+//         { val: "90%", label: "Reduction in Wait Times", dark: false },
+//         { val: "10K+", label: "Daily Concurrent Calls", dark: true },
+//         { val: "<200ms", label: "End-to-End Latency", dark: false },
+//       ].map(({ val, label, dark }) => (
+//         <div key={label} style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: dark ? "#000" : "#fff", borderRight: "1px solid #000" }}>
+//           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,6vw,72px)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "16px", color: dark ? "#80f9c8" : "#000" }}>{val}</div>
+//           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)" }}>{label}</div>
+//         </div>
+//       ))}
+//     </div>
+//   </section>
+// );
+
+// const Vision = () => (
+//   <section style={{ padding: "128px 48px", borderBottom: "1px solid #000", overflow: "hidden", position: "relative" }}>
+//     <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+//       <Icon name="format_quote" style={{ fontSize: 48, color: "#006c4e", display: "block", marginBottom: "48px" }} />
+//       <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>
+//         "We believe AI agents will replace repetitive human workflows. We're building the infrastructure for that future."
+//       </blockquote>
+//       <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase" }}>— Nexov Core Vision</div>
+//     </div>
+//     <div style={{ position: "absolute", bottom: "-80px", left: "-40px", fontFamily: "'Inter',sans-serif", fontSize: "20vw", fontWeight: 900, color: "rgba(0,0,0,.05)", textTransform: "uppercase", lineHeight: 1, pointerEvents: "none", userSelect: "none" }}>
+//       FUTURE
+//     </div>
+//   </section>
+// );
+
+// const testimonials = [
+//   { quote: "The latency is actually unbelievable. We've replaced our entire front-line phone support with Nexov agents and customer satisfaction hasn't dropped a single point.", name: "Sarah Jenkins", role: "CTO, Global Logistics Inc.", stars: 5, dark: false },
+//   { quote: "Integrating the API was straightforward. We had a working prototype in three days. The human-like inflection is the best in the industry.", name: "Marcus Thorne", role: "Product Lead, FinTech Pro", stars: 4, dark: true },
+//   { quote: "Nexov solved our scalability problem overnight. We can now handle seasonal spikes without hiring temporary staff. Revolutionary for retail.", name: "Elena Rodriguez", role: "Head of Ops, Retail Stream", stars: 5, dark: false },
+// ];
+
+// const WallOfLove = () => (
+//   <section style={{ borderBottom: "1px solid #000", background: "#fff" }}>
+//     <div style={{ borderBottom: "1px solid #000", padding: "48px", textAlign: "center" }}>
+//       <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,6vw,64px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em" }}>Wall of Love</h2>
+//     </div>
+//     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
+//       {testimonials.map((t) => (
+//         <div key={t.name} style={{ padding: "48px", background: t.dark ? "#000" : "#fff", borderRight: "1px solid #000", display: "flex", flexDirection: "column" }}>
+//           <div style={{ display: "flex", gap: "4px", marginBottom: "32px" }}>
+//             {Array.from({ length: 5 }).map((_, i) => (
+//               <div key={i} style={{ width: 16, height: 16, background: i < t.stars ? "#80f9c8" : t.dark ? "rgba(255,255,255,.2)" : "#dce2f7" }} />
+//             ))}
+//           </div>
+//           <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontStyle: "italic", lineHeight: 1.6, color: t.dark ? "#fff" : "#141b2b", marginBottom: "48px" }}>
+//             "{t.quote}"
+//           </blockquote>
+//           <div style={{ marginTop: "auto" }}>
+//             <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: t.dark ? "#fff" : "#141b2b" }}>{t.name}</div>
+//             <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: t.dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)", textTransform: "uppercase" }}>{t.role}</div>
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   </section>
+// );
+
+// const CTA = () => (
+//   <section style={{ borderBottom: "1px solid #000", background: "#6EE7B7" }}>
+//     <div style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+//       <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,7vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.9, letterSpacing: "-0.04em", marginBottom: "48px", maxWidth: "900px" }}>
+//         Start Automating Conversations Today
+//       </h2>
+//       <div style={{ display: "flex", border: "1px solid #000", boxShadow: "8px 8px 0 #000" }}>
+//         <button style={{ background: "#000", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid #000", cursor: "pointer" }}>
+//           Deploy Now
+//         </button>
+//         <button style={{ background: "transparent", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>
+//           Talk to an Engineer
+//         </button>
+//       </div>
+//     </div>
+//   </section>
+// );
+
+// const Footer = () => (
+//   <footer style={{ background: "#fff", borderTop: "1px solid #000" }}>
+//     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-end" }}>
+//       <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
+//         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase" }}>Nexov AI</div>
+//         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>
+//           © 2024 NEXOV AI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS
+//         </div>
+//       </div>
+//       <div style={{ display: "flex", gap: "32px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+//         {["Documentation", "Privacy Policy", "System Status", "Twitter/X"].map((link) => (
+//           <a key={link} href="#" style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)", textDecoration: "none" }}>
+//             {link}
+//           </a>
+//         ))}
+//       </div>
+//     </div>
+//   </footer>
+// );
+
+// export default function App() {
+//   useEffect(() => { injectTailwindConfig(); }, []);
+
+//   return (
+//     <>
+//       <style>{styles}</style>
+      
+//       <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
+//         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
+//           <Navbar />
+//           <Hero />
+//           <MarqueeBar />
+//           <TalkToAgent />
+//           <Mission />
+//           <ProductGrid />
+//           <LogicFlow />
+//           <UseCases />
+//           <WhyDifferent />
+//           <Metrics />
+//           <Vision />
+//           <WallOfLove />
+//           <CTA />
+//         </main>
+//       </div>
+//       <Footer />
+//     </>
+//   );
+// }
+
 import { useState, useEffect, useRef } from "react";
 import MusicCarousel from "./components/MusicCarousel";
 import Navbar from "./components/Navbar";
+import InteractiveMissionDiagram, { ProcessFlow } from "./components/InteractiveMissionDiagram";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -684,152 +1584,72 @@ void main(){
 `;
 
 const Grainient = ({
-  timeSpeed = 0.25,
-  colorBalance = 0.0,
-  warpStrength = 1.0,
-  warpFrequency = 5.0,
-  warpSpeed = 2.0,
-  warpAmplitude = 50.0,
-  blendAngle = 0.0,
-  blendSoftness = 0.05,
-  rotationAmount = 500.0,
-  noiseScale = 2.0,
-  grainAmount = 0.1,
-  grainScale = 2.0,
-  grainAnimated = false,
-  contrast = 1.5,
-  gamma = 1.0,
-  saturation = 1.0,
-  centerX = 0.0,
-  centerY = 0.0,
-  zoom = 0.9,
-  color1 = '#FF9FFC',
-  color2 = '#5227FF',
-  color3 = '#B497CF',
-  style = {},
+  timeSpeed = 0.25, colorBalance = 0.0, warpStrength = 1.0,
+  warpFrequency = 5.0, warpSpeed = 2.0, warpAmplitude = 50.0,
+  blendAngle = 0.0, blendSoftness = 0.05, rotationAmount = 500.0,
+  noiseScale = 2.0, grainAmount = 0.1, grainScale = 2.0,
+  grainAnimated = false, contrast = 1.5, gamma = 1.0, saturation = 1.0,
+  centerX = 0.0, centerY = 0.0, zoom = 0.9,
+  color1 = '#FF9FFC', color2 = '#5227FF', color3 = '#B497CF', style = {},
 }) => {
   const containerRef = useRef(null);
-
   useEffect(() => {
     if (!containerRef.current) return;
-
     let renderer, raf, ro;
-
     const init = async () => {
       try {
         const { Renderer, Program, Mesh, Triangle } = await import('ogl');
-
-        renderer = new Renderer({
-          webgl: 2,
-          alpha: true,
-          antialias: false,
-          dpr: Math.min(window.devicePixelRatio || 1, 2),
-        });
-
+        renderer = new Renderer({ webgl: 2, alpha: true, antialias: false, dpr: Math.min(window.devicePixelRatio || 1, 2) });
         const gl = renderer.gl;
         const canvas = gl.canvas;
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.display = 'block';
-        canvas.style.position = 'absolute';
-        canvas.style.inset = '0';
-
-        const container = containerRef.current;
-        container.appendChild(canvas);
-
+        canvas.style.cssText = 'width:100%;height:100%;display:block;position:absolute;inset:0;';
+        containerRef.current.appendChild(canvas);
         const geometry = new Triangle(gl);
         const program = new Program(gl, {
-          vertex,
-          fragment,
+          vertex, fragment,
           uniforms: {
-            iTime: { value: 0 },
-            iResolution: { value: new Float32Array([1, 1]) },
-            uTimeSpeed: { value: timeSpeed },
-            uColorBalance: { value: colorBalance },
-            uWarpStrength: { value: warpStrength },
-            uWarpFrequency: { value: warpFrequency },
-            uWarpSpeed: { value: warpSpeed },
-            uWarpAmplitude: { value: warpAmplitude },
-            uBlendAngle: { value: blendAngle },
-            uBlendSoftness: { value: blendSoftness },
-            uRotationAmount: { value: rotationAmount },
-            uNoiseScale: { value: noiseScale },
-            uGrainAmount: { value: grainAmount },
-            uGrainScale: { value: grainScale },
+            iTime: { value: 0 }, iResolution: { value: new Float32Array([1, 1]) },
+            uTimeSpeed: { value: timeSpeed }, uColorBalance: { value: colorBalance },
+            uWarpStrength: { value: warpStrength }, uWarpFrequency: { value: warpFrequency },
+            uWarpSpeed: { value: warpSpeed }, uWarpAmplitude: { value: warpAmplitude },
+            uBlendAngle: { value: blendAngle }, uBlendSoftness: { value: blendSoftness },
+            uRotationAmount: { value: rotationAmount }, uNoiseScale: { value: noiseScale },
+            uGrainAmount: { value: grainAmount }, uGrainScale: { value: grainScale },
             uGrainAnimated: { value: grainAnimated ? 1.0 : 0.0 },
-            uContrast: { value: contrast },
-            uGamma: { value: gamma },
-            uSaturation: { value: saturation },
-            uCenterOffset: { value: new Float32Array([centerX, centerY]) },
-            uZoom: { value: zoom },
+            uContrast: { value: contrast }, uGamma: { value: gamma }, uSaturation: { value: saturation },
+            uCenterOffset: { value: new Float32Array([centerX, centerY]) }, uZoom: { value: zoom },
             uColor1: { value: new Float32Array(hexToRgb(color1)) },
             uColor2: { value: new Float32Array(hexToRgb(color2)) },
             uColor3: { value: new Float32Array(hexToRgb(color3)) },
           },
         });
-
         const mesh = new Mesh(gl, { geometry, program });
-
         const setSize = () => {
-          const rect = container.getBoundingClientRect();
-          const width = Math.max(1, Math.floor(rect.width));
-          const height = Math.max(1, Math.floor(rect.height));
-          renderer.setSize(width, height);
+          const rect = containerRef.current.getBoundingClientRect();
+          renderer.setSize(Math.max(1, Math.floor(rect.width)), Math.max(1, Math.floor(rect.height)));
           const res = program.uniforms.iResolution.value;
-          res[0] = gl.drawingBufferWidth;
-          res[1] = gl.drawingBufferHeight;
+          res[0] = gl.drawingBufferWidth; res[1] = gl.drawingBufferHeight;
           renderer.render({ scene: mesh });
         };
-
         ro = new ResizeObserver(setSize);
-        ro.observe(container);
+        ro.observe(containerRef.current);
         setSize();
-
         const t0 = performance.now();
-        const loop = t => {
-          program.uniforms.iTime.value = (t - t0) * 0.001;
-          renderer.render({ scene: mesh });
-          raf = requestAnimationFrame(loop);
-        };
+        const loop = t => { program.uniforms.iTime.value = (t - t0) * 0.001; renderer.render({ scene: mesh }); raf = requestAnimationFrame(loop); };
         raf = requestAnimationFrame(loop);
-      } catch (err) {
-        console.error('Grainient init error:', err);
-      }
+      } catch (err) { console.error('Grainient init error:', err); }
     };
-
     init();
-
     return () => {
       if (raf) cancelAnimationFrame(raf);
       if (ro) ro.disconnect();
-      try {
-        const canvas = containerRef.current?.querySelector('canvas');
-        if (canvas) containerRef.current.removeChild(canvas);
-      } catch {}
+      try { const c = containerRef.current?.querySelector('canvas'); if (c) containerRef.current.removeChild(c); } catch {}
     };
-  }, [
-    timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed,
-    warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
-    grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
-    centerX, centerY, zoom, color1, color2, color3,
-  ]);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden',
-        ...style,
-      }}
-    />
-  );
+  }, [timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed, warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale, grainAmount, grainScale, grainAnimated, contrast, gamma, saturation, centerX, centerY, zoom, color1, color2, color3]);
+  return <div ref={containerRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', ...style }} />;
 };
 
-// ─── App config / styles ────────────────────────────────────────────────────
+// ─── App config / styles ─────────────────────────────────────────────────────
 const injectTailwindConfig = () => {
   if (window.tailwind) {
     window.tailwind.config = {
@@ -837,12 +1657,9 @@ const injectTailwindConfig = () => {
       theme: {
         extend: {
           colors: {
-            "secondary": "#006c4e",
-            "secondary-container": "#80f9c8",
-            "on-secondary-container": "#007353",
-            "nexov-mint": "#80f9c8",
-            "surface-container-low": "#f1f3ff",
-            "surface-container-highest": "#dce2f7",
+            "secondary": "#006c4e", "secondary-container": "#80f9c8",
+            "on-secondary-container": "#007353", "nexov-mint": "#80f9c8",
+            "surface-container-low": "#f1f3ff", "surface-container-highest": "#dce2f7",
             "on-surface": "#141b2b",
           },
         },
@@ -864,16 +1681,12 @@ const styles = `
     font-family: 'Material Symbols Outlined';
   }
 
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
   .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
-
   .marquee-item {
     display: flex; align-items: center; justify-content: center;
-    padding: 0 64px; height: 80px;
-    font-family: 'Inter', sans-serif; font-weight: 400; font-size: 24px;
+    padding: 0 64px; height: 50px;
+    font-family: 'Inter', sans-serif; font-weight: 400; font-size: 16px;
     letter-spacing: -0.02em; position: relative;
   }
   .marquee-item::after {
@@ -885,136 +1698,61 @@ const styles = `
 
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
   .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+
+  /* ── LogicFlow ── */
+  @keyframes lf-scanline {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(500%); opacity: 0; }
+  }
+  @keyframes lf-blink {
+    0%,100% { opacity: 1; } 50% { opacity: 0; }
+  }
+  @keyframes lf-float-a {
+    0%,100% { transform: translateY(0px); }
+    50%     { transform: translateY(-8px); }
+  }
+  @keyframes lf-float-b {
+    0%,100% { transform: translateY(0px); }
+    50%     { transform: translateY(6px); }
+  }
+  @keyframes lf-glow-pulse {
+    0%,100% { box-shadow: 0 0 12px rgba(128,249,200,0.6); }
+    50%     { box-shadow: 0 0 28px rgba(128,249,200,1), 0 0 56px rgba(128,249,200,0.3); }
+  }
+  @keyframes lf-beam {
+    0%   { opacity: 0; transform: scaleX(0); }
+    30%  { opacity: 1; transform: scaleX(1); }
+    70%  { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0; transform: scaleX(1); }
+  }
+  @keyframes lf-card-in-left {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes lf-card-in-right {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
 `;
 
 const Icon = ({ name, className = "" }) => (
-  <span className={`material-symbols-outlined ${className}`} style={{ fontFamily: "Material Symbols Outlined" }}>
-    {name}
-  </span>
+  <span className={`material-symbols-outlined ${className}`} style={{ fontFamily: "Material Symbols Outlined" }}>{name}</span>
 );
 
-// ─── Hero with Grainient background ─────────────────────────────────────────
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 const Hero = () => (
-  <section style={{
-    borderBottom: "1px solid #000",
-    overflow: "hidden",
-    borderTopLeftRadius: "12px",
-    borderTopRightRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-    position: "relative",
-  }}>
-    {/* Grainient canvas sits behind all content */}
-    <Grainient
-      color1="#80f9c8"
-      color2="#006c4e"
-      color3="#90EE90"
-      timeSpeed={0.18}
-      colorBalance={0.1}
-      warpStrength={1.2}
-      warpFrequency={4}
-      warpSpeed={1.5}
-      warpAmplitude={60}
-      blendAngle={20}
-      blendSoftness={0.08}
-      rotationAmount={400}
-      noiseScale={2.5}
-      grainAmount={0.08}
-      grainScale={2}
-      grainAnimated={false}
-      contrast={1.4}
-      gamma={1}
-      saturation={0.9}
-      centerX={0}
-      centerY={0}
-      zoom={0.85}
-    />
-
-    {/* Subtle dark overlay so text stays legible */}
-    <div style={{
-      position: "absolute",
-      inset: 0,
-      background: "rgba(0,0,0,0.35)",
-      zIndex: 1,
-    }} />
-
-    {/* Content */}
-    <div style={{
-      position: "relative",
-      zIndex: 2,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      padding: "96px 48px",
-    }}>
-      <div style={{
-        display: "inline-block",
-        border: "1px solid rgba(128,249,200,0.6)",
-        background: "rgba(128,249,200,0.1)",
-        padding: "4px 12px",
-        fontFamily: "'Space Grotesk',monospace",
-        fontSize: "10px",
-        letterSpacing: "0.1em",
-        textTransform: "uppercase",
-        marginBottom: "32px",
-        color: "#80f9c8",
-      }}>
-        V4.2.0 STABLE RELEASE
-      </div>
-
-      <h1 style={{
-        fontFamily: "'Inter',sans-serif",
-        fontSize: "clamp(48px,8vw,80px)",
-        fontWeight: 900,
-        textTransform: "uppercase",
-        lineHeight: 0.95,
-        letterSpacing: "-0.04em",
-        marginBottom: "32px",
-        color: "#ffffff",
-      }}>
-        The infrastructure<br />for AI Voice<br />Agents
-      </h1>
-
-      <p style={{
-        fontFamily: "'Inter',sans-serif",
-        fontSize: "18px",
-        lineHeight: 1.6,
-        color: "rgba(255,255,255,0.75)",
-        maxWidth: "480px",
-        marginBottom: "48px",
-      }}>
-        Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.
-      </p>
-
+  <section style={{ borderBottom: "1px solid #000", overflow: "hidden", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", position: "relative" }}>
+    <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.8} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={6.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
+    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 1 }} />
+    <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
+      <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>V4.2.0 STABLE RELEASE</div>
+      <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
+      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p>
       <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)" }}>
-        <button style={{
-          background: "#80f9c8",
-          color: "#000",
-          padding: "20px 40px",
-          fontSize: "12px",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          border: "none",
-          borderRight: "1px solid rgba(0,0,0,0.2)",
-          cursor: "pointer",
-        }}>
-          Start Building
-        </button>
-        <button style={{
-          background: "transparent",
-          color: "#fff",
-          padding: "20px 40px",
-          fontSize: "12px",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          border: "none",
-          cursor: "pointer",
-        }}>
-          View Docs
-        </button>
+        <button style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer" }}>Start Building</button>
+        <button style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>View Docs</button>
       </div>
     </div>
   </section>
@@ -1023,7 +1761,7 @@ const Hero = () => (
 const MarqueeBar = () => {
   const LOGOS = ["SALESFORCE", "SLACK", "STRIPE", "GITHUB", "TWILIO", "HUBSPOT"];
   return (
-    <section style={{ borderTop: "1px solid #000", borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", height: 80, display: "flex", alignItems: "center" }}>
+    <section style={{ borderTop: "1px solid #000", borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", height: 50, display: "flex", alignItems: "center" }}>
       <div className="marquee-track">
         {[...LOGOS, ...LOGOS].map((name, i) => (
           <div key={i} className="marquee-item" style={{ textTransform: "uppercase" }}>{name}</div>
@@ -1033,24 +1771,63 @@ const MarqueeBar = () => {
   );
 };
 
-export const TalkToAgent = () => {
-  return <MusicCarousel />;
-};
+export const TalkToAgent = () => <MusicCarousel />;
 
 const Mission = () => (
   <section style={{ padding: "96px 48px", borderBottom: "1px solid #000" }}>
-    <div style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px" }}>
-      <div style={{ gridColumn: "span 4", borderLeft: "1px solid #000", paddingLeft: "24px" }}>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)" }}>The Mission</p>
+    <div style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start" }}>
+      {/* Left: ProcessFlow Diagram */}
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+        <div style={{ background: "#f0f4f1", padding: "48px", borderRadius: "8px", width: "100%", maxWidth: "400px" }}>
+          <ProcessFlow />
+        </div>
       </div>
-      <div style={{ gridColumn: "span 8" }}>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
-          We are an AI agents company building a suite of voice-based AI applications designed to automate real-world business operations.
+
+      {/* Right: Mission Text & Stats */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "24px" }}>The Mission</p>
+
+        <p style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "clamp(26px, 3.5vw, 44px)",
+          fontWeight: 800,
+          textTransform: "uppercase",
+          lineHeight: 1.08,
+          letterSpacing: "-0.03em",
+          color: "#141b2b",
+          marginBottom: "32px",
+        }}>
+          We are an AI agents company building a suite of voice-based AI applications designed to{" "}
+          <span style={{ color: "#006c4e", borderBottom: "2.5px solid #80f9c8", paddingBottom: "2px" }}>
+            automate real-world
+          </span>{" "}
+          business operations.
         </p>
+
+        <div style={{
+          display: "flex",
+          alignItems: "flex-start",
+          gap: "24px",
+          paddingTop: "28px",
+          borderTop: "1px solid #000",
+        }}>
+          {[
+            { label: "Founded",          val: "2024"                      },
+            { label: "Agents deployed",  val: "5+"                        },
+            { label: "Industries served",val: "Healthcare · SaaS · RE"    },
+            { label: "Infrastructure",   val: "14 Global PoPs"            },
+          ].map((stat, i, arr) => (
+            <div key={stat.label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "4px" }}>
+              <span style={{ fontFamily: "'Space Grotesk', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)" }}>{stat.label}</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, letterSpacing: "-0.01em", color: "#141b2b" }}>{stat.val}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
 );
+
 
 const products = [
   { icon: "call", title: "Call Handling Agent", desc: "Autonomous inbound and outbound call management with human-level natural language processing.", no: "01" },
@@ -1062,17 +1839,248 @@ const products = [
 
 const ProductCard = ({ icon, title, desc, no }) => {
   const [hovered, setHovered] = useState(false);
+  const isCallAgent = title === "Call Handling Agent";
+  const isAppointmentAgent = title === "Appointment Booking Agent";
+  const isCustomerSupportAgent = title === "Customer Support Agent";
+  const isLeadQualificationAgent = title === "Lead Qualification Agent";
+  const isDoctorTranscriptionAgent = title === "Doctor Transcription Tool";
+
+  useEffect(() => {
+    if (isCallAgent) {
+      const wf = document.getElementById('waveform-card');
+      if (wf && !wf.dataset.populated) {
+        wf.dataset.populated = 'true';
+        const originalHeights = [12,18,26,34,40,48,42,36,28,22,30,44,48,38,24,16,28,42,48,40,30,20,34,46,44,32,18,24,38,48,44,30,16,22,36,46,40,26,14,20,32,44,48,36,22,18,30,42,46,34];
+        const heights = originalHeights.map(h => h * 0.5);
+        heights.forEach((h,i)=>{
+          const b=document.createElement('div');
+          b.className='bar'+(h<12.5?' dim':'');
+          b.style.height=h+'px';
+          b.style.animationDelay=(i*0.04)+'s';
+          wf.appendChild(b);
+        });
+      }
+    }
+  }, [isCallAgent]);
+
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ borderRight: "1px solid #000", borderTop: parseInt(no) > 3 ? "1px solid #000" : "none", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "background .2s", display: "flex", flexDirection: "column", minHeight: "340px", cursor: "default" }}
-    >
-      <div style={{ marginBottom: "48px" }}><Icon name={icon} /></div>
-      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "32px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.2, letterSpacing: "-0.01em", marginBottom: "16px" }}>{title}</h3>
-      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.5, marginBottom: "32px" }}>{desc}</p>
-      <div style={{ marginTop: "auto", paddingTop: "32px", borderTop: "1px solid #000" }}>
-        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Agent No. {no}</span>
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ borderRight: "1px solid #000", borderTop: parseInt(no) > 3 ? "1px solid #000" : "none", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "background .2s", display: "flex", flexDirection: "column", minHeight: "440px", cursor: "default", overflow: "hidden" }}>
+      
+      <div style={{ marginBottom: "32px" }}><Icon name={icon} /></div>
+      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "28px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.2, letterSpacing: "-0.01em", marginBottom: "16px" }}>{title}</h3>
+      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "15px", color: "rgba(20,27,43,0.8)", lineHeight: 1.5, marginBottom: "32px" }}>{desc}</p>
+
+      <div style={{ marginTop: "auto", height: "160px", display: "flex", flexDirection: "column", justifyContent: "center", marginBottom: "32px" }}>
+        
+        {isCallAgent && (
+          <>
+            <style>{`
+              .card-monitor{background:#fff;border:1px solid #ececec;border-radius:12px;padding:12px;font-family:'Inter',sans-serif;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+              .wave-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:12px;height:24px}
+              .bar{width:3px;border-radius:2px;background:#22c693;animation:pulse 1.2s ease-in-out infinite}
+              .bar.dim{background:#b0e8d4;animation:none}
+              .phone-center{width:28px;height:28px;border-radius:50%;background:#22c693;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 10px;font-size:12px}
+              .calls-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}
+              .call-block{display:flex;flex-direction:column;gap:3px;flex:1}
+              .call-label{font-size:10px;color:#6b7280;display:flex;align-items:center;gap:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+              .divider{height:1px;background:#ececec;margin-bottom:8px}
+              @keyframes pulse{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1)}}
+            `}</style>
+            <div className="card-monitor">
+              <div className="wave-row" id="waveform-card"></div>
+              <div className="calls-row">
+                <div className="call-block">
+                  <div className="call-label">📞 IN</div>
+                </div>
+                <div className="phone-center">☎️</div>
+                <div className="call-block right">
+                  <div className="call-label" style={{justifyContent:"flex-end"}}>OUT 📞</div>
+                </div>
+              </div>
+              <div className="divider"></div>
+            </div>
+          </>
+        )}
+
+        {isAppointmentAgent && (
+          <>
+            <style>{`
+              .booking-wrapper { width: 100%; font-family: 'Inter', sans-serif; }
+              .booking-card { background: white; border: 1px solid #ececec; border-radius: 12px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+              .b-day { flex: 1; min-width: 0; height: 48px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s ease; }
+              .b-day:hover { background: #f6f6f6; }
+              .b-day span { font-size: 8px; font-weight: 700; color: #9ca3af; margin-bottom: 2px; letter-spacing: 0.5px; }
+              .b-day h3 { font-size: 16px; color: #111827; font-weight: 700; margin: 0; }
+              .active-day { background: #dff9ee; border: 1px solid #b8f0d7; }
+              .time-container { margin-top: 12px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+              .b-time { flex: 1; height: 32px; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #374151; background: white; cursor: pointer; transition: 0.2s ease; letter-spacing: 0.5px; }
+              .b-time:hover { border-color: #c7c7c7; }
+              .active-time { background: #f0fdf4; border: 1px solid #b8f0d7; color: #006c4e; }
+              .b-dots { flex: 0 0 32px; font-size: 16px; font-weight: 700; letter-spacing: 1px; border: none; background: transparent; }
+              .b-dots:hover { border: none; background: transparent; }
+            `}</style>
+            <div className="booking-wrapper">
+              <div className="booking-card">
+                <div className="b-day"><span>MON</span><h3>20</h3></div>
+                <div className="b-day"><span>TUE</span><h3>21</h3></div>
+                <div className="b-day active-day"><span>WED</span><h3>22</h3></div>
+                <div className="b-day"><span>THU</span><h3>23</h3></div>
+                <div className="b-day"><span>FRI</span><h3>24</h3></div>
+              </div>
+              <div className="time-container">
+                <div className="b-time">9:00 AM</div>
+                <div className="b-time active-time">10:30 AM</div>
+                <div className="b-time">12:00 PM</div>
+                <div className="b-time">2:30 PM</div>
+                <div className="b-time b-dots">...</div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {isCustomerSupportAgent && (
+          <>
+            <style>{`
+              .c-chat-box{ display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+              .c-message{ max-width:85%; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:500; line-height:1.4; color:#374151; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+              .c-user{ background:#f3f4f6; align-self:flex-start; border-top-left-radius:4px; }
+              .c-bot-row{ display:flex; align-items:center; gap:6px; align-self:flex-end; }
+              .c-bot{ background:#dff9ee; border-top-right-radius:4px; }
+              .c-voice-btn{ width:32px; height:32px; border-radius:10px; background:white; border:1px solid #ececec; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+              .c-wave{ display:flex; align-items:center; gap:2px; }
+              .c-wave span{ width:2px; background:#57d89a; border-radius:10px; animation:wave 1s infinite ease-in-out; }
+              .c-wave span:nth-child(1){ height:6px; animation-delay:0s; }
+              .c-wave span:nth-child(2){ height:10px; animation-delay:0.1s; }
+              .c-wave span:nth-child(3){ height:14px; animation-delay:0.2s; }
+              .c-wave span:nth-child(4){ height:8px; animation-delay:0.3s; }
+              .c-wave span:nth-child(5){ height:4px; animation-delay:0.4s; }
+              @keyframes wave{ 0%,100%{ transform:scaleY(1); opacity:0.8; } 50%{ transform:scaleY(1.4); opacity:1; } }
+              .c-stats{ background:white; border:1px solid #ececec; border-radius:12px; padding:12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+              .c-stat{ flex:1; }
+              .c-label{ font-size:8px; color:#9ca3af; margin-bottom:2px; font-weight:700; text-transform: uppercase; letter-spacing:0.5px; }
+              .c-value{ font-size:16px; color:#111827; font-weight:700; }
+              .c-divider{ width:1px; height:24px; background:#ececec; margin:0 12px; }
+              .c-graph{ width:48px; height:24px; }
+              .c-graph svg{ width:100%; height:100%; }
+              .c-graph path{ stroke:#7ce0ad; stroke-width:4; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+            `}</style>
+            <div style={{ width: "100%" }}>
+              <div className="c-chat-box">
+                <div className="c-message c-user">I need help with my appointment.</div>
+                <div className="c-bot-row">
+                  <div className="c-message c-bot">Sure, I can help you with that.</div>
+                  <div className="c-voice-btn">
+                    <div className="c-wave"><span></span><span></span><span></span><span></span><span></span></div>
+                  </div>
+                </div>
+              </div>
+              <div className="c-stats">
+                <div className="c-stat">
+                  <div className="c-label">Resolved</div>
+                  <div className="c-value">1,248</div>
+                </div>
+                <div className="c-divider"></div>
+                <div className="c-stat">
+                  <div className="c-label">Time</div>
+                  <div className="c-value">1.2s</div>
+                </div>
+                <div className="c-graph">
+                  <svg viewBox="0 0 100 50"><path d="M5 35 L20 20 L35 30 L50 10 L65 28 L80 35 L95 18"/></svg>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {isLeadQualificationAgent && (
+          <>
+            <style>{`
+              .l-wrapper{ width:100%; display:flex; flex-direction:column; gap:8px; }
+              .l-card{ position:relative; height:44px; background:white; border:1px solid #ececec; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:space-between; padding:0 12px; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+              .l-left{ position:absolute; left:0; top:0; height:100%; display:flex; align-items:center; padding-left:24px; color:#1f2937; font-size:11px; font-weight:700; clip-path:polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%, 4% 50%); text-transform:uppercase; letter-spacing:0.5px;}
+              .l-lead{ width:65%; background:linear-gradient(90deg, #c7f6df 0%, #edfdf5 100%); }
+              .l-qualified{ width:55%; background:linear-gradient(90deg, #b7f2d5 0%, #ebfcf4 100%); }
+              .l-sales{ width:45%; background:linear-gradient(90deg, #79e5af 0%, #eefdf5 100%); }
+              .l-right{ margin-left:auto; height:100%; display:flex; align-items:center; }
+              .l-count{ width:56px; height:100%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#1f2937; border-left:1px solid #f0f0f0; }
+              .l-icon-box{ width:48px; height:100%; display:flex; align-items:center; justify-content:center; border-left:1px solid #f0f0f0; }
+              .l-users{ display:flex; align-items:center; gap:0px; }
+              .l-users svg{ width:16px; height:16px; }
+              .l-green{ stroke:#5ad698; }
+              .l-gray{ stroke:#cfcfcf; }
+              .l-single{ width:18px; height:18px; }
+            `}</style>
+            <div className="l-wrapper">
+              <div className="l-card">
+                <div className="l-left l-lead">New Leads</div>
+                <div className="l-right">
+                  <div className="l-count">2,346</div>
+                  <div className="l-icon-box">
+                    <div className="l-users">
+                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                      <svg viewBox="0 0 24 24" fill="none" className="l-gray"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="l-card">
+                <div className="l-left l-qualified">Qualified</div>
+                <div className="l-right">
+                  <div className="l-count">842</div>
+                  <div className="l-icon-box">
+                    <div className="l-users">
+                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="l-card">
+                <div className="l-left l-sales">Sales Ready</div>
+                <div className="l-right">
+                  <div className="l-count">278</div>
+                  <div className="l-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" className="l-green l-single"><circle cx="12" cy="7" r="3.5" strokeWidth="2"/><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {isDoctorTranscriptionAgent && (
+          <>
+            <style>{`
+              .d-card{ background:white; border:1px solid #ececec; border-radius:12px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03); width: 100%; }
+              .d-audio-header{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+              .d-time{ font-size:10px; font-weight:600; color:#9ca3af; min-width:32px; }
+              .d-play-btn{ width:24px; height:24px; border-radius:50%; background:#dff9ee; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; }
+              .d-play-btn::before{ content:""; width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:6px solid #006c4e; margin-left:2px; }
+              .d-progress-wrapper{ flex:1; height:4px; background:#ececf1; border-radius:999px; overflow:hidden; position:relative; }
+              .d-progress{ width:35%; height:100%; background:#58d89b; border-radius:999px; }
+              .d-transcript{ font-size:14px; line-height:1.6; font-weight:500; color:#374151; letter-spacing:-0.2px; }
+              .d-highlight{ color:#006c4e; background:#eafcf3; padding:1px 4px; border-radius:4px; font-weight:600; }
+            `}</style>
+            <div className="d-card">
+              <div className="d-audio-header">
+                <div className="d-time">00:03</div>
+                <div className="d-play-btn"></div>
+                <div className="d-progress-wrapper">
+                  <div className="d-progress"></div>
+                </div>
+                <div className="d-time" style={{textAlign:"right"}}>03:42</div>
+              </div>
+              <div className="d-transcript">
+                Patient reports persistent <span className="d-highlight">headaches</span> and mild <span className="d-highlight">dizziness</span> for the past 3 days. Prescribing rest.
+              </div>
+            </div>
+          </>
+        )}
+
+      </div>
+
+      <div style={{ paddingTop: "24px", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
+        <span style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Agent No. {no}</span>
       </div>
     </div>
   );
@@ -1080,14 +2088,12 @@ const ProductCard = ({ icon, title, desc, no }) => {
 
 const ProductGrid = () => (
   <section style={{ borderBottom: "1px solid #000" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridAutoRows: "1fr", minHeight: "680px" }}>
       {products.map((p) => <ProductCard key={p.no} {...p} />)}
-      <div style={{ borderTop: "1px solid #000", background: "#000", padding: "48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden", minHeight: "340px" }}>
+      <div style={{ borderTop: "1px solid #000", background: "#000", padding: "48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" />
-            </pattern></defs>
+            <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs>
             <rect fill="url(#pg)" width="100%" height="100%" />
           </svg>
         </div>
@@ -1107,112 +2113,509 @@ const ProductGrid = () => (
   </section>
 );
 
+// ─── IMPROVED LogicFlow ───────────────────────────────────────────────────────
 const timelineSteps = [
-  { num: "01", label: "UNDERSTANDS", title: "Real-time Audio Processing", desc: "Captures the nuances of human speech and emotional intent with sub-100ms processing cycles.", icon: "settings_voice", align: "right" },
-  { num: "02", label: "PROCESSES", title: "Proprietary LLM Analysis", desc: "Multi-layer analysis modules determine context, intent, and the optimal response strategy in parallel.", icon: "neurology", align: "left" },
-  { num: "03", label: "EXECUTES", title: "Instant Response Action", desc: "Perform complex operations—booking, routing, or transcribing—within the live call stream seamlessly.", icon: "bolt", align: "right" },
-  { num: "04", label: "INTEGRATES", title: "Deep System Sync", desc: "Direct synchronization with CRMs, databases, and enterprise toolchains via high-security API endpoints.", icon: "api", align: "left" },
+  {
+    num: "01", label: "UNDERSTANDS", title: "Real-time Audio Processing",
+    desc: "Captures the nuances of human speech and emotional intent with sub-100ms processing cycles, preserving every intonation shift across the entire call stream.",
+    icon: "settings_voice", side: "left",
+    stat: { val: "<87ms", label: "Capture Latency" },
+    tags: ["VAD", "Speaker ID", "Noise Cancellation"],
+  },
+  {
+    num: "02", label: "PROCESSES", title: "Proprietary LLM Analysis",
+    desc: "Multi-layer analysis modules determine context, intent, and the optimal response strategy in parallel — adapting to conversation drift in real time.",
+    icon: "neurology", side: "right",
+    stat: { val: "4-Layer", label: "Analysis Pipeline" },
+    tags: ["Intent", "Sentiment", "Context"],
+  },
+  {
+    num: "03", label: "EXECUTES", title: "Instant Response Action",
+    desc: "Perform complex operations — booking, routing, or transcribing — within the live call stream seamlessly, with no perceptible delay to the caller.",
+    icon: "bolt", side: "left",
+    stat: { val: "<200ms", label: "End-to-End" },
+    tags: ["Booking", "Routing", "Transcription"],
+  },
+  {
+    num: "04", label: "INTEGRATES", title: "Deep System Sync",
+    desc: "Direct synchronisation with CRMs, databases, and enterprise toolchains via high-security bidirectional API endpoints. Zero manual export. Always live.",
+    icon: "api", side: "right",
+    stat: { val: "50+", label: "Native Integrations" },
+    tags: ["Salesforce", "HubSpot", "Webhooks"],
+  },
 ];
 
-const StepCard = ({ step, align }) => (
-  <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "40px", backdropFilter: "blur(8px)", textAlign: align, maxWidth: 460, width: "100%" }}>
-    <div style={{ marginBottom: "24px", display: "flex", justifyContent: align === "right" ? "flex-end" : "flex-start" }}>
-      <span className="material-symbols-outlined" style={{ fontSize: 44, color: "#80f9c8", fontFamily: "Material Symbols Outlined" }}>{step.icon}</span>
-    </div>
-    <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "11px", letterSpacing: "0.15em", color: "#80f9c8", marginBottom: "10px", textTransform: "uppercase" }}>
-      {step.num}. {step.label}
-    </div>
-    <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(20px,2vw,26px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: "16px" }}>
-      {step.title}
-    </h4>
-    <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "16px", lineHeight: 1.7 }}>{step.desc}</p>
-  </div>
-);
-
 const LogicFlow = () => {
-  const trackRef = useRef(null);
-  const stepsRef = useRef([]);
-  const progressRef = useRef(null);
-  const nodeRefs = useRef([]);
+  const trackRef    = useRef(null);
+  const fillRef     = useRef(null);
+  const cardRefs    = useRef([]);
+  const dotRefs     = useRef([]);
+  const outerRefs   = useRef([]);
+  const beamRefs    = useRef([]);
+  const floatRefs   = useRef([]);
+  const scanRef     = useRef(null);
 
   useEffect(() => {
-    const handler = () => {
+    const TRIGGER = 0.62;
+
+    const onScroll = () => {
       const track = trackRef.current;
-      if (!track || !progressRef.current) return;
+      if (!track || !fillRef.current) return;
+
       const trackRect = track.getBoundingClientRect();
       const vh = window.innerHeight;
+
+      // ── Spine progress
       const traveled = vh / 2 - trackRect.top;
       const pct = Math.max(0, Math.min(1, traveled / trackRect.height));
-      progressRef.current.style.transform = `scaleY(${pct})`;
-      stepsRef.current.forEach((step, i) => {
-        if (!step) return;
-        const sr = step.getBoundingClientRect();
-        const active = sr.top < vh * 0.62;
-        step.style.opacity = active ? "1" : "0.1";
-        step.style.transform = active ? "translateY(0)" : "translateY(40px)";
-        const node = nodeRefs.current[i];
-        if (node) {
-          node.style.background = active ? "#80f9c8" : "#000";
-          node.style.boxShadow = active ? "0 0 12px rgba(128,249,200,.9)" : "none";
+      fillRef.current.style.transform = `scaleY(${pct})`;
+
+      // ── Per-step activation
+      cardRefs.current.forEach((card, i) => {
+        if (!card) return;
+        const r = card.getBoundingClientRect();
+        const active = r.top < vh * TRIGGER;
+
+        const dot   = dotRefs.current[i];
+        const outer = outerRefs.current[i];
+        const beam  = beamRefs.current[i];
+
+        if (active) {
+          card.style.opacity = "1";
+          card.style.transform = "translateX(0) translateY(0)";
+          card.style.filter = "none";
+          if (dot)  { dot.style.background = "#80f9c8"; dot.style.boxShadow = "0 0 20px rgba(128,249,200,1), 0 0 40px rgba(128,249,200,0.4)"; dot.style.borderColor = "#80f9c8"; }
+          if (outer){ outer.style.borderColor = "rgba(128,249,200,0.5)"; outer.style.background = "rgba(128,249,200,0.06)"; }
+          if (beam) { beam.style.opacity = "1"; beam.style.transform = "scaleX(1)"; }
+        } else {
+          const step = timelineSteps[i];
+          card.style.opacity = "0.06";
+          card.style.transform = step.side === "left" ? "translateX(-32px) translateY(16px)" : "translateX(32px) translateY(16px)";
+          card.style.filter = "blur(1px)";
+          if (dot)  { dot.style.background = "#0d0d0d"; dot.style.boxShadow = "none"; dot.style.borderColor = "rgba(128,249,200,0.25)"; }
+          if (outer){ outer.style.borderColor = "rgba(128,249,200,0.1)"; outer.style.background = "transparent"; }
+          if (beam) { beam.style.opacity = "0"; beam.style.transform = "scaleX(0)"; }
         }
       });
+
+      // ── Parallax on floating data labels
+      const scrollY = window.scrollY || window.pageYOffset;
+      const speeds  = [0.06, -0.04, 0.08, -0.06, 0.05, -0.07, 0.04, -0.05];
+      floatRefs.current.forEach((el, i) => {
+        if (!el) return;
+        el.style.transform = `translateY(${scrollY * speeds[i % speeds.length]}px)`;
+      });
+
+      // ── Scanline parallax
+      if (scanRef.current) {
+        scanRef.current.style.top = `${(scrollY * 0.15) % 100}%`;
+      }
     };
-    window.addEventListener("scroll", handler, { passive: true });
-    handler();
-    return () => window.removeEventListener("scroll", handler);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const FLOAT_DATA = [
+    { label: "LATENCY: 87ms",        top: "8%",  left: "3%",  speed: 0 },
+    { label: "LLM_LAYER: ACTIVE",    top: "22%", right: "2%", speed: 1 },
+    { label: "QUEUE_DEPTH: 0",       top: "42%", left: "2%",  speed: 2 },
+    { label: "CRM_SYNC: LIVE",       top: "58%", right: "3%", speed: 3 },
+    { label: "NODE_ID: NX-04",       top: "12%", right: "5%", speed: 4 },
+    { label: "UPTIME: 99.98%",       top: "75%", left: "4%",  speed: 5 },
+    { label: "SESSIONS: 10,241",     top: "88%", right: "3%", speed: 6 },
+    { label: "REGIONS: 14 PoPs",     top: "33%", left: "3%",  speed: 7 },
+  ];
+
   return (
-    <section style={{ background: "#000", color: "#fff", display: "flex", flexDirection: "column", backgroundImage: "radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)", backgroundSize: "24px 24px" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid rgba(255,255,255,.1)", paddingTop: "128px", paddingBottom: "64px" }}>
-        <div style={{ textAlign: "center" }}>
-          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8" }}>Architecture</span>
-          <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginTop: "16px" }}>The Logic Flow</h2>
+    <section style={{
+      background: "#050505",
+      color: "#fff",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* ── Background dot grid ── */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        backgroundImage: "radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)",
+        backgroundSize: "28px 28px",
+      }} />
+
+      {/* ── Radial ambient glow ── */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "radial-gradient(ellipse 70% 50% at 50% 40%, rgba(128,249,200,0.04) 0%, transparent 70%)",
+      }} />
+
+      {/* ── Scanline sweep ── */}
+      <div ref={scanRef} style={{
+        position: "absolute", left: 0, right: 0, height: "2px",
+        background: "linear-gradient(to right, transparent, rgba(128,249,200,0.06) 30%, rgba(128,249,200,0.12) 50%, rgba(128,249,200,0.06) 70%, transparent)",
+        pointerEvents: "none",
+        zIndex: 0,
+        top: "0%",
+        willChange: "top",
+      }} />
+
+      {/* ── Floating data labels ── */}
+      {FLOAT_DATA.map((f, i) => (
+        <div key={i} ref={el => floatRefs.current[i] = el} style={{
+          position: "absolute",
+          top: f.top,
+          ...(f.left  ? { left:  f.left  } : {}),
+          ...(f.right ? { right: f.right } : {}),
+          fontFamily: "'Space Grotesk', monospace",
+          fontSize: "9px",
+          letterSpacing: "0.16em",
+          color: "rgba(128,249,200,0.07)",
+          textTransform: "uppercase",
+          pointerEvents: "none",
+          userSelect: "none",
+          willChange: "transform",
+          zIndex: 0,
+        }}>{f.label}</div>
+      ))}
+
+      {/* ── Header ── */}
+      <div style={{
+        display: "flex", flexDirection: "column", alignItems: "center",
+        justifyContent: "center", textAlign: "center",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        paddingTop: "120px", paddingBottom: "72px",
+        position: "relative", zIndex: 2,
+      }}>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: "8px",
+          border: "1px solid rgba(128,249,200,0.2)",
+          background: "rgba(128,249,200,0.05)",
+          padding: "5px 16px",
+          fontFamily: "'Space Grotesk', monospace",
+          fontSize: "10px", letterSpacing: "0.18em",
+          textTransform: "uppercase", color: "#80f9c8",
+          marginBottom: "24px",
+        }}>
+          <span style={{
+            display: "inline-block", width: 6, height: 6,
+            borderRadius: "50%", background: "#80f9c8",
+            animation: "lf-blink 1.4s step-end infinite",
+          }} />
+          Architecture
         </div>
+        <h2 style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "clamp(38px,5vw,60px)",
+          fontWeight: 900, textTransform: "uppercase",
+          lineHeight: 1.0, letterSpacing: "-0.035em",
+        }}>The Logic Flow</h2>
+        <p style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "15px", lineHeight: 1.7,
+          color: "rgba(255,255,255,0.4)",
+          maxWidth: 480, marginTop: 20,
+        }}>
+          Four precision-engineered stages that transform raw voice into autonomous enterprise action.
+        </p>
       </div>
-      <div ref={trackRef} style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "0 48px 128px", width: "100%" }}>
-        <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, transform: "translateX(-50%)", background: "rgba(255,255,255,0.08)", zIndex: 0 }} />
-        <div style={{ position: "absolute", left: "50%", top: 0, width: 2, height: "100%", transform: "translateX(-50%)", transformOrigin: "top", zIndex: 1, pointerEvents: "none" }}>
-          <div ref={progressRef} style={{ width: "100%", height: "100%", background: "linear-gradient(to bottom, #80f9c8, #00e5a0)", boxShadow: "0 0 18px rgba(128,249,200,0.7)", transformOrigin: "top", transform: "scaleY(0)", transition: "transform 0.25s ease-out" }} />
+
+      {/* ── Timeline track ── */}
+      <div ref={trackRef} style={{
+        position: "relative",
+        maxWidth: 1100, margin: "0 auto",
+        padding: "20px 48px 120px",
+        zIndex: 2,
+      }}>
+        {/* Spine background */}
+        <div style={{
+          position: "absolute", left: "50%", top: 0, bottom: 0,
+          width: "1px", transform: "translateX(-50%)",
+          background: "rgba(255,255,255,0.06)",
+          zIndex: 0,
+        }} />
+
+        {/* Animated progress fill */}
+        <div style={{
+          position: "absolute", left: "50%", top: 0,
+          width: "2px", height: "100%",
+          transform: "translateX(-50%)",
+          zIndex: 1, pointerEvents: "none",
+        }}>
+          <div ref={fillRef} style={{
+            width: "100%", height: "100%",
+            background: "linear-gradient(to bottom, #80f9c8 0%, #00e5a0 60%, rgba(0,229,160,0) 100%)",
+            boxShadow: "0 0 12px rgba(128,249,200,0.6)",
+            transformOrigin: "top",
+            transform: "scaleY(0)",
+            transition: "transform 0.2s linear",
+          }} />
         </div>
+
+        {/* Steps */}
         {timelineSteps.map((step, i) => {
-          const isRight = step.align === "right";
+          const isLeft = step.side === "left";
           return (
-            <div
-              key={step.num}
-              ref={(el) => (stepsRef.current[i] = el)}
-              style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 48px 1fr", alignItems: "center", minHeight: "80vh", paddingTop: "64px", paddingBottom: "64px", opacity: 0.1, transform: "translateY(40px)", transition: "opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1)" }}
-            >
-              <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "40px" }}>
-                {!isRight && <StepCard step={step} align="right" />}
+            <div key={step.num} style={{
+              position: "relative",
+              display: "grid",
+              gridTemplateColumns: "1fr 80px 1fr",
+              alignItems: "center",
+              minHeight: "340px",
+              paddingTop: "48px",
+              paddingBottom: "48px",
+            }}>
+
+              {/* ── Left slot ── */}
+              <div style={{
+                display: "flex", justifyContent: "flex-end",
+                paddingRight: "36px",
+              }}>
+                {isLeft && (
+                  <div
+                    ref={el => cardRefs.current[i] = el}
+                    style={{
+                      maxWidth: 420, width: "100%",
+                      background: "rgba(255,255,255,0.025)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      padding: "36px",
+                      position: "relative",
+                      opacity: 0.06,
+                      transform: "translateX(-32px) translateY(16px)",
+                      filter: "blur(1px)",
+                      transition: "opacity 0.75s cubic-bezier(.16,1,.3,1), transform 0.75s cubic-bezier(.16,1,.3,1), filter 0.5s, border-color 0.5s",
+                      willChange: "transform, opacity",
+                    }}
+                  >
+                    {/* Corner accent */}
+                    <div style={{ position: "absolute", top: -1, left: -1, width: 28, height: 28, borderTop: "1.5px solid #80f9c8", borderLeft: "1.5px solid #80f9c8" }} />
+                    <div style={{ position: "absolute", bottom: -1, right: -1, width: 28, height: 28, borderBottom: "1.5px solid rgba(128,249,200,0.3)", borderRight: "1.5px solid rgba(128,249,200,0.3)" }} />
+
+                    <StepCardInner step={step} />
+                    <div style={{ position: "absolute", bottom: 20, right: 24, fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.15em", color: "rgba(128,249,200,0.3)", textTransform: "uppercase" }}>AGENT {step.num}</div>
+                  </div>
+                )}
               </div>
+
+              {/* ── Spine node ── */}
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative", zIndex: 10 }}>
-                <div ref={(el) => (nodeRefs.current[i] = el)} style={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid #80f9c8", background: "#000", transition: "background 0.4s, box-shadow 0.4s", flexShrink: 0 }} />
+                {/* Horizontal beam (left) */}
+                {isLeft && (
+                  <div ref={el => beamRefs.current[i] = el} style={{
+                    position: "absolute", right: "50%", top: "50%",
+                    width: "36px", height: "1px",
+                    background: "linear-gradient(to left, rgba(128,249,200,0.6), transparent)",
+                    transformOrigin: "right",
+                    opacity: 0, transform: "scaleX(0)",
+                    transition: "opacity 0.4s 0.3s, transform 0.4s 0.3s",
+                  }} />
+                )}
+                {/* Horizontal beam (right) */}
+                {!isLeft && (
+                  <div ref={el => beamRefs.current[i] = el} style={{
+                    position: "absolute", left: "50%", top: "50%",
+                    width: "36px", height: "1px",
+                    background: "linear-gradient(to right, rgba(128,249,200,0.6), transparent)",
+                    transformOrigin: "left",
+                    opacity: 0, transform: "scaleX(0)",
+                    transition: "opacity 0.4s 0.3s, transform 0.4s 0.3s",
+                  }} />
+                )}
+
+                {/* Step number above node */}
+                <div style={{
+                  position: "absolute", top: -36,
+                  fontFamily: "'Space Grotesk',monospace",
+                  fontSize: "9px", letterSpacing: "0.2em",
+                  color: "rgba(128,249,200,0.4)",
+                  textTransform: "uppercase",
+                  textAlign: "center",
+                }}>{step.num}</div>
+
+                {/* Outer ring */}
+                <div ref={el => outerRefs.current[i] = el} style={{
+                  width: 52, height: 52, borderRadius: "50%",
+                  border: "1px solid rgba(128,249,200,0.1)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "transparent",
+                  transition: "border-color 0.5s, background 0.5s",
+                  flexShrink: 0,
+                }}>
+                  {/* Inner dot */}
+                  <div ref={el => dotRefs.current[i] = el} style={{
+                    width: 14, height: 14, borderRadius: "50%",
+                    border: "1.5px solid rgba(128,249,200,0.25)",
+                    background: "#0d0d0d",
+                    transition: "background 0.5s, box-shadow 0.5s, border-color 0.5s",
+                  }} />
+                </div>
               </div>
-              <div style={{ paddingLeft: "40px" }}>
-                {isRight && <StepCard step={step} align="left" />}
+
+              {/* ── Right slot ── */}
+              <div style={{
+                display: "flex", justifyContent: "flex-start",
+                paddingLeft: "36px",
+              }}>
+                {!isLeft && (
+                  <div
+                    ref={el => cardRefs.current[i] = el}
+                    style={{
+                      maxWidth: 420, width: "100%",
+                      background: "rgba(255,255,255,0.025)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      padding: "36px",
+                      position: "relative",
+                      opacity: 0.06,
+                      transform: "translateX(32px) translateY(16px)",
+                      filter: "blur(1px)",
+                      transition: "opacity 0.75s cubic-bezier(.16,1,.3,1), transform 0.75s cubic-bezier(.16,1,.3,1), filter 0.5s, border-color 0.5s",
+                      willChange: "transform, opacity",
+                    }}
+                  >
+                    <div style={{ position: "absolute", top: -1, right: -1, width: 28, height: 28, borderTop: "1.5px solid #80f9c8", borderRight: "1.5px solid #80f9c8" }} />
+                    <div style={{ position: "absolute", bottom: -1, left: -1, width: 28, height: 28, borderBottom: "1.5px solid rgba(128,249,200,0.3)", borderLeft: "1.5px solid rgba(128,249,200,0.3)" }} />
+
+                    <StepCardInner step={step} />
+                    <div style={{ position: "absolute", bottom: 20, right: 24, fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.15em", color: "rgba(128,249,200,0.3)", textTransform: "uppercase" }}>AGENT {step.num}</div>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* ── Bottom metrics strip ── */}
+      <div style={{
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+        display: "grid",
+        gridTemplateColumns: "repeat(4,1fr)",
+        maxWidth: 1100, margin: "0 auto",
+      }}>
+        {[
+          { val: "<87ms",   label: "Audio Capture" },
+          { val: "4-Layer", label: "LLM Pipeline"  },
+          { val: "<200ms",  label: "End-to-End"    },
+          { val: "14 PoPs", label: "Global Regions" },
+        ].map((s, i) => (
+          <div key={s.label} style={{
+            padding: "32px 24px",
+            borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
+            textAlign: "center",
+          }}>
+            <div style={{
+              fontFamily: "'Inter',sans-serif",
+              fontSize: "clamp(22px,3vw,32px)",
+              fontWeight: 900, letterSpacing: "-0.03em",
+              color: "#80f9c8", lineHeight: 1,
+              marginBottom: 8,
+            }}>{s.val}</div>
+            <div style={{
+              fontFamily: "'Space Grotesk',monospace",
+              fontSize: "9px", letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.3)",
+            }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
 
+// Inner card content — extracted to keep step JSX clean
+const StepCardInner = ({ step }) => (
+  <>
+    {/* Step label */}
+    <div style={{
+      display: "flex", alignItems: "center", gap: 10,
+      marginBottom: 20,
+    }}>
+      <div style={{
+        width: 20, height: 1,
+        background: "rgba(128,249,200,0.5)",
+      }} />
+      <span style={{
+        fontFamily: "'Space Grotesk',monospace",
+        fontSize: "10px", fontWeight: 700,
+        letterSpacing: "0.18em", textTransform: "uppercase",
+        color: "rgba(128,249,200,0.7)",
+      }}>{step.num}. {step.label}</span>
+    </div>
+
+    {/* Icon box */}
+    <div style={{
+      width: 44, height: 44,
+      border: "1px solid rgba(128,249,200,0.2)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      marginBottom: 20,
+      background: "rgba(128,249,200,0.04)",
+    }}>
+      <span className="material-symbols-outlined" style={{
+        fontFamily: "Material Symbols Outlined",
+        fontSize: 22, color: "#80f9c8",
+        fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24",
+      }}>{step.icon}</span>
+    </div>
+
+    {/* Title */}
+    <h4 style={{
+      fontFamily: "'Inter',sans-serif",
+      fontSize: "clamp(18px,2vw,24px)",
+      fontWeight: 900, textTransform: "uppercase",
+      letterSpacing: "-0.025em", lineHeight: 1.15,
+      marginBottom: 14, color: "#ffffff",
+    }}>{step.title}</h4>
+
+    {/* Description */}
+    <p style={{
+      fontFamily: "'Inter',sans-serif",
+      fontSize: "14px", lineHeight: 1.8,
+      color: "rgba(255,255,255,0.5)", marginBottom: 24,
+    }}>{step.desc}</p>
+
+    {/* Stat pill */}
+    <div style={{
+      display: "inline-flex", alignItems: "center", gap: 10,
+      border: "1px solid rgba(128,249,200,0.15)",
+      padding: "8px 14px",
+      marginBottom: 20,
+    }}>
+      <span style={{
+        fontFamily: "'Inter',sans-serif",
+        fontSize: "16px", fontWeight: 900,
+        letterSpacing: "-0.02em", color: "#80f9c8",
+      }}>{step.stat.val}</span>
+      <span style={{
+        fontFamily: "'Space Grotesk',monospace",
+        fontSize: "9px", letterSpacing: "0.15em",
+        textTransform: "uppercase", color: "rgba(255,255,255,0.35)",
+      }}>{step.stat.label}</span>
+    </div>
+
+    {/* Tags */}
+    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+      {step.tags.map(tag => (
+        <span key={tag} style={{
+          fontFamily: "'Space Grotesk',monospace",
+          fontSize: "9px", letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "rgba(128,249,200,0.45)",
+          border: "1px solid rgba(128,249,200,0.12)",
+          padding: "3px 8px",
+        }}>{tag}</span>
+      ))}
+    </div>
+  </>
+);
+
+// ─── Rest of sections (unchanged) ────────────────────────────────────────────
 const UseCases = () => (
   <section style={{ borderBottom: "1px solid #000" }}>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px", padding: "48px" }}>
       <div style={{ gridColumn: "span 8", background: "#fff", border: "1px solid #000", padding: "32px", display: "flex", flexDirection: "column", justifyContent: "center", minHeight: 300 }}>
         <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em" }}>Applied Intelligence</h2>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", color: "rgba(20,27,43,.6)", marginTop: "16px", maxWidth: 480, lineHeight: 1.6 }}>
-          Deploying specialized voice agents across critical industries to optimize workflow and customer experience.
-        </p>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", color: "rgba(20,27,43,.6)", marginTop: "16px", maxWidth: 480, lineHeight: 1.6 }}>Deploying specialized voice agents across critical industries to optimize workflow and customer experience.</p>
       </div>
-      {[
-        { n: "01", t: "Healthcare", d: "Automated appointment handling and transcription for clinics and hospitals." },
-        { n: "02", t: "Real Estate", d: "Lead qualification calls that filter serious buyers from cold traffic." },
-      ].map((uc) => (
+      {[{ n: "01", t: "Healthcare", d: "Automated appointment handling and transcription for clinics and hospitals." }, { n: "02", t: "Real Estate", d: "Lead qualification calls that filter serious buyers from cold traffic." }].map((uc) => (
         <div key={uc.n} style={{ gridColumn: "span 4", background: "#fff", border: "1px solid #000", padding: "32px" }}>
           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "12px", color: "rgba(20,27,43,.3)", marginBottom: "16px" }}>{uc.n}</div>
           <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>{uc.t}</h3>
@@ -1226,12 +2629,7 @@ const UseCases = () => (
       </div>
       <div style={{ gridColumn: "span 4", background: "#000", border: "1px solid #000", padding: "32px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", minHeight: 250 }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.1 }}>
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs><pattern id="gb" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" />
-            </pattern></defs>
-            <rect fill="url(#gb)" width="100%" height="100%" />
-          </svg>
+          <svg width="100%" height="100%"><defs><pattern id="gb" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs><rect fill="url(#gb)" width="100%" height="100%" /></svg>
         </div>
         <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
           <div style={{ width: 48, height: 48, border: "1px solid #80f9c8", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
@@ -1242,9 +2640,7 @@ const UseCases = () => (
       </div>
       <div style={{ gridColumn: "span 8", background: "#80f9c8", border: "1px solid #000", padding: "32px" }}>
         <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", color: "#007353", marginBottom: "8px" }}>Case Study: SaaS</h4>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(0,115,83,.8)", lineHeight: 1.5, maxWidth: 600 }}>
-          90% reduction in customer onboarding friction through proactive agent-led setup calls, resulting in a 15% increase in month-one retention.
-        </p>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(0,115,83,.8)", lineHeight: 1.5, maxWidth: 600 }}>90% reduction in customer onboarding friction through proactive agent-led setup calls, resulting in a 15% increase in month-one retention.</p>
       </div>
     </div>
   </section>
@@ -1262,11 +2658,8 @@ const comparisonRows = [
 const ComparisonRow = ({ row, index }) => {
   const [hovered, setHovered] = useState(false);
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", background: hovered ? "#000" : index % 2 === 0 ? "#fff" : "#fafafa", transition: "background 0.2s", cursor: "default" }}
-    >
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", background: hovered ? "#000" : index % 2 === 0 ? "#fff" : "#fafafa", transition: "background 0.2s", cursor: "default" }}>
       <div style={{ padding: "28px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "14px" }}>
         <div style={{ width: 36, height: 36, background: hovered ? "rgba(128,249,200,0.12)" : "#f1f3ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
           <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 18, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.icon}</span>
@@ -1298,18 +2691,11 @@ const WhyDifferent = () => (
       <div style={{ padding: "64px 48px", borderRight: "1px solid #000" }}>
         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)", marginBottom: "20px" }}>Competitive Analysis</div>
         <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(52px,6vw,96px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", lineHeight: 0.92, marginBottom: "28px" }}>Why Our<br />Agents Are<br />Different</h2>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.7, color: "rgba(20,27,43,0.55)", maxWidth: "380px" }}>
-          Legacy chatbots were built for text. Nexov was built for the full complexity of live human voice — a fundamentally harder problem, solved.
-        </p>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.7, color: "rgba(20,27,43,0.55)", maxWidth: "380px" }}>Legacy chatbots were built for text. Nexov was built for the full complexity of live human voice — a fundamentally harder problem, solved.</p>
       </div>
       <div style={{ background: "#000", padding: "64px 48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.06 }}>
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-              <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#80f9c8" strokeWidth="0.8"/>
-            </pattern></defs>
-            <rect fill="url(#wd-grid)" width="100%" height="100%"/>
-          </svg>
+          <svg width="100%" height="100%"><defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#80f9c8" strokeWidth="0.8"/></pattern></defs><rect fill="url(#wd-grid)" width="100%" height="100%"/></svg>
         </div>
         <div style={{ position: "relative", zIndex: 1 }}>
           <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,0.6)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "16px" }}>Performance delta</div>
@@ -1337,12 +2723,10 @@ const WhyDifferent = () => (
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", borderTop: "1px solid #000", background: "#f9f9ff" }}>
         <div style={{ padding: "16px 32px", borderRight: "1px solid #000", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>Capability</div>
         <div style={{ padding: "16px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13 }}>history</span>
-          Legacy Chatbots
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13 }}>history</span>Legacy Chatbots
         </div>
         <div style={{ padding: "16px 32px", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#006c4e", fontWeight: 700 }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13, color: "#006c4e" }}>bolt</span>
-          Nexov Voice Agents
+          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13, color: "#006c4e" }}>bolt</span>Nexov Voice Agents
         </div>
       </div>
       {comparisonRows.map((row, i) => <ComparisonRow key={row.feature} row={row} index={i} />)}
@@ -1358,11 +2742,7 @@ const WhyDifferent = () => (
 const Metrics = () => (
   <section style={{ borderBottom: "1px solid #000", marginTop: "100px" }}>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
-      {[
-        { val: "90%", label: "Reduction in Wait Times", dark: false },
-        { val: "10K+", label: "Daily Concurrent Calls", dark: true },
-        { val: "<200ms", label: "End-to-End Latency", dark: false },
-      ].map(({ val, label, dark }) => (
+      {[{ val: "90%", label: "Reduction in Wait Times", dark: false }, { val: "10K+", label: "Daily Concurrent Calls", dark: true }, { val: "<200ms", label: "End-to-End Latency", dark: false }].map(({ val, label, dark }) => (
         <div key={label} style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: dark ? "#000" : "#fff", borderRight: "1px solid #000" }}>
           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,6vw,72px)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "16px", color: dark ? "#80f9c8" : "#000" }}>{val}</div>
           <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)" }}>{label}</div>
@@ -1376,14 +2756,10 @@ const Vision = () => (
   <section style={{ padding: "128px 48px", borderBottom: "1px solid #000", overflow: "hidden", position: "relative" }}>
     <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
       <Icon name="format_quote" style={{ fontSize: 48, color: "#006c4e", display: "block", marginBottom: "48px" }} />
-      <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>
-        "We believe AI agents will replace repetitive human workflows. We're building the infrastructure for that future."
-      </blockquote>
+      <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>"We believe AI agents will replace repetitive human workflows. We're building the infrastructure for that future."</blockquote>
       <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase" }}>— Nexov Core Vision</div>
     </div>
-    <div style={{ position: "absolute", bottom: "-80px", left: "-40px", fontFamily: "'Inter',sans-serif", fontSize: "20vw", fontWeight: 900, color: "rgba(0,0,0,.05)", textTransform: "uppercase", lineHeight: 1, pointerEvents: "none", userSelect: "none" }}>
-      FUTURE
-    </div>
+    <div style={{ position: "absolute", bottom: "-80px", left: "-40px", fontFamily: "'Inter',sans-serif", fontSize: "20vw", fontWeight: 900, color: "rgba(0,0,0,.05)", textTransform: "uppercase", lineHeight: 1, pointerEvents: "none", userSelect: "none" }}>FUTURE</div>
   </section>
 );
 
@@ -1406,9 +2782,7 @@ const WallOfLove = () => (
               <div key={i} style={{ width: 16, height: 16, background: i < t.stars ? "#80f9c8" : t.dark ? "rgba(255,255,255,.2)" : "#dce2f7" }} />
             ))}
           </div>
-          <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontStyle: "italic", lineHeight: 1.6, color: t.dark ? "#fff" : "#141b2b", marginBottom: "48px" }}>
-            "{t.quote}"
-          </blockquote>
+          <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontStyle: "italic", lineHeight: 1.6, color: t.dark ? "#fff" : "#141b2b", marginBottom: "48px" }}>"{t.quote}"</blockquote>
           <div style={{ marginTop: "auto" }}>
             <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: t.dark ? "#fff" : "#141b2b" }}>{t.name}</div>
             <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: t.dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)", textTransform: "uppercase" }}>{t.role}</div>
@@ -1422,16 +2796,10 @@ const WallOfLove = () => (
 const CTA = () => (
   <section style={{ borderBottom: "1px solid #000", background: "#6EE7B7" }}>
     <div style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-      <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,7vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.9, letterSpacing: "-0.04em", marginBottom: "48px", maxWidth: "900px" }}>
-        Start Automating Conversations Today
-      </h2>
+      <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,7vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.9, letterSpacing: "-0.04em", marginBottom: "48px", maxWidth: "900px" }}>Start Automating Conversations Today</h2>
       <div style={{ display: "flex", border: "1px solid #000", boxShadow: "8px 8px 0 #000" }}>
-        <button style={{ background: "#000", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid #000", cursor: "pointer" }}>
-          Deploy Now
-        </button>
-        <button style={{ background: "transparent", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>
-          Talk to an Engineer
-        </button>
+        <button style={{ background: "#000", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid #000", cursor: "pointer" }}>Deploy Now</button>
+        <button style={{ background: "transparent", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>Talk to an Engineer</button>
       </div>
     </div>
   </section>
@@ -1442,33 +2810,33 @@ const Footer = () => (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-end" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase" }}>Nexov AI</div>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>
-          © 2024 NEXOV AI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS
-        </div>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>© 2024 NEXOV AI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS</div>
       </div>
       <div style={{ display: "flex", gap: "32px", justifyContent: "flex-end", flexWrap: "wrap" }}>
         {["Documentation", "Privacy Policy", "System Status", "Twitter/X"].map((link) => (
-          <a key={link} href="#" style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)", textDecoration: "none" }}>
-            {link}
-          </a>
+          <a key={link} href="#" style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)", textDecoration: "none" }}>{link}</a>
         ))}
       </div>
     </div>
   </footer>
 );
 
+// ─── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   useEffect(() => { injectTailwindConfig(); }, []);
-
   return (
     <>
       <style>{styles}</style>
+      <Navbar />
       
-      <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
-        <main style={{ margin: "0 15px", paddingTop: "15px" }}>
-          <Navbar />
+      <div className="mx-[20px]">
           <Hero />
           <MarqueeBar />
+      </div>
+      <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
+        <main style={{ margin: "0 15px", paddingTop: "15px" }}>
+          
+          
           <TalkToAgent />
           <Mission />
           <ProductGrid />

@@ -1,0 +1,75 @@
+
+<style>
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;max-width:520px;margin:1.5rem auto;font-family:var(--font-sans)}
+.wave-row{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:1.25rem;height:48px}
+.bar{width:3px;border-radius:2px;background:#22c693;animation:pulse 1.2s ease-in-out infinite}
+.bar.dim{background:#b0e8d4;animation:none}
+.phone-center{width:44px;height:44px;border-radius:50%;background:#22c693;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 10px}
+.calls-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:8px}
+.call-block{display:flex;flex-direction:column;gap:3px;flex:1}
+.call-label{font-size:11px;color:var(--color-text-secondary);display:flex;align-items:center;gap:5px}
+.call-label i{font-size:13px}
+.call-num{font-size:15px;font-weight:500;color:var(--color-text-primary);letter-spacing:0.01em}
+.call-block.right{text-align:right;align-items:flex-end}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin-bottom:1rem}
+.stats-row{display:flex;justify-content:space-between;align-items:center}
+.stat{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.amber{background:#f59e0b}
+.dot.green{background:#22c693}
+.stat-val{font-weight:500;color:var(--color-text-primary)}
+@keyframes pulse{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1)}}
+</style>
+
+<div class="card">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Call monitor showing incoming and outgoing call stats with live waveform</h2>
+
+  <div class="wave-row" id="waveform"></div>
+
+  <div class="calls-row">
+    <div class="call-block">
+      <div class="call-label">
+        <i class="ti ti-phone-incoming" aria-hidden="true" style="color:#22c693"></i>
+        Incoming call
+      </div>
+      <div class="call-num">+1 (415) 555-0123</div>
+    </div>
+
+    <div class="phone-center" aria-hidden="true">
+      <i class="ti ti-phone" style="color:#fff;font-size:18px"></i>
+    </div>
+
+    <div class="call-block right">
+      <div class="call-label" style="justify-content:flex-end">
+        Outgoing call
+        <i class="ti ti-phone-outgoing" aria-hidden="true" style="color:#22c693"></i>
+      </div>
+      <div class="call-num">+1 (415) 555-0456</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <span class="dot amber"></span>
+      Latency: <span class="stat-val">120ms</span>
+    </div>
+    <div class="stat">
+      <span class="dot green"></span>
+      Success rate: <span class="stat-val">98.7%</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const wf = document.getElementById('waveform');
+const heights = [12,18,26,34,40,48,42,36,28,22,30,44,48,38,24,16,28,42,48,40,30,20,34,46,44,32,18,24,38,48,44,30,16,22,36,46,40,26,14,20,32,44,48,36,22,18,30,42,46,34];
+heights.forEach((h,i)=>{
+  const b=document.createElement('div');
+  b.className='bar'+(h<25?' dim':'');
+  b.style.height=h+'px';
+  b.style.animationDelay=(i*0.04)+'s';
+  wf.appendChild(b);
+});
+</script>

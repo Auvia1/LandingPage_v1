@@ -24,6 +24,7 @@
     "@fontsource/dm-sans": "^5.2.8",
     "@fontsource/syne": "^5.2.7",
     "@tailwindcss/postcss": "^4.3.0",
+    "@xyflow/react": "^12.10.2",
     "audiomotion-analyzer": "^4.5.4",
     "framer-motion": "^12.38.0",
     "ogl": "^1.0.11"

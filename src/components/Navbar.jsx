@@ -42,13 +42,18 @@ const Navbar = () => {
 
   return (
     <div style={{
-      position: "sticky", top: 0, zIndex: 50, width: "100%",
+      position: "sticky", top: 0, zIndex: 50,
       padding: scrolled ? "10px 0" : "0",
+      marginBottom: "20px",
+      marginLeft: "20px",
+      marginRight: "20px",
       transition: "padding 0.3s ease",
-    }}>
+    }}
+
+    >
       <nav style={{
         maxWidth: "100%",
-        marginBottom: "20px",
+        
         margin: "0 auto",
         background: scrolled ? "#fff" : "transparent",
         borderBottom: scrolled ? "none" : "0.5px solid rgba(0,0,0,0.1)",
