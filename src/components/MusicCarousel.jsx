@@ -622,6 +622,10 @@ export default function MusicCarousel() {
         }
       `}</style>
 
+      <h2 style={{ position: "relative", zIndex: 20, marginBottom: "60px", fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.02em", lineHeight: 1.1, color: "#141b2b", textAlign: "center", maxWidth: "600px", paddingTop: "40px" }}>
+        Listen To Our Agent
+      </h2>
+
       <div
         style={{
           position: "absolute",

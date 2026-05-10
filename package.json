@@ -25,6 +25,7 @@
     "@fontsource/syne": "^5.2.7",
     "@tailwindcss/postcss": "^4.3.0",
     "audiomotion-analyzer": "^4.5.4",
-    "framer-motion": "^12.38.0"
+    "framer-motion": "^12.38.0",
+    "ogl": "^1.0.11"
   }
 }
