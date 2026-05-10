@@ -28,6 +28,7 @@
     "audiomotion-analyzer": "^4.5.4",
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",
+    "motion": "^12.38.0",
     "ogl": "^1.0.11"
   }
 }

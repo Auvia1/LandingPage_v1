@@ -299,7 +299,6 @@ export const ProcessFlow = () => {
     { label: "Voice Agents", desc: "Human-like conversations powered by advanced voice AI.", icon: "voice" },
     { label: "Workflows", desc: "Intelligent orchestration of tasks and systems.", icon: "workflow" },
     { label: "Data & Context", desc: "Secure data handling and contextual AI understanding.", icon: "data" },
-    { label: "Automation", desc: "Automate repetitive processes and reduce operational overhead.", icon: "automation" },
     { label: "Deployment", desc: "Scalable deployment across regions and infrastructure.", icon: "deployment" },
   ];
 

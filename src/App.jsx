@@ -1487,10 +1487,12 @@
 // }
 
 import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import MusicCarousel from "./components/MusicCarousel";
 import Navbar from "./components/Navbar";
 import InteractiveMissionDiagram, { ProcessFlow } from "./components/InteractiveMissionDiagram";
 import DotGrid from "./components/DotGrid";
+import VariableProximity from "./components/VariableProximity";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -1774,65 +1776,120 @@ const MarqueeBar = () => {
 
 export const TalkToAgent = () => <MusicCarousel />;
 
-const Mission = () => (
-  <section style={{ padding: "96px 48px" }}>
-    <div style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start" }}>
-      {/* Left: ProcessFlow Diagram */}
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
-        <div style={{ background: "#f0f4f1", padding: "48px", borderRadius: "8px", width: "100%", maxWidth: "400px" }}>
-          <ProcessFlow />
+const ScaleInText = ({
+  text,
+  style,
+  className,
+  delayOffset = 0
+}) => {
+  const words = text.split(' ');
+  let currentTotalChars = 0;
+
+  return (
+    <span style={style} className={className}>
+      {words.map((word, wordIdx) => {
+        const wordStartOffset = currentTotalChars;
+        currentTotalChars += word.length + 1; // +1 for the space
+
+        return (
+          <span key={wordIdx} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+            {word.split('').map((char, charIdx) => (
+              <motion.span
+                key={charIdx}
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true, margin: "-20%" }}
+                transition={{
+                  delay: (wordStartOffset + charIdx + delayOffset) * 0.015,
+                  type: 'spring',
+                  stiffness: 150,
+                  damping: 15
+                }}
+                style={{ display: "inline-block" }}
+              >
+                {char}
+              </motion.span>
+            ))}
+            {/* Render a space after each word except the last one in the segment */}
+            {wordIdx < words.length - 1 && (
+              <span style={{ display: "inline-block" }}>&nbsp;</span>
+            )}
+          </span>
+        );
+      })}
+    </span>
+  );
+};
+
+const Mission = () => {
+  const containerRef = useRef(null);
+
+  return (
+    <section style={{ padding: "96px 48px" }}>
+      <div
+        ref={containerRef}
+        style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start", position: "relative" }}
+      >
+        {/* Left: ProcessFlow Diagram */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+          <div style={{ background: "#f0f4f1", padding: "48px", borderRadius: "8px", width: "100%", maxWidth: "400px" }}>
+            <ProcessFlow />
+          </div>
+        </div>
+
+        {/* Right: Mission Text & Stats */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "24px" }}>The Mission</p>
+
+          <div style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "clamp(26px, 3.5vw, 44px)",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            lineHeight: 1.4,
+            letterSpacing: "-0.03em",
+            color: "#141b2b",
+            marginBottom: "32px",
+            minHeight: "4em"
+          }}>
+            <ScaleInText text="We are an AI agents company building a suite of voice-based AI applications designed to " />
+            <ScaleInText
+              text="automate real-world"
+              delayOffset={88}
+              style={{ color: "#006c4e", borderBottom: "2.5px solid #80f9c8", paddingBottom: "2px" }}
+            />
+            <ScaleInText text=" business operations." delayOffset={107} />
+          </div>
+
+          <div style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "24px",
+            paddingTop: "28px",
+            borderTop: "1px solid #000",
+          }}>
+            {[
+              { label: "Founded", val: "2024" },
+              { label: "Agents deployed", val: "5+" },
+              { label: "Industries served", val: "Healthcare · SaaS · RE" },
+              { label: "Infrastructure", val: "14 Global PoPs" },
+            ].map((stat, i, arr) => (
+              <div key={stat.label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "4px" }}>
+                <span style={{ fontFamily: "'Space Grotesk', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)" }}>{stat.label}</span>
+                <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, letterSpacing: "-0.01em", color: "#141b2b" }}>{stat.val}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* Right: Mission Text & Stats */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "24px" }}>The Mission</p>
-
-        <p style={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "clamp(26px, 3.5vw, 44px)",
-          fontWeight: 800,
-          textTransform: "uppercase",
-          lineHeight: 1.08,
-          letterSpacing: "-0.03em",
-          color: "#141b2b",
-          marginBottom: "32px",
-        }}>
-          We are an AI agents company building a suite of voice-based AI applications designed to{" "}
-          <span style={{ color: "#006c4e", borderBottom: "2.5px solid #80f9c8", paddingBottom: "2px" }}>
-            automate real-world
-          </span>{" "}
-          business operations.
-        </p>
-
-        <div style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "24px",
-          paddingTop: "28px",
-          borderTop: "1px solid #000",
-        }}>
-          {[
-            { label: "Founded", val: "2024" },
-            { label: "Agents deployed", val: "5+" },
-            { label: "Industries served", val: "Healthcare · SaaS · RE" },
-            { label: "Infrastructure", val: "14 Global PoPs" },
-          ].map((stat, i, arr) => (
-            <div key={stat.label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "4px" }}>
-              <span style={{ fontFamily: "'Space Grotesk', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)" }}>{stat.label}</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, letterSpacing: "-0.01em", color: "#141b2b" }}>{stat.val}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 
 const products = [
   { icon: "call", title: "Call Handling Agent", desc: "Autonomous inbound and outbound call management with human-level natural language processing.", no: "01" },
-  { icon: "calendar_today", title: "Appointment Booking Agent", desc: "Syncs directly with your CRM and calendar to schedule, reschedule, and confirm consultations.", no: "02" },
+  { icon: "calendar_today", title: "Appointment Booking\nAgent", desc: "Syncs directly with your CRM and calendar to schedule, reschedule, and confirm consultations.", no: "02" },
   { icon: "support_agent", title: "Customer Support Agent", desc: "Instant resolution for Tier 1 and Tier 2 queries across voice and omnichannel interfaces.", no: "03" },
   { icon: "leaderboard", title: "Lead Qualification Agent", desc: "Screens potential customers through intelligent dialogue to ensure high-quality pipeline growth.", no: "04" },
   { icon: "medical_services", title: "Doctor Transcription Tool", desc: "Real-time medical transcription with specialized terminology support and HIPAA compliance.", no: "05" },
@@ -1840,11 +1897,12 @@ const products = [
 
 const ProductCard = ({ icon, title, desc, no }) => {
   const [hovered, setHovered] = useState(false);
-  const isCallAgent = title === "Call Handling Agent";
-  const isAppointmentAgent = title === "Appointment Booking Agent";
-  const isCustomerSupportAgent = title === "Customer Support Agent";
-  const isLeadQualificationAgent = title === "Lead Qualification Agent";
-  const isDoctorTranscriptionAgent = title === "Doctor Transcription Tool";
+  const containerRef = useRef(null);
+  const isCallAgent = title.includes("Call Handling");
+  const isAppointmentAgent = title.includes("Appointment Booking");
+  const isCustomerSupportAgent = title.includes("Customer Support");
+  const isLeadQualificationAgent = title.includes("Lead Qualification");
+  const isDoctorTranscriptionAgent = title.includes("Doctor Transcription");
 
   useEffect(() => {
     if (isCallAgent) {
@@ -1865,12 +1923,34 @@ const ProductCard = ({ icon, title, desc, no }) => {
   }, [isCallAgent]);
 
   return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ border: "none", borderRadius: "24px", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "all .2s ease-in-out", boxShadow: hovered ? "0 10px 30px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "440px", cursor: "default", overflow: "hidden" }}>
+    <div
+      ref={containerRef}
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ border: "none", borderRadius: "24px", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "all .2s ease-in-out", boxShadow: hovered ? "0 10px 30px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "440px", cursor: "default", overflow: "hidden", position: "relative" }}>
 
       <div style={{ marginBottom: "32px" }}><Icon name={icon} /></div>
-      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "28px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.2, letterSpacing: "-0.01em", marginBottom: "16px" }}>{title}</h3>
-      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "15px", color: "rgba(20,27,43,0.8)", lineHeight: 1.5, marginBottom: "32px" }}>{desc}</p>
+
+      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "28px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.4, letterSpacing: "-0.01em", marginBottom: "16px", minHeight: "2.8em", display: "flex", alignItems: "center" }}>
+        <VariableProximity
+          label={title}
+          fromFontVariationSettings="'wght' 600, 'opsz' 9"
+          toFontVariationSettings="'wght' 900, 'opsz' 40"
+          containerRef={containerRef}
+          radius={100}
+          falloff="linear"
+        />
+      </h3>
+
+      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "15px", color: "rgba(20,27,43,0.8)", lineHeight: 1.6, marginBottom: "32px", minHeight: "4.8em" }}>
+        <VariableProximity
+          label={desc}
+          fromFontVariationSettings="'wght' 400, 'opsz' 9"
+          toFontVariationSettings="'wght' 700, 'opsz' 40"
+          containerRef={containerRef}
+          radius={100}
+          falloff="linear"
+        />
+      </div>
 
       <div style={{ marginTop: "auto", height: "160px", display: "flex", flexDirection: "column", justifyContent: "center", marginBottom: "32px" }}>
 
@@ -2081,38 +2161,83 @@ const ProductCard = ({ icon, title, desc, no }) => {
       </div>
 
       <div style={{ paddingTop: "24px", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
-        <span style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Agent No. {no}</span>
+        <span style={{ display: "inline-block", minHeight: "14px", lineHeight: "1", fontFamily: "'Space Grotesk',monospace", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <VariableProximity
+            label={`Agent No. ${no}`}
+            fromFontVariationSettings="'wght' 700, 'opsz' 9"
+            toFontVariationSettings="'wght' 900, 'opsz' 40"
+            containerRef={containerRef}
+            radius={80}
+            falloff="linear"
+          />
+        </span>
       </div>
     </div>
   );
 };
 
-const ProductGrid = () => (
-  <section style={{ padding: "96px 15px", background: "transparent" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
-      {products.map((p) => <ProductCard key={p.no} {...p} />)}
-      <div style={{ border: "none", borderRadius: "24px", background: "#000", padding: "48px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs>
-            <rect fill="url(#pg)" width="100%" height="100%" />
-          </svg>
-        </div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8", display: "block", marginBottom: "16px" }}>Infrastructure Node</span>
-          {[null, null, null].map((_, i) => (
-            <div key={i} style={{ height: 4, width: ["100%", "66%", "75%"][i], background: `rgba(128,249,200,${[.2, .4, .1][i]})`, marginBottom: 8 }} />
-          ))}
-        </div>
-        <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 8, fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,.6)" }}>
-          <span>// GLOBAL_MESH_ACTIVE</span>
-          <span>// LATENCY_OPTIMIZED</span>
-          <span>// 100% UPTIME_PROTOCOL</span>
+const ProductGrid = () => {
+  const infraRef = useRef(null);
+
+  return (
+    <section style={{ padding: "96px 15px", background: "transparent" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
+        {products.map((p) => <ProductCard key={p.no} {...p} />)}
+        <div
+          ref={infraRef}
+          style={{ border: "none", borderRadius: "24px", background: "#000", padding: "48px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs>
+              <rect fill="url(#pg)" width="100%" height="100%" />
+            </svg>
+          </div>
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <span style={{ display: "inline-block", minHeight: "16px", lineHeight: "1", fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8", marginBottom: "16px" }}>
+              <VariableProximity
+                label="Infrastructure Node"
+                fromFontVariationSettings="'wght' 700, 'opsz' 9"
+                toFontVariationSettings="'wght' 900, 'opsz' 40"
+                containerRef={infraRef}
+                radius={100}
+                falloff="linear"
+              />
+            </span>
+            {[null, null, null].map((_, i) => (
+              <div key={i} style={{ height: 4, width: ["100%", "66%", "75%"][i], background: `rgba(128,249,200,${[.2, .4, .1][i]})`, marginBottom: 8 }} />
+            ))}
+          </div>
+          <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 8, fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,.6)" }}>
+            <VariableProximity
+              label="// GLOBAL_MESH_ACTIVE"
+              fromFontVariationSettings="'wght' 400, 'opsz' 9"
+              toFontVariationSettings="'wght' 700, 'opsz' 40"
+              containerRef={infraRef}
+              radius={100}
+              falloff="linear"
+            />
+            <VariableProximity
+              label="// LATENCY_OPTIMIZED"
+              fromFontVariationSettings="'wght' 400, 'opsz' 9"
+              toFontVariationSettings="'wght' 700, 'opsz' 40"
+              containerRef={infraRef}
+              radius={100}
+              falloff="linear"
+            />
+            <VariableProximity
+              label="// 100% UPTIME_PROTOCOL"
+              fromFontVariationSettings="'wght' 400, 'opsz' 9"
+              toFontVariationSettings="'wght' 700, 'opsz' 40"
+              containerRef={infraRef}
+              radius={100}
+              falloff="linear"
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // ─── IMPROVED LogicFlow ───────────────────────────────────────────────────────
 const timelineSteps = [
