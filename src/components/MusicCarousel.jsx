@@ -963,12 +963,14 @@ const Grainient = ({
     <div
       ref={containerRef}
       style={{
-        // ── KEY FIX: explicit block-level box that the canvas can fill ──
         position: 'absolute',
         inset: 0,
         width: '100%',
         height: '100%',
         overflow: 'hidden',
+        // Inherit any border-radius passed via style so the canvas is
+        // clipped right at the WebGL layer — not just by an ancestor
+        borderRadius: 'inherit',
         ...style,
       }}
     />
@@ -1166,29 +1168,30 @@ export const PlayerCard = forwardRef(
         {/* ── Artwork wrapper: this is the key fixed container ── */}
         <div
           style={{
-            // ── KEY FIX: use explicit width+paddingBottom trick for square aspect ratio
-            // instead of `aspectRatio` which can confuse OGL's ResizeObserver measurement
             position: "relative",
             width: "100%",
-            paddingBottom: "100%",   // creates a square
+            paddingBottom: "100%",          // square via padding trick
             overflow: "hidden",
+            // Explicitly clip the top corners — WebGL canvases can escape
+            // CSS overflow:hidden on the parent card in some browsers
+            borderRadius: "27px 27px 0 0",
             cursor: isCenter ? "pointer" : "default",
           }}
           onClick={isCenter ? togglePlay : undefined}
           onMouseEnter={() => setArtHovered(true)}
           onMouseLeave={() => setArtHovered(false)}
         >
-          {/* Inner absolute fill so children can use inset:0 */}
-          <div style={{ position: "absolute", inset: 0 }}>
+          {/* Inner absolute fill — also rounded so the canvas itself is clipped */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: "27px 27px 0 0", overflow: "hidden" }}>
             {/* Grainient WebGL canvas — now has a real sized parent */}
             <Grainient
               color1={g1} color2={g2} color3={g3}
-              timeSpeed={isPlaying ? 0.35 : 0.12}
+              timeSpeed={isPlaying ? 1.4 : 0.55}
               colorBalance={0.05}
-              warpStrength={isPlaying ? 1.4 : 0.7}
+              warpStrength={isPlaying ? 2.8 : 1.4}
               warpFrequency={warpFrequency ?? 4}
-              warpSpeed={isPlaying ? 2.5 : 1.0}
-              warpAmplitude={55}
+              warpSpeed={isPlaying ? 8.0 : 3.5}
+              warpAmplitude={isPlaying ? 30 : 45}
               blendAngle={blendAngle ?? 15}
               blendSoftness={0.1}
               rotationAmount={rotationAmount ?? 380}
