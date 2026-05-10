@@ -589,6 +589,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import MusicCarousel from "./components/MusicCarousel";
+import Navbar from "./components/Navbar";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -890,35 +891,6 @@ const Icon = ({ name, className = "" }) => (
   <span className={`material-symbols-outlined ${className}`} style={{ fontFamily: "Material Symbols Outlined" }}>
     {name}
   </span>
-);
-
-const Nav = () => (
-  <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#f4f4f4", borderBottom: "1px solid #000", width: "100%" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", width: "100%" }}>
-      <div style={{ gridColumn: "span 2", borderRight: "1px solid #000", padding: "16px", display: "flex", alignItems: "center" }}>
-        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", lineHeight: 1 }}>
-          Nexov<br />AI
-        </span>
-      </div>
-      <div style={{ gridColumn: "span 7", display: "flex", alignItems: "stretch" }}>
-        {["INFRASTRUCTURE", "VOICE MODELS", "API DOCS", "PRICING"].map((label) => (
-          <a key={label} href="#" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", borderRight: "1px solid #000", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", color: "#141b2b", padding: "0 8px", textAlign: "center" }}>
-            {label}
-          </a>
-        ))}
-        <div style={{ flex: 2 }} />
-      </div>
-      <div style={{ gridColumn: "span 3", display: "flex", alignItems: "stretch" }}>
-        <div style={{ flex: 1 }} />
-        <a href="#" style={{ display: "flex", alignItems: "center", padding: "0 24px", borderLeft: "1px solid #000", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textDecoration: "none", color: "#141b2b" }}>
-          LOGIN
-        </a>
-        <button style={{ background: "#000", color: "#fff", padding: "0 32px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
-          GET STARTED
-        </button>
-      </div>
-    </div>
-  </nav>
 );
 
 // ─── Hero with Grainient background ─────────────────────────────────────────
@@ -1491,9 +1463,10 @@ export default function App() {
   return (
     <>
       <style>{styles}</style>
-      <Nav />
+      
       <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
+          <Navbar />
           <Hero />
           <MarqueeBar />
           <TalkToAgent />
