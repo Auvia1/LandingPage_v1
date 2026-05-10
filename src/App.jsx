@@ -935,7 +935,7 @@ const Hero = () => (
     <Grainient
       color1="#80f9c8"
       color2="#006c4e"
-      color3="#141b2b"
+      color3="#90EE90"
       timeSpeed={0.18}
       colorBalance={0.1}
       warpStrength={1.2}
