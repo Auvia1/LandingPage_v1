@@ -1798,19 +1798,19 @@ const ScaleInText = ({
                 key={charIdx}
                 initial={{ scale: 0, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true, margin: "-20%" }}
+                viewport={{ once: true, margin: "-5%" }}
                 transition={{
-                  delay: (wordStartOffset + charIdx + delayOffset) * 0.015,
+                  delay: (wordStartOffset + charIdx + delayOffset) * 0.007,
                   type: 'spring',
-                  stiffness: 150,
-                  damping: 15
+                  stiffness: 200,
+                  damping: 18,
+                  mass: 0.6,
                 }}
                 style={{ display: "inline-block" }}
               >
                 {char}
               </motion.span>
             ))}
-            {/* Render a space after each word except the last one in the segment */}
             {wordIdx < words.length - 1 && (
               <span style={{ display: "inline-block" }}>&nbsp;</span>
             )}
@@ -1832,7 +1832,7 @@ const Mission = () => {
       >
         {/* Left: ProcessFlow Diagram */}
         <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
-          <div style={{ background: "#f0f4f1", padding: "48px", borderRadius: "8px", width: "100%", maxWidth: "400px" }}>
+          <div style={{ background: "transparent", padding: "48px", borderRadius: "8px", width: "100%", maxWidth: "400px" }}>
             <ProcessFlow />
           </div>
         </div>
@@ -1843,7 +1843,7 @@ const Mission = () => {
 
           <div style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(26px, 3.5vw, 44px)",
+            fontSize: "clamp(22px, 3vw, 36px)",
             fontWeight: 800,
             textTransform: "uppercase",
             lineHeight: 1.4,
@@ -1855,10 +1855,10 @@ const Mission = () => {
             <ScaleInText text="We are an AI agents company building a suite of voice-based AI applications designed to " />
             <ScaleInText
               text="automate real-world"
-              delayOffset={88}
+              delayOffset={80}
               style={{ color: "#006c4e", borderBottom: "2.5px solid #80f9c8", paddingBottom: "2px" }}
             />
-            <ScaleInText text=" business operations." delayOffset={107} />
+            <ScaleInText text=" business operations." delayOffset={90} />
           </div>
 
           <div style={{
@@ -1882,7 +1882,7 @@ const Mission = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

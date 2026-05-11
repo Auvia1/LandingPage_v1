@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -227,7 +228,7 @@ export default function InteractiveMissionDiagram() {
       `}</style>
 
       <div
-        style={{ width: "100%", height: "520px", background: "#f4f3ef", borderRadius: "8px", overflow: "hidden", border: "1px solid #e0e0da" }}
+        style={{ width: "100%", height: "520px", background: "transparent", borderRadius: "8px", overflow: "hidden", border: "1px solid #e0e0da" }}
         onContextMenu={(e) => e.preventDefault()}
       >
         <ReactFlowProvider>
@@ -259,37 +260,20 @@ export default function InteractiveMissionDiagram() {
 export const ProcessFlow = () => {
   const [scrollBrightness, setScrollBrightness] = React.useState(0);
   const [scrollParallax, setScrollParallax] = React.useState(0);
-  const [nodeTransforms, setNodeTransforms] = React.useState([0, 0, 0, 0, 0]);
   const containerRef = React.useRef(null);
-  const nodeRefs = React.useRef([]);
 
   React.useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-
       const elementCenter = rect.top + rect.height / 2;
       const viewportCenter = viewportHeight / 2;
       const distance = Math.abs(elementCenter - viewportCenter);
       const maxDistance = viewportHeight;
-
-      const brightness = Math.max(0, Math.min(1, 1 - distance / maxDistance));
-      setScrollBrightness(brightness);
-
-      const parallax = (rect.top * 0.5) / 100;
-      setScrollParallax(parallax);
-
-      const transforms = nodeRefs.current.map((node) => {
-        if (!node) return 0;
-        const nodeRect = node.getBoundingClientRect();
-        const nodeCenter = nodeRect.top + nodeRect.height / 2;
-        const nodeDistance = Math.abs(nodeCenter - viewportCenter);
-        return Math.max(-20, Math.min(20, (nodeDistance / maxDistance) * -40));
-      });
-      setNodeTransforms(transforms);
+      setScrollBrightness(Math.max(0, Math.min(1, 1 - distance / maxDistance)));
+      setScrollParallax((rect.top * 0.5) / 100);
     };
-
     window.addEventListener('scroll', handleScroll);
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
@@ -302,205 +286,212 @@ export const ProcessFlow = () => {
     { label: "Deployment", desc: "Scalable deployment across regions and infrastructure.", icon: "deployment" },
   ];
 
-  const iconComponents = {
-    voice: <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>,
-    workflow: <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
-    data: <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>,
-    automation: <svg viewBox="0 0 24 24"><polyline points="13 2 13 9 20 9"/><path d="M20 9L13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="13" y2="18"/></svg>,
-    deployment: <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+  const icons = {
+    voice: <><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></>,
+    workflow: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
+    data: <><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></>,
+    deployment: <><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></>,
   };
 
-  const brightnessAmount = 0.4;
-  const spineGlowIntensity = scrollBrightness * 0.6;
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
+  };
+
+  const nodeVariants = {
+    hidden: { opacity: 0, x: -36, scale: 0.93 },
+    visible: {
+      opacity: 1, x: 0, scale: 1,
+      transition: { type: "spring", stiffness: 85, damping: 14 },
+    },
+  };
+
+  const spineVariants = {
+    hidden: { scaleY: 0 },
+    visible: { scaleY: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
+  };
+
+  const spineGlow = scrollBrightness * 0.7;
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
-
-        .process-container {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+        .pf-container {
           width: 100%;
           max-width: 380px;
           margin: 0 auto;
           position: relative;
-          will-change: transform;
         }
-
-        .spine {
+        .pf-spine-track {
           position: absolute;
           left: 40px;
           top: 40px;
           bottom: 40px;
           width: 2px;
-          background: linear-gradient(to bottom, #80f9c8 0%, #006c4e 40%, #006c4e 60%, #80f9c8 100%);
+          background: rgba(128,249,200,0.1);
           z-index: 0;
-          box-shadow: 0 0 12px rgba(128, 249, 200, 0.3);
-          transition: box-shadow 0.6s ease;
-          will-change: transform, box-shadow;
+          overflow: hidden;
+          border-radius: 2px;
         }
-
-        .node-row {
+        .pf-spine {
+          position: absolute;
+          left: 0; top: 0;
+          width: 100%; height: 100%;
+          transform-origin: top center;
+          background: linear-gradient(to bottom, #80f9c8 0%, #006c4e 50%, #80f9c8 100%);
+          border-radius: 2px;
+        }
+        .pf-row {
           display: flex;
           align-items: center;
-          gap: 24px;
-          margin-bottom: 48px;
+          gap: 20px;
+          margin-bottom: 40px;
           position: relative;
           z-index: 1;
-          opacity: 0;
-          transform: translateX(-20px);
-          animation: fadeSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-          will-change: transform, opacity;
-        }
-
-        .node-row:nth-child(1) { animation-delay: 0.1s; }
-        .node-row:nth-child(2) { animation-delay: 0.2s; }
-        .node-row:nth-child(3) { animation-delay: 0.3s; }
-        .node-row:nth-child(4) { animation-delay: 0.4s; }
-        .node-row:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes fadeSlide {
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .icon-wrap {
-          width: 80px;
-          height: 80px;
-          min-width: 80px;
-          border-radius: 50%;
-          background: #fff;
-          border: 2px solid #aac9be;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          box-shadow: 0 8px 24px rgba(128, 249, 200, 0.15), 0 0 0 1px rgba(128, 249, 200, 0.1);
-          transition: all 0.6s ease;
           cursor: default;
-          will-change: transform, box-shadow;
         }
-
-        .icon-wrap svg {
-          width: 36px;
-          height: 36px;
-          stroke: #006c4e;
-          fill: none;
-          stroke-width: 1.5;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          transition: stroke 0.6s ease;
+        .pf-row:last-child { margin-bottom: 0; }
+        .pf-icon {
+          width: 80px; height: 80px; min-width: 80px;
+          border-radius: 50%;
+          background: linear-gradient(140deg, #ffffff 55%, #edfdf5 100%);
+          border: 2px solid rgba(128,249,200,0.45);
+          display: flex; align-items: center; justify-content: center;
+          position: relative;
+          transition: box-shadow 0.35s ease, border-color 0.35s ease;
         }
-
-        .icon-wrap::before {
+        .pf-row:hover .pf-icon {
+          border-color: #80f9c8;
+          box-shadow: 0 0 0 5px rgba(128,249,200,0.22), 0 8px 28px rgba(0,108,78,0.18);
+        }
+        .pf-icon svg {
+          width: 32px; height: 32px;
+          stroke: #006c4e; fill: none;
+          stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round;
+          transition: stroke 0.3s ease;
+        }
+        .pf-row:hover .pf-icon svg { stroke: #009e70; }
+        .pf-icon::before {
           content: '';
           position: absolute;
-          left: -26px;
-          top: 50%;
+          left: -27px; top: 50%;
           transform: translateY(-50%);
-          width: 12px;
-          height: 12px;
+          width: 13px; height: 13px;
           border-radius: 50%;
           background: #80f9c8;
-          border: 2px solid #f4f3ef;
-          box-shadow: 0 0 0 4px rgba(128, 249, 200, 0.25), 0 0 8px rgba(128, 249, 200, 0.4);
-          transition: box-shadow 0.6s ease;
-          will-change: box-shadow;
+          border: 2px solid #f0f4f1;
+          box-shadow: 0 0 0 4px rgba(128,249,200,0.2), 0 0 10px rgba(128,249,200,0.5);
+          transition: box-shadow 0.35s ease;
         }
-
-        .icon-wrap::after {
+        .pf-row:hover .pf-icon::before {
+          box-shadow: 0 0 0 6px rgba(128,249,200,0.3), 0 0 18px rgba(128,249,200,0.75);
+        }
+        .pf-icon::after {
           content: '';
           position: absolute;
-          left: -20px;
-          top: 50%;
+          left: -19px; top: 50%;
           transform: translateY(-50%);
-          width: 20px;
-          height: 2px;
-          background: linear-gradient(to left, #80f9c8, transparent);
-          opacity: 0.6;
-          transition: opacity 0.6s ease;
+          width: 20px; height: 2px;
+          background: linear-gradient(to right, transparent, rgba(128,249,200,0.7));
         }
-
-        .text-block {
-          flex: 1;
-        }
-
-        .label {
+        .pf-text { flex: 1; min-width: 0; }
+        .pf-label {
           font-family: 'Space Grotesk', monospace;
-          font-weight: 600;
-          font-size: 12px;
-          letter-spacing: 0.12em;
+          font-weight: 700;
+          font-size: 11px;
+          letter-spacing: 0.13em;
           color: #006c4e;
           text-transform: uppercase;
-          margin-bottom: 6px;
-          transition: color 0.6s ease;
-          will-change: color;
+          margin-bottom: 5px;
+          transition: color 0.3s ease;
         }
-
-        .desc {
+        .pf-row:hover .pf-label { color: #009e70; }
+        .pf-desc {
           font-family: 'Inter', sans-serif;
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 400;
           color: #5a7868;
-          line-height: 1.6;
-          transition: color 0.6s ease;
-          will-change: color;
+          line-height: 1.55;
+          transition: color 0.3s ease;
+        }
+        .pf-row:hover .pf-desc { color: #3a5446; }
+        .pf-num {
+          font-family: 'Space Grotesk', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          color: rgba(0,108,78,0.22);
+          letter-spacing: 0.08em;
+          align-self: flex-start;
+          padding-top: 2px;
+          min-width: 20px;
+          text-align: right;
         }
       `}</style>
-      <div
-        className="process-container"
+
+      <motion.div
+        className="pf-container"
         ref={containerRef}
         style={{ transform: `translateY(${scrollParallax}px)` }}
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
       >
-        <div
-          className="spine"
-          style={{
-            boxShadow: `0 0 ${12 + spineGlowIntensity * 12}px rgba(128, 249, 200, ${0.3 + spineGlowIntensity * 0.3})`,
-            transform: `scaleY(${0.9 + scrollBrightness * 0.1})`,
-            transformOrigin: 'center',
-          }}
-        />
-        {nodes.map((node, idx) => (
-          <div
-            key={idx}
-            className="node-row"
-            ref={el => nodeRefs.current[idx] = el}
+        {/* Animated spine */}
+        <div className="pf-spine-track">
+          <motion.div
+            className="pf-spine"
+            variants={spineVariants}
             style={{
-              transform: `translateX(${nodeTransforms[idx]}px)`,
-              opacity: Math.max(0.3, 1 - Math.abs(nodeTransforms[idx]) / 40),
+              boxShadow: `0 0 ${10 + spineGlow * 18}px rgba(128,249,200,${0.25 + spineGlow * 0.45})`,
             }}
+          />
+        </div>
+
+        {nodes.map((node, idx) => (
+          <motion.div
+            key={idx}
+            className="pf-row"
+            variants={nodeVariants}
           >
-            <div
-              className="icon-wrap"
+            {/* Icon with individual hover spring */}
+            <motion.div
+              className="pf-icon"
               style={{
-                boxShadow: `0 8px ${24 + scrollBrightness * 16}px rgba(128, 249, 200, ${0.15 + scrollBrightness * 0.15}), 0 0 0 1px rgba(128, 249, 200, ${0.1 + scrollBrightness * 0.1})`,
-                transform: `scale(${1 + scrollBrightness * 0.05})`,
+                boxShadow: `0 4px ${14 + scrollBrightness * 14}px rgba(128,249,200,${0.1 + scrollBrightness * 0.12})`,
               }}
+              whileHover={{ scale: 1.1, transition: { type: "spring", stiffness: 280, damping: 18 } }}
+              whileTap={{ scale: 0.93 }}
             >
-              <svg style={{ stroke: `rgb(0, 108, 78, ${Math.min(1, 0.6 + scrollBrightness * brightnessAmount)})` }} viewBox="0 0 24 24">{iconComponents[node.icon].props.children}</svg>
-            </div>
-            <div className="text-block">
-              <div
-                className="label"
-                style={{
-                  color: `rgba(0, 108, 78, ${Math.min(1, 0.8 + scrollBrightness * brightnessAmount)})`,
-                }}
-              >
-                {node.label}
-              </div>
-              <div
-                className="desc"
-                style={{
-                  color: `rgba(90, 120, 104, ${Math.min(1, 0.7 + scrollBrightness * brightnessAmount)})`,
-                }}
-              >
-                {node.desc}
-              </div>
-            </div>
-          </div>
+              <svg viewBox="0 0 24 24">{icons[node.icon]}</svg>
+            </motion.div>
+
+            {/* Text fades up slightly after node slide */}
+            <motion.div
+              className="pf-text"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.15 + 0.18, duration: 0.45, ease: "easeOut" }}
+            >
+              <div className="pf-label">{node.label}</div>
+              <div className="pf-desc">{node.desc}</div>
+            </motion.div>
+
+            {/* Sequential index number fades in last */}
+            <motion.span
+              className="pf-num"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.15 + 0.32, duration: 0.4 }}
+            >
+              0{idx + 1}
+            </motion.span>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </>
   );
 };
