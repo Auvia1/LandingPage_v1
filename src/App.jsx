@@ -1747,7 +1747,7 @@ const Icon = ({ name, className = "" }) => (
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 const Hero = () => (
   <section style={{ borderBottom: "1px solid #000", overflow: "hidden", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", position: "relative" }}>
-    <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.8} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={6.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
+    <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.2} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={1.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 1 }} />
     <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
       <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>V4.2.0 STABLE RELEASE</div>
@@ -1825,7 +1825,7 @@ const Mission = () => {
   const containerRef = useRef(null);
 
   return (
-    <section style={{ padding: "96px 48px" }}>
+    <section style={{ padding: "64px 48px", background: "#ffffff", borderRadius: "24px", marginTop: "100px", marginBottom: "40px", border: "1px solid #dddddd" }}>
       <div
         ref={containerRef}
         style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start", position: "relative" }}
@@ -1895,7 +1895,7 @@ const products = [
   { icon: "medical_services", title: "Doctor Transcription Tool", desc: "Real-time medical transcription with specialized terminology support and HIPAA compliance.", no: "05" },
 ];
 
-const ProductCard = ({ icon, title, desc, no }) => {
+const ProductCard = ({ icon, title, desc, no, index }) => {
   const [hovered, setHovered] = useState(false);
   const containerRef = useRef(null);
   const isCallAgent = title.includes("Call Handling");
@@ -1923,14 +1923,22 @@ const ProductCard = ({ icon, title, desc, no }) => {
   }, [isCallAgent]);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{
+        duration: 0.7,
+        delay: index * 0.12,
+        ease: [0.25, 0.1, 0.25, 1.0]
+      }}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ border: "none", borderRadius: "24px", padding: "48px", background: hovered ? "#80f9c8" : "#fff", transition: "all .2s ease-in-out", boxShadow: hovered ? "0 10px 30px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "440px", cursor: "default", overflow: "hidden", position: "relative" }}>
+      style={{ border: "none", borderRadius: "24px", padding: "28px", background: hovered ? "#80f9c8" : "#fff", transition: "background .3s ease, transform .3s ease, box-shadow .3s ease", boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "450px", cursor: "default", overflow: "hidden", position: "relative" }}>
 
-      <div style={{ marginBottom: "32px" }}><Icon name={icon} /></div>
+      <div style={{ marginBottom: "16px" }}><Icon name={icon} /></div>
 
-      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "28px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.4, letterSpacing: "-0.01em", marginBottom: "16px", minHeight: "2.8em", display: "flex", alignItems: "center" }}>
+      <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", lineHeight: 1.3, letterSpacing: "-0.01em", marginBottom: "10px", display: "flex", alignItems: "center" }}>
         <VariableProximity
           label={title}
           fromFontVariationSettings="'wght' 600, 'opsz' 9"
@@ -1941,7 +1949,7 @@ const ProductCard = ({ icon, title, desc, no }) => {
         />
       </h3>
 
-      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "15px", color: "rgba(20,27,43,0.8)", lineHeight: 1.6, marginBottom: "32px", minHeight: "4.8em" }}>
+      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", color: "rgba(20,27,43,0.8)", lineHeight: 1.5, marginBottom: "16px" }}>
         <VariableProximity
           label={desc}
           fromFontVariationSettings="'wght' 400, 'opsz' 9"
@@ -1952,34 +1960,85 @@ const ProductCard = ({ icon, title, desc, no }) => {
         />
       </div>
 
-      <div style={{ marginTop: "auto", height: "160px", display: "flex", flexDirection: "column", justifyContent: "center", marginBottom: "32px" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingTop: "12px" }}>
 
         {isCallAgent && (
           <>
             <style>{`
-              .card-monitor{background:#fff;border:1px solid #ececec;border-radius:12px;padding:12px;font-family:'Inter',sans-serif;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
-              .wave-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:12px;height:24px}
-              .bar{width:3px;border-radius:2px;background:#22c693;animation:pulse 1.2s ease-in-out infinite}
-              .bar.dim{background:#b0e8d4;animation:none}
-              .phone-center{width:28px;height:28px;border-radius:50%;background:#22c693;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 10px;font-size:12px}
-              .calls-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}
-              .call-block{display:flex;flex-direction:column;gap:3px;flex:1}
-              .call-label{font-size:10px;color:#6b7280;display:flex;align-items:center;gap:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-              .divider{height:1px;background:#ececec;margin-bottom:8px}
-              @keyframes pulse{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1)}}
+              .cm-root{background:#fff;border:1px solid #ececec;border-radius:14px;padding:14px 14px 12px;font-family:'Inter',sans-serif;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:10px;}
+              .cm-header{display:flex;align-items:center;justify-content:space-between;}
+              .cm-live-badge{display:flex;align-items:center;gap:5px;background:#edfcf4;border:1px solid #b8f0d7;border-radius:20px;padding:3px 9px;}
+              .cm-live-dot{width:6px;height:6px;border-radius:50%;background:#22c693;animation:cm-blink 1.4s ease-in-out infinite;}
+              .cm-live-text{font-size:9px;font-weight:800;color:#006c4e;letter-spacing:0.12em;text-transform:uppercase;}
+              .cm-timer{font-size:11px;font-weight:700;color:#9ca3af;font-variant-numeric:tabular-nums;letter-spacing:0.04em;}
+              .cm-caller{display:flex;align-items:center;gap:10px;}
+              .cm-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#b8f0d7,#58d89b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#006c4e;flex-shrink:0;}
+              .cm-caller-info{display:flex;flex-direction:column;gap:1px;}
+              .cm-caller-name{font-size:12px;font-weight:700;color:#111827;}
+              .cm-caller-num{font-size:10px;color:#9ca3af;font-weight:500;letter-spacing:0.02em;}
+              .cm-wave-wrap{width:100%;height:36px;display:flex;align-items:flex-end;gap:2px;overflow:hidden;border-radius:6px;padding:0 2px;}
+              .cm-bar{flex:1;border-radius:2px 2px 0 0;background:#22c693;min-height:3px;animation:cm-wave 1.2s ease-in-out infinite;}
+              .cm-bar.d{background:#c8f5e5;animation:none;height:4px!important;}
+              .cm-stats{display:flex;align-items:center;border-top:1px solid #f0f0f0;padding-top:10px;gap:0;}
+              .cm-stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+              .cm-stat+.cm-stat{border-left:1px solid #f0f0f0;}
+              .cm-stat-val{font-size:13px;font-weight:800;color:#111827;}
+              .cm-stat-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;}
+              .cm-route{display:flex;align-items:center;gap:6px;background:#f8f9fa;border-radius:8px;padding:6px 10px;}
+              .cm-route-icon{width:18px;height:18px;border-radius:50%;background:#22c693;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;}
+              .cm-route-label{font-size:10px;color:#374151;font-weight:600;flex:1;}
+              .cm-route-badge{font-size:8px;font-weight:700;color:#006c4e;background:#dff9ee;border-radius:4px;padding:2px 6px;letter-spacing:0.05em;}
+              @keyframes cm-wave{0%,100%{transform:scaleY(0.35)}50%{transform:scaleY(1)}}
+              @keyframes cm-blink{0%,100%{opacity:1}50%{opacity:0.35}}
             `}</style>
-            <div className="card-monitor">
-              <div className="wave-row" id="waveform-card"></div>
-              <div className="calls-row">
-                <div className="call-block">
-                  <div className="call-label">📞 IN</div>
+            <div className="cm-root">
+              {/* Header: LIVE badge + timer */}
+              <div className="cm-header">
+                <div className="cm-live-badge">
+                  <div className="cm-live-dot" />
+                  <span className="cm-live-text">Live Call</span>
                 </div>
-                <div className="phone-center">☎️</div>
-                <div className="call-block right">
-                  <div className="call-label" style={{ justifyContent: "flex-end" }}>OUT 📞</div>
+                <span className="cm-timer">02:14</span>
+              </div>
+
+              {/* Caller info */}
+              <div className="cm-caller">
+                <div className="cm-avatar">JD</div>
+                <div className="cm-caller-info">
+                  <span className="cm-caller-name">John Davidson</span>
+                  <span className="cm-caller-num">+1 (555) 284-9102</span>
                 </div>
               </div>
-              <div className="divider"></div>
+
+              {/* Waveform */}
+              <div className="cm-wave-wrap" id="waveform-card">
+                {[40, 55, 30, 70, 85, 60, 45, 75, 90, 55, 35, 65, 80, 50, 40, 70, 85, 55, 30, 60, 75, 45, 65, 80, 50, 35, 70, 90, 55, 40].map((h, i) => (
+                  <div key={i} className={`cm-bar${h < 42 ? ' d' : ''}`} style={{ height: h * 0.4 + 'px', animationDelay: (i * 0.04) + 's' }} />
+                ))}
+              </div>
+
+              {/* Route info */}
+              <div className="cm-route">
+                <div className="cm-route-icon">☎</div>
+                <span className="cm-route-label">Inbound → Support Queue</span>
+                <span className="cm-route-badge">AI HANDLING</span>
+              </div>
+
+              {/* Stats bar */}
+              <div className="cm-stats">
+                <div className="cm-stat">
+                  <span className="cm-stat-val">1,248</span>
+                  <span className="cm-stat-lbl">Calls Today</span>
+                </div>
+                <div className="cm-stat">
+                  <span className="cm-stat-val">98%</span>
+                  <span className="cm-stat-lbl">Resolved</span>
+                </div>
+                <div className="cm-stat">
+                  <span className="cm-stat-val">&lt;1.2s</span>
+                  <span className="cm-stat-lbl">Response</span>
+                </div>
+              </div>
             </div>
           </>
         )}
@@ -1987,34 +2046,88 @@ const ProductCard = ({ icon, title, desc, no }) => {
         {isAppointmentAgent && (
           <>
             <style>{`
-              .booking-wrapper { width: 100%; font-family: 'Inter', sans-serif; }
-              .booking-card { background: white; border: 1px solid #ececec; border-radius: 12px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-              .b-day { flex: 1; min-width: 0; height: 48px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s ease; }
-              .b-day:hover { background: #f6f6f6; }
-              .b-day span { font-size: 8px; font-weight: 700; color: #9ca3af; margin-bottom: 2px; letter-spacing: 0.5px; }
-              .b-day h3 { font-size: 16px; color: #111827; font-weight: 700; margin: 0; }
-              .active-day { background: #dff9ee; border: 1px solid #b8f0d7; }
-              .time-container { margin-top: 12px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-              .b-time { flex: 1; height: 32px; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #374151; background: white; cursor: pointer; transition: 0.2s ease; letter-spacing: 0.5px; }
-              .b-time:hover { border-color: #c7c7c7; }
-              .active-time { background: #f0fdf4; border: 1px solid #b8f0d7; color: #006c4e; }
-              .b-dots { flex: 0 0 32px; font-size: 16px; font-weight: 700; letter-spacing: 1px; border: none; background: transparent; }
-              .b-dots:hover { border: none; background: transparent; }
+              .bk-root{background:#fff;border:1px solid #ececec;border-radius:14px;padding:14px 14px 12px;font-family:'Inter',sans-serif;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:10px;}
+              .bk-header{display:flex;align-items:center;justify-content:space-between;}
+              .bk-month{font-size:11px;font-weight:800;color:#111827;letter-spacing:-0.01em;}
+              .bk-sync{display:flex;align-items:center;gap:4px;background:#edfcf4;border:1px solid #b8f0d7;border-radius:20px;padding:2px 8px;}
+              .bk-sync-dot{width:5px;height:5px;border-radius:50%;background:#22c693;animation:bk-blink 1.4s ease-in-out infinite;}
+              .bk-sync-text{font-size:8px;font-weight:800;color:#006c4e;letter-spacing:0.1em;text-transform:uppercase;}
+              .bk-days{display:flex;gap:4px;}
+              .bk-day{flex:1;min-width:0;border-radius:10px;height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent;transition:0.18s ease;}
+              .bk-day:hover{background:#f6f6f6;}
+              .bk-day-name{font-size:8px;font-weight:700;color:#9ca3af;letter-spacing:0.5px;margin-bottom:3px;}
+              .bk-day-num{font-size:17px;font-weight:800;color:#111827;line-height:1;}
+              .bk-active{background:#dff9ee;border-color:#b8f0d7;}
+              .bk-active .bk-day-name{color:#006c4e;}
+              .bk-active .bk-day-num{color:#006c4e;}
+              .bk-times{display:flex;gap:5px;}
+              .bk-time{flex:1;height:30px;border:1px solid #e5e7eb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#374151;background:white;cursor:pointer;transition:0.18s ease;letter-spacing:0.3px;}
+              .bk-time:hover{border-color:#b8f0d7;}
+              .bk-time-active{background:#f0fdf4;border-color:#b8f0d7;color:#006c4e;}
+              .bk-confirmed{display:flex;align-items:center;gap:8px;background:#f8f9fa;border-radius:10px;padding:8px 10px;}
+              .bk-conf-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#b8f0d7,#58d89b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#006c4e;flex-shrink:0;}
+              .bk-conf-info{flex:1;display:flex;flex-direction:column;gap:1px;}
+              .bk-conf-name{font-size:11px;font-weight:700;color:#111827;}
+              .bk-conf-time{font-size:9px;color:#9ca3af;font-weight:500;}
+              .bk-conf-badge{font-size:8px;font-weight:800;color:#006c4e;background:#dff9ee;border:1px solid #b8f0d7;border-radius:4px;padding:2px 6px;white-space:nowrap;}
+              .bk-stats{display:flex;align-items:center;border-top:1px solid #f0f0f0;padding-top:10px;gap:0;}
+              .bk-stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+              .bk-stat+.bk-stat{border-left:1px solid #f0f0f0;}
+              .bk-stat-val{font-size:13px;font-weight:800;color:#111827;}
+              .bk-stat-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;}
+              @keyframes bk-blink{0%,100%{opacity:1}50%{opacity:0.35}}
             `}</style>
-            <div className="booking-wrapper">
-              <div className="booking-card">
-                <div className="b-day"><span>MON</span><h3>20</h3></div>
-                <div className="b-day"><span>TUE</span><h3>21</h3></div>
-                <div className="b-day active-day"><span>WED</span><h3>22</h3></div>
-                <div className="b-day"><span>THU</span><h3>23</h3></div>
-                <div className="b-day"><span>FRI</span><h3>24</h3></div>
+            <div className="bk-root">
+              {/* Header */}
+              <div className="bk-header">
+                <span className="bk-month">May 2026</span>
+                <div className="bk-sync">
+                  <div className="bk-sync-dot" />
+                  <span className="bk-sync-text">CRM Synced</span>
+                </div>
               </div>
-              <div className="time-container">
-                <div className="b-time">9:00 AM</div>
-                <div className="b-time active-time">10:30 AM</div>
-                <div className="b-time">12:00 PM</div>
-                <div className="b-time">2:30 PM</div>
-                <div className="b-time b-dots">...</div>
+
+              {/* Day picker */}
+              <div className="bk-days">
+                {[{ d: 'MON', n: 20 }, { d: 'TUE', n: 21 }, { d: 'WED', n: 22, active: true }, { d: 'THU', n: 23 }, { d: 'FRI', n: 24 }].map(({ d, n, active }) => (
+                  <div key={n} className={`bk-day${active ? ' bk-active' : ''}`}>
+                    <span className="bk-day-name">{d}</span>
+                    <span className="bk-day-num">{n}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Time slots */}
+              <div className="bk-times">
+                {['9:00 AM', '10:30 AM', '12:00 PM', '2:30 PM'].map((t, i) => (
+                  <div key={t} className={`bk-time${i === 1 ? ' bk-time-active' : ''}`}>{t}</div>
+                ))}
+              </div>
+
+              {/* Confirmed booking */}
+              <div className="bk-confirmed">
+                <div className="bk-conf-avatar">SR</div>
+                <div className="bk-conf-info">
+                  <span className="bk-conf-name">Sarah Reynolds</span>
+                  <span className="bk-conf-time">Wed 22 · 10:30 AM · 30 min</span>
+                </div>
+                <span className="bk-conf-badge">✓ BOOKED</span>
+              </div>
+
+              {/* Stats bar */}
+              <div className="bk-stats">
+                <div className="bk-stat">
+                  <span className="bk-stat-val">847</span>
+                  <span className="bk-stat-lbl">Booked</span>
+                </div>
+                <div className="bk-stat">
+                  <span className="bk-stat-val">3%</span>
+                  <span className="bk-stat-lbl">No-show</span>
+                </div>
+                <div className="bk-stat">
+                  <span className="bk-stat-val">&lt;30s</span>
+                  <span className="bk-stat-lbl">Book Time</span>
+                </div>
               </div>
             </div>
           </>
@@ -2023,30 +2136,52 @@ const ProductCard = ({ icon, title, desc, no }) => {
         {isCustomerSupportAgent && (
           <>
             <style>{`
-              .c-chat-box{ display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
-              .c-message{ max-width:85%; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:500; line-height:1.4; color:#374151; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
-              .c-user{ background:#f3f4f6; align-self:flex-start; border-top-left-radius:4px; }
-              .c-bot-row{ display:flex; align-items:center; gap:6px; align-self:flex-end; }
-              .c-bot{ background:#dff9ee; border-top-right-radius:4px; }
-              .c-voice-btn{ width:32px; height:32px; border-radius:10px; background:white; border:1px solid #ececec; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
-              .c-wave{ display:flex; align-items:center; gap:2px; }
-              .c-wave span{ width:2px; background:#57d89a; border-radius:10px; animation:wave 1s infinite ease-in-out; }
-              .c-wave span:nth-child(1){ height:6px; animation-delay:0s; }
-              .c-wave span:nth-child(2){ height:10px; animation-delay:0.1s; }
-              .c-wave span:nth-child(3){ height:14px; animation-delay:0.2s; }
-              .c-wave span:nth-child(4){ height:8px; animation-delay:0.3s; }
-              .c-wave span:nth-child(5){ height:4px; animation-delay:0.4s; }
-              @keyframes wave{ 0%,100%{ transform:scaleY(1); opacity:0.8; } 50%{ transform:scaleY(1.4); opacity:1; } }
-              .c-stats{ background:white; border:1px solid #ececec; border-radius:12px; padding:12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
-              .c-stat{ flex:1; }
-              .c-label{ font-size:8px; color:#9ca3af; margin-bottom:2px; font-weight:700; text-transform: uppercase; letter-spacing:0.5px; }
-              .c-value{ font-size:16px; color:#111827; font-weight:700; }
-              .c-divider{ width:1px; height:24px; background:#ececec; margin:0 12px; }
-              .c-graph{ width:48px; height:24px; }
-              .c-graph svg{ width:100%; height:100%; }
-              .c-graph path{ stroke:#7ce0ad; stroke-width:4; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+              .c-root{background:#fff;border:1px solid #ececec;border-radius:14px;padding:16px;font-family:'Inter',sans-serif;width:100%;height:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:12px;box-sizing:border-box;}
+              .c-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid #f0f0f0;}
+              .c-agent{display:flex;align-items:center;gap:8px;}
+              .c-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#b8f0d7,#58d89b);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#006c4e;flex-shrink:0;box-shadow:0 2px 6px rgba(34,198,147,0.15);}
+              .c-agent-info{display:flex;flex-direction:column;gap:1px;}
+              .c-agent-name{font-size:12px;font-weight:700;color:#111827;}
+              .c-agent-status{font-size:10px;color:#22c693;font-weight:600;}
+              .c-channel{display:flex;align-items:center;gap:5px;background:#f0f7ff;border:1px solid #bfdbfe;border-radius:20px;padding:4px 10px;}
+              .c-channel-dot{width:6px;height:6px;border-radius:50%;background:#3b82f6;animation:c-blink 1.4s ease-in-out infinite;}
+              .c-channel-text{font-size:9px;font-weight:700;color:#3b82f6;letter-spacing:0.1em;text-transform:uppercase;}
+              .c-chat-box{display:flex;flex-direction:column;gap:10px;background:#f8f9fa;border-radius:10px;padding:12px;border:1px solid #f0f0f0;flex:1;overflow-y:auto;min-height:80px;}
+              .c-message{max-width:85%;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:500;line-height:1.5;color:#374151;word-wrap:break-word;}
+              .c-user{background:#fff;border:1px solid #e5e7eb;align-self:flex-start;border-bottom-left-radius:2px;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+              .c-bot-row{display:flex;align-items:flex-end;gap:6px;align-self:flex-end;}
+              .c-bot{background:#22c693;color:#fff;border-bottom-right-radius:2px;box-shadow:0 2px 8px rgba(34,198,147,0.2);}
+              .c-voice-btn{width:28px;height:28px;border-radius:8px;background:#fff;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.05);flex-shrink:0;cursor:pointer;transition:all 0.2s ease;}
+              .c-voice-btn:hover{background:#f8f9fa;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+              .c-wave{display:flex;align-items:center;gap:1.5px;height:14px;}
+              .c-wave span{width:2px;background:#22c693;border-radius:10px;animation:c-wave-anim 1s infinite ease-in-out;}
+              .c-wave span:nth-child(1){height:6px;animation-delay:0s;}
+              .c-wave span:nth-child(2){height:10px;animation-delay:0.1s;}
+              .c-wave span:nth-child(3){height:14px;animation-delay:0.2s;}
+              .c-wave span:nth-child(4){height:8px;animation-delay:0.3s;}
+              .c-wave span:nth-child(5){height:4px;animation-delay:0.4s;}
+              .c-stats{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f0f0f0;padding-top:12px;gap:8px;}
+              .c-stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 8px;}
+              .c-stat:not(:last-child){border-right:1px solid #f0f0f0;}
+              .c-stat-val{font-size:14px;font-weight:800;color:#111827;}
+              .c-stat-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.15em;}
+              @keyframes c-wave-anim{0%,100%{transform:scaleY(0.4);opacity:0.6;}50%{transform:scaleY(1);opacity:1;}}
+              @keyframes c-blink{0%,100%{opacity:1}50%{opacity:0.4}}
             `}</style>
-            <div style={{ width: "100%" }}>
+            <div className="c-root">
+              <div className="c-header">
+                <div className="c-agent">
+                  <div className="c-avatar">AI</div>
+                  <div className="c-agent-info">
+                    <span className="c-agent-name">Support Agent</span>
+                    <span className="c-agent-status">Online</span>
+                  </div>
+                </div>
+                <div className="c-channel">
+                  <div className="c-channel-dot"></div>
+                  <span className="c-channel-text">Omnichannel</span>
+                </div>
+              </div>
               <div className="c-chat-box">
                 <div className="c-message c-user">I need help with my appointment.</div>
                 <div className="c-bot-row">
@@ -2058,16 +2193,16 @@ const ProductCard = ({ icon, title, desc, no }) => {
               </div>
               <div className="c-stats">
                 <div className="c-stat">
-                  <div className="c-label">Resolved</div>
-                  <div className="c-value">1,248</div>
+                  <span className="c-stat-val">1,248</span>
+                  <span className="c-stat-lbl">Resolved</span>
                 </div>
-                <div className="c-divider"></div>
                 <div className="c-stat">
-                  <div className="c-label">Time</div>
-                  <div className="c-value">1.2s</div>
+                  <span className="c-stat-val">98%</span>
+                  <span className="c-stat-lbl">CSAT</span>
                 </div>
-                <div className="c-graph">
-                  <svg viewBox="0 0 100 50"><path d="M5 35 L20 20 L35 30 L50 10 L65 28 L80 35 L95 18" /></svg>
+                <div className="c-stat">
+                  <span className="c-stat-val">&lt;1.2s</span>
+                  <span className="c-stat-lbl">Response</span>
                 </div>
               </div>
             </div>
@@ -2077,52 +2212,86 @@ const ProductCard = ({ icon, title, desc, no }) => {
         {isLeadQualificationAgent && (
           <>
             <style>{`
-              .l-wrapper{ width:100%; display:flex; flex-direction:column; gap:8px; }
-              .l-card{ position:relative; height:44px; background:white; border:1px solid #ececec; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:space-between; padding:0 12px; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
-              .l-left{ position:absolute; left:0; top:0; height:100%; display:flex; align-items:center; padding-left:24px; color:#1f2937; font-size:11px; font-weight:700; clip-path:polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%, 4% 50%); text-transform:uppercase; letter-spacing:0.5px;}
-              .l-lead{ width:65%; background:linear-gradient(90deg, #c7f6df 0%, #edfdf5 100%); }
-              .l-qualified{ width:55%; background:linear-gradient(90deg, #b7f2d5 0%, #ebfcf4 100%); }
-              .l-sales{ width:45%; background:linear-gradient(90deg, #79e5af 0%, #eefdf5 100%); }
-              .l-right{ margin-left:auto; height:100%; display:flex; align-items:center; }
-              .l-count{ width:56px; height:100%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#1f2937; border-left:1px solid #f0f0f0; }
-              .l-icon-box{ width:48px; height:100%; display:flex; align-items:center; justify-content:center; border-left:1px solid #f0f0f0; }
-              .l-users{ display:flex; align-items:center; gap:0px; }
-              .l-users svg{ width:16px; height:16px; }
-              .l-green{ stroke:#5ad698; }
-              .l-gray{ stroke:#cfcfcf; }
-              .l-single{ width:18px; height:18px; }
+              .lq-root{background:#fff;border:1px solid #ececec;border-radius:14px;padding:14px 14px 12px;font-family:'Inter',sans-serif;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:10px;}
+              .lq-header{display:flex;align-items:center;justify-content:space-between;}
+              .lq-title{font-size:11px;font-weight:800;color:#111827;letter-spacing:-0.01em;}
+              .lq-badge{display:flex;align-items:center;gap:4px;background:#edfcf4;border:1px solid #b8f0d7;border-radius:20px;padding:2px 8px;}
+              .lq-badge-dot{width:5px;height:5px;border-radius:50%;background:#22c693;animation:lq-blink 1.4s ease-in-out infinite;}
+              .lq-badge-text{font-size:8px;font-weight:800;color:#006c4e;letter-spacing:0.1em;text-transform:uppercase;}
+              .lq-funnel{display:flex;flex-direction:column;gap:6px;}
+              .lq-stage{display:flex;align-items:center;gap:8px;}
+              .lq-label{font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;width:68px;flex-shrink:0;}
+              .lq-bar-track{flex:1;height:22px;background:#f3f4f6;border-radius:6px;overflow:hidden;position:relative;}
+              .lq-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;transition:width 0.6s ease;}
+              .lq-count{font-size:11px;font-weight:800;color:#111827;width:40px;text-align:right;flex-shrink:0;}
+              .lq-lead-card{display:flex;align-items:center;gap:8px;background:#f8f9fa;border-radius:10px;padding:7px 10px;}
+              .lq-lead-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#b8f0d7,#58d89b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#006c4e;flex-shrink:0;}
+              .lq-lead-info{flex:1;display:flex;flex-direction:column;gap:1px;}
+              .lq-lead-name{font-size:11px;font-weight:700;color:#111827;}
+              .lq-lead-src{font-size:9px;color:#9ca3af;font-weight:500;}
+              .lq-score{display:flex;align-items:center;gap:4px;}
+              .lq-score-val{font-size:12px;font-weight:800;color:#22c693;}
+              .lq-score-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;}
+              .lq-stats{display:flex;align-items:center;border-top:1px solid #f0f0f0;padding-top:10px;gap:0;}
+              .lq-stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+              .lq-stat+.lq-stat{border-left:1px solid #f0f0f0;}
+              .lq-stat-val{font-size:13px;font-weight:800;color:#111827;}
+              .lq-stat-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;}
+              @keyframes lq-blink{0%,100%{opacity:1}50%{opacity:0.35}}
             `}</style>
-            <div className="l-wrapper">
-              <div className="l-card">
-                <div className="l-left l-lead">New Leads</div>
-                <div className="l-right">
-                  <div className="l-count">2,346</div>
-                  <div className="l-icon-box">
-                    <div className="l-users">
-                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
-                      <svg viewBox="0 0 24 24" fill="none" className="l-gray"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
-                    </div>
-                  </div>
+            <div className="lq-root">
+              {/* Header */}
+              <div className="lq-header">
+                <span className="lq-title">Lead Pipeline</span>
+                <div className="lq-badge">
+                  <div className="lq-badge-dot" />
+                  <span className="lq-badge-text">AI Scoring</span>
                 </div>
               </div>
-              <div className="l-card">
-                <div className="l-left l-qualified">Qualified</div>
-                <div className="l-right">
-                  <div className="l-count">842</div>
-                  <div className="l-icon-box">
-                    <div className="l-users">
-                      <svg viewBox="0 0 24 24" fill="none" className="l-green"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
+
+              {/* Funnel stages */}
+              <div className="lq-funnel">
+                {[
+                  { label: 'New Leads',   count: '2,346', pct: '100%', color: '#22c693' },
+                  { label: 'Qualified',   count: '842',   pct: '36%',  color: '#16a97f' },
+                  { label: 'Sales Ready', count: '278',   pct: '12%',  color: '#0d7a5f' },
+                ].map(({ label, count, pct, color }) => (
+                  <div key={label} className="lq-stage">
+                    <span className="lq-label">{label}</span>
+                    <div className="lq-bar-track">
+                      <div className="lq-bar-fill" style={{ width: pct, background: color }}>{pct}</div>
                     </div>
+                    <span className="lq-count">{count}</span>
                   </div>
+                ))}
+              </div>
+
+              {/* Top lead chip */}
+              <div className="lq-lead-card">
+                <div className="lq-lead-avatar">MK</div>
+                <div className="lq-lead-info">
+                  <span className="lq-lead-name">Marcus Klein</span>
+                  <span className="lq-lead-src">Inbound call · Enterprise SaaS</span>
+                </div>
+                <div className="lq-score">
+                  <span className="lq-score-val">94</span>
+                  <span className="lq-score-lbl">Score</span>
                 </div>
               </div>
-              <div className="l-card">
-                <div className="l-left l-sales">Sales Ready</div>
-                <div className="l-right">
-                  <div className="l-count">278</div>
-                  <div className="l-icon-box">
-                    <svg viewBox="0 0 24 24" fill="none" className="l-green l-single"><circle cx="12" cy="7" r="3.5" strokeWidth="2" /><path d="M5 19C5 15.8 7.7 14 12 14C16.3 14 19 15.8 19 19" strokeWidth="2" strokeLinecap="round" /></svg>
-                  </div>
+
+              {/* Stats bar */}
+              <div className="lq-stats">
+                <div className="lq-stat">
+                  <span className="lq-stat-val">2,346</span>
+                  <span className="lq-stat-lbl">Leads</span>
+                </div>
+                <div className="lq-stat">
+                  <span className="lq-stat-val">36%</span>
+                  <span className="lq-stat-lbl">Qualified</span>
+                </div>
+                <div className="lq-stat">
+                  <span className="lq-stat-val">12%</span>
+                  <span className="lq-stat-lbl">Sales Ready</span>
                 </div>
               </div>
             </div>
@@ -2132,47 +2301,93 @@ const ProductCard = ({ icon, title, desc, no }) => {
         {isDoctorTranscriptionAgent && (
           <>
             <style>{`
-              .d-card{ background:white; border:1px solid #ececec; border-radius:12px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03); width: 100%; }
-              .d-audio-header{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-              .d-time{ font-size:10px; font-weight:600; color:#9ca3af; min-width:32px; }
-              .d-play-btn{ width:24px; height:24px; border-radius:50%; background:#dff9ee; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; }
-              .d-play-btn::before{ content:""; width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:6px solid #006c4e; margin-left:2px; }
-              .d-progress-wrapper{ flex:1; height:4px; background:#ececf1; border-radius:999px; overflow:hidden; position:relative; }
-              .d-progress{ width:35%; height:100%; background:#58d89b; border-radius:999px; }
-              .d-transcript{ font-size:14px; line-height:1.6; font-weight:500; color:#374151; letter-spacing:-0.2px; }
-              .d-highlight{ color:#006c4e; background:#eafcf3; padding:1px 4px; border-radius:4px; font-weight:600; }
+              .dt-root{background:#fff;border:1px solid #ececec;border-radius:14px;padding:14px 14px 12px;font-family:'Inter',sans-serif;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:10px;}
+              .dt-header{display:flex;align-items:center;justify-content:space-between;}
+              .dt-title{font-size:11px;font-weight:800;color:#111827;letter-spacing:-0.01em;}
+              .dt-badge{display:flex;align-items:center;gap:4px;background:#edfcf4;border:1px solid #b8f0d7;border-radius:20px;padding:2px 8px;}
+              .dt-badge-dot{width:5px;height:5px;border-radius:50%;background:#22c693;animation:dt-blink 1.4s ease-in-out infinite;}
+              .dt-badge-text{font-size:8px;font-weight:800;color:#006c4e;letter-spacing:0.1em;text-transform:uppercase;}
+              .dt-patient{display:flex;align-items:center;gap:8px;background:#f8f9fa;border-radius:10px;padding:7px 10px;}
+              .dt-pat-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#b8f0d7,#58d89b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#006c4e;flex-shrink:0;}
+              .dt-pat-info{flex:1;display:flex;flex-direction:column;gap:1px;}
+              .dt-pat-name{font-size:11px;font-weight:700;color:#111827;}
+              .dt-pat-meta{font-size:9px;color:#9ca3af;font-weight:500;}
+              .dt-hipaa{font-size:8px;font-weight:800;color:#006c4e;background:#dff9ee;border:1px solid #b8f0d7;border-radius:4px;padding:2px 6px;white-space:nowrap;}
+              .dt-audio{display:flex;align-items:center;gap:8px;}
+              .dt-play{width:24px;height:24px;border-radius:50%;background:#dff9ee;border:1px solid #b8f0d7;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;position:relative;}
+              .dt-play::after{content:'';width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid #006c4e;margin-left:2px;}
+              .dt-track{flex:1;height:5px;background:#f0f0f0;border-radius:999px;overflow:hidden;}
+              .dt-fill{width:35%;height:100%;background:linear-gradient(90deg,#22c693,#58d89b);border-radius:999px;}
+              .dt-time{font-size:9px;font-weight:600;color:#9ca3af;white-space:nowrap;}
+              .dt-transcript-box{background:#f8f9fa;border:1px solid #f0f0f0;border-radius:10px;padding:10px 12px;}
+              .dt-transcript-lbl{font-size:8px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:5px;}
+              .dt-transcript-text{font-size:11px;line-height:1.7;font-weight:500;color:#374151;}
+              .dt-highlight{color:#006c4e;background:#eafcf3;padding:1px 4px;border-radius:4px;font-weight:700;}
+              .dt-fields{display:flex;gap:5px;}
+              .dt-field{flex:1;background:#f8f9fa;border:1px solid #f0f0f0;border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;gap:2px;}
+              .dt-field-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;}
+              .dt-field-val{font-size:10px;font-weight:700;color:#111827;}
+              .dt-stats{display:flex;align-items:center;border-top:1px solid #f0f0f0;padding-top:10px;gap:0;}
+              .dt-stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+              .dt-stat+.dt-stat{border-left:1px solid #f0f0f0;}
+              .dt-stat-val{font-size:13px;font-weight:800;color:#111827;}
+              .dt-stat-lbl{font-size:8px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;}
+              @keyframes dt-blink{0%,100%{opacity:1}50%{opacity:0.35}}
             `}</style>
-            <div className="d-card">
-              <div className="d-audio-header">
-                <div className="d-time">00:03</div>
-                <div className="d-play-btn"></div>
-                <div className="d-progress-wrapper">
-                  <div className="d-progress"></div>
+            <div className="dt-root">
+              {/* Header */}
+              <div className="dt-header">
+                <span className="dt-title">Live Transcription</span>
+                <div className="dt-badge">
+                  <div className="dt-badge-dot" />
+                  <span className="dt-badge-text">Recording</span>
                 </div>
-                <div className="d-time" style={{ textAlign: "right" }}>03:42</div>
               </div>
-              <div className="d-transcript">
-                Patient reports persistent <span className="d-highlight">headaches</span> and mild <span className="d-highlight">dizziness</span> for the past 3 days. Prescribing rest.
+
+              {/* Patient row */}
+              <div className="dt-patient">
+                <div className="dt-pat-avatar">RJ</div>
+                <div className="dt-pat-info">
+                  <span className="dt-pat-name">Robert Johnson</span>
+                  <span className="dt-pat-meta">DOB: 14 Mar 1978 · Visit #2841</span>
+                </div>
+                <span className="dt-hipaa">🔒 HIPAA</span>
+              </div>
+
+              {/* Audio player */}
+              <div className="dt-audio">
+                <div className="dt-play" />
+                <div className="dt-track"><div className="dt-fill" /></div>
+                <span className="dt-time">00:03 / 03:42</span>
+              </div>
+
+              {/* Transcript */}
+              <div className="dt-transcript-box">
+                <div className="dt-transcript-lbl">Transcript</div>
+                <div className="dt-transcript-text">
+                  Patient reports persistent <span className="dt-highlight">headaches</span> and mild <span className="dt-highlight">dizziness</span> for 3 days. No fever. Prescribing <span className="dt-highlight">rest</span> + follow-up in 5 days.
+                </div>
+              </div>
+
+              {/* Extracted fields */}
+              <div className="dt-fields">
+                <div className="dt-field"><span className="dt-field-lbl">Symptoms</span><span className="dt-field-val">Headache, Dizziness</span></div>
+                <div className="dt-field"><span className="dt-field-lbl">Duration</span><span className="dt-field-val">3 Days</span></div>
+                <div className="dt-field"><span className="dt-field-lbl">Rx</span><span className="dt-field-val">Rest + Follow-up</span></div>
+              </div>
+
+              {/* Stats bar */}
+              <div className="dt-stats">
+                <div className="dt-stat"><span className="dt-stat-val">99%</span><span className="dt-stat-lbl">Accuracy</span></div>
+                <div className="dt-stat"><span className="dt-stat-val">&lt;1s</span><span className="dt-stat-lbl">Latency</span></div>
+                <div className="dt-stat"><span className="dt-stat-val">HIPAA</span><span className="dt-stat-lbl">Compliant</span></div>
               </div>
             </div>
           </>
         )}
 
       </div>
-
-      <div style={{ paddingTop: "24px", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
-        <span style={{ display: "inline-block", minHeight: "14px", lineHeight: "1", fontFamily: "'Space Grotesk',monospace", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          <VariableProximity
-            label={`Agent No. ${no}`}
-            fromFontVariationSettings="'wght' 700, 'opsz' 9"
-            toFontVariationSettings="'wght' 900, 'opsz' 40"
-            containerRef={containerRef}
-            radius={80}
-            falloff="linear"
-          />
-        </span>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -2181,10 +2396,22 @@ const ProductGrid = () => {
 
   return (
     <section style={{ padding: "96px 15px", background: "transparent" }}>
+      <div style={{ maxWidth: 1440, margin: "0 auto", marginBottom: "96px", textAlign: "center" }}>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Innovation Pipeline</p>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", color: "#141b2b", lineHeight: 1.1 }}>What we are working on</h2>
+      </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
-        {products.map((p) => <ProductCard key={p.no} {...p} />)}
-        <div
+        {products.map((p, idx) => <ProductCard key={p.no} {...p} index={idx} />)}
+        <motion.div
           ref={infraRef}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{
+            duration: 0.7,
+            delay: products.length * 0.12,
+            ease: [0.25, 0.1, 0.25, 1.0]
+          }}
           style={{ border: "none", borderRadius: "24px", background: "#000", padding: "48px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -2233,7 +2460,7 @@ const ProductGrid = () => {
               falloff="linear"
             />
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
