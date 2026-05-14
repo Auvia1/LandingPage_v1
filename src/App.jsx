@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import MusicCarousel from "./components/MusicCarousel";
 import Navbar from "./components/Navbar";
 import InteractiveMissionDiagram, { ProcessFlow } from "./components/InteractiveMissionDiagram";
@@ -423,6 +423,8 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
   const [activeBookingIndex, setActiveBookingIndex] = useState(0);
   const [activeCallerIndex, setActiveCallerIndex] = useState(0);
   const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-60px" });
+  const chatBoxRef = useRef(null);
 
   const isCallAgent = title.includes("Call Handling");
   const isAppointmentAgent = title.includes("Appointment Booking");
@@ -485,6 +487,23 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
     }
   }, [isAppointmentAgent, bookings.length]);
 
+  useEffect(() => {
+    if (isCustomerSupportAgent && isInView) {
+      let frame;
+      const startTime = Date.now();
+      const scroll = () => {
+        if (chatBoxRef.current) {
+          chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+        if (Date.now() - startTime < 20000) {
+          frame = requestAnimationFrame(scroll);
+        }
+      };
+      frame = requestAnimationFrame(scroll);
+      return () => cancelAnimationFrame(frame);
+    }
+  }, [isCustomerSupportAgent, isInView]);
+
   return (
     <motion.div
       ref={containerRef}
@@ -525,9 +544,9 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingTop: "12px" }}>
 
-       {isCallAgent && (
-  <>
-    <style>{`
+        {isCallAgent && (
+          <>
+            <style>{`
       .cm-root{
         background:#fff;
         border:1px solid #ececec;
@@ -759,90 +778,90 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }
     `}</style>
 
-    <div className="cm-root">
+            <div className="cm-root">
 
-      {/* Header */}
-      <div className="cm-header">
-        <div className="cm-live-badge">
-          <div className="cm-live-dot" />
-          <span className="cm-live-text">Live Call</span>
-        </div>
+              {/* Header */}
+              <div className="cm-header">
+                <div className="cm-live-badge">
+                  <div className="cm-live-dot" />
+                  <span className="cm-live-text">Live Call</span>
+                </div>
 
-        <span className="cm-timer">02:14</span>
-      </div>
+                <span className="cm-timer">02:14</span>
+              </div>
 
-      {/* Caller */}
-      <div className="cm-caller">
-        <div className="cm-avatar">
-          {callers[activeCallerIndex].initials}
-        </div>
+              {/* Caller */}
+              <div className="cm-caller">
+                <div className="cm-avatar">
+                  {callers[activeCallerIndex].initials}
+                </div>
 
-        <div className="cm-caller-info">
-          <span className="cm-caller-name">
-            {callers[activeCallerIndex].name}
-          </span>
+                <div className="cm-caller-info">
+                  <span className="cm-caller-name">
+                    {callers[activeCallerIndex].name}
+                  </span>
 
-          <span className="cm-caller-num">
-            {callers[activeCallerIndex].phone}
-          </span>
-        </div>
-      </div>
+                  <span className="cm-caller-num">
+                    {callers[activeCallerIndex].phone}
+                  </span>
+                </div>
+              </div>
 
-      {/* Waveform */}
-      <div className="cm-wave-wrap">
+              {/* Waveform */}
+              <div className="cm-wave-wrap">
 
-        {[
-          40,55,30,70,85,60,45,75,90,55,
-          35,65,80,50,40,70,85,55,30,60,
-          75,45,65,80,50,35,70,90,55,40
-        ].map((h, i) => (
-          <div
-            key={i}
-            className={`cm-bar${h < 42 ? ' d' : ''}`}
-            style={{
-              height: h * 0.42 + 'px',
-              animationDelay: (i * 0.05) + 's'
-            }}
-          />
-        ))}
+                {[
+                  40, 55, 30, 70, 85, 60, 45, 75, 90, 55,
+                  35, 65, 80, 50, 40, 70, 85, 55, 30, 60,
+                  75, 45, 65, 80, 50, 35, 70, 90, 55, 40
+                ].map((h, i) => (
+                  <div
+                    key={i}
+                    className={`cm-bar${h < 42 ? ' d' : ''}`}
+                    style={{
+                      height: h * 0.42 + 'px',
+                      animationDelay: (i * 0.05) + 's'
+                    }}
+                  />
+                ))}
 
-      </div>
+              </div>
 
-      {/* Route */}
-      <div className="cm-route">
-        <div className="cm-route-icon">☎</div>
+              {/* Route */}
+              <div className="cm-route">
+                <div className="cm-route-icon">☎</div>
 
-        <span className="cm-route-label">
-          Inbound → Support Queue
-        </span>
+                <span className="cm-route-label">
+                  Inbound → Support Queue
+                </span>
 
-        <span className="cm-route-badge">
-          AI HANDLING
-        </span>
-      </div>
+                <span className="cm-route-badge">
+                  AI HANDLING
+                </span>
+              </div>
 
-      {/* Stats */}
-      <div className="cm-stats">
+              {/* Stats */}
+              <div className="cm-stats">
 
-        <div className="cm-stat">
-          <span className="cm-stat-val">1,248</span>
-          <span className="cm-stat-lbl">Calls Today</span>
-        </div>
+                <div className="cm-stat">
+                  <span className="cm-stat-val">1,248</span>
+                  <span className="cm-stat-lbl">Calls Today</span>
+                </div>
 
-        <div className="cm-stat">
-          <span className="cm-stat-val">98%</span>
-          <span className="cm-stat-lbl">Resolved</span>
-        </div>
+                <div className="cm-stat">
+                  <span className="cm-stat-val">98%</span>
+                  <span className="cm-stat-lbl">Resolved</span>
+                </div>
 
-        <div className="cm-stat">
-          <span className="cm-stat-val">&lt;1.2s</span>
-          <span className="cm-stat-lbl">Response</span>
-        </div>
+                <div className="cm-stat">
+                  <span className="cm-stat-val">&lt;1.2s</span>
+                  <span className="cm-stat-lbl">Response</span>
+                </div>
 
-      </div>
-    </div>
-  </>
-)}
+              </div>
+            </div>
+          </>
+        )}
 
         {isAppointmentAgent && (
           <>
@@ -1005,9 +1024,9 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
           </>
         )} */}
 
-{isCustomerSupportAgent && (
-  <>
-    <style>{`
+        {isCustomerSupportAgent && (
+          <>
+            <style>{`
       .c-root{
         background:#fff;
         border:1px solid #ececec;
@@ -1015,8 +1034,6 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
         padding:16px;
         font-family:'Inter',sans-serif;
         width:100%;
-        height:100%;
-        min-height:0;
         box-shadow:0 2px 12px rgba(0,0,0,0.05);
         display:flex;
         flex-direction:column;
@@ -1024,6 +1041,8 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
         box-sizing:border-box;
         overflow:hidden;
         max-height:300px;
+        min-height:300px;
+        
       }
 
       .c-header{
@@ -1101,15 +1120,12 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }
 
       .c-chat-box{
-        flex:1;
-        min-height:0;
-        overflow-y:auto;
         overflow-x:hidden;
         display:flex;
         flex-direction:column;
-        gap:10px;
         padding-right:4px;
-        scroll-behavior:smooth;
+        overflow-y:auto;
+        max-height:100%;
       }
 
       .c-chat-box::-webkit-scrollbar{
@@ -1124,6 +1140,11 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       .c-message-wrap{
         display:flex;
         width:100%;
+        padding-top:10px;
+      }
+
+      .c-chat-box > div:first-child .c-message-wrap {
+        padding-top:0;
       }
 
       .c-user-wrap{
@@ -1234,14 +1255,18 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
         animation-delay:0.4s;
       }
 
-      .c-seq{
+      .c-seq, .c-msg-seq, .c-typing-seq {
         opacity:0;
+        max-height:0;
+        overflow:hidden;
+      }
+
+      .c-seq{
         transform:translateY(12px) scale(0.96);
         animation:c-show 0.6s cubic-bezier(.22,1,.36,1) forwards;
       }
 
       .c-typing-seq{
-        opacity:0;
         animation:
           c-show 0.4s ease forwards,
           c-hide 0.3s ease forwards;
@@ -1249,7 +1274,6 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }
 
       .c-msg-seq{
-        opacity:0;
         transform:translateY(12px) scale(0.96);
         animation:c-show 0.6s cubic-bezier(.22,1,.36,1) forwards;
         animation-delay:var(--msg-delay);
@@ -1293,13 +1317,19 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }
 
       @keyframes c-show{
-        from{
+        0%{
           opacity:0;
           transform:translateY(12px) scale(0.96);
+          max-height:0;
         }
-        to{
+        40%{
+          max-height:200px;
+        }
+        100%{
           opacity:1;
           transform:translateY(0) scale(1);
+          max-height:200px;
+          overflow:visible;
         }
       }
 
@@ -1346,226 +1376,231 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }
     `}</style>
 
-    <div className="c-root">
+            <div className="c-root">
 
-      <div className="c-header">
-        <div className="c-agent">
-          <div className="c-avatar">AI</div>
+              <div className="c-header">
+                <div className="c-agent">
+                  <div className="c-avatar">AI</div>
 
-          <div className="c-agent-info">
-            <span className="c-agent-name">Support Agent</span>
-            <span className="c-agent-status">Online</span>
-          </div>
-        </div>
+                  <div className="c-agent-info">
+                    <span className="c-agent-name">Support Agent</span>
+                    <span className="c-agent-status">Online</span>
+                  </div>
+                </div>
 
-        <div className="c-channel">
-          <div className="c-channel-dot"></div>
-          <span className="c-channel-text">Omnichannel</span>
-        </div>
-      </div>
+                <div className="c-channel">
+                  <div className="c-channel-dot"></div>
+                  <span className="c-channel-text">Omnichannel</span>
+                </div>
+              </div>
 
-      <div className="c-chat-box">
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: 0 }}>
+                <div className="c-chat-box" ref={chatBoxRef}>
+                  {isInView && (
+                    <>
 
-        {/* 1 */}
-        <div className="c-seq" style={{animationDelay:"0.5s"}}>
-          <div className="c-message-wrap c-user-wrap">
-            <div className="c-message c-user">
-              Hi, my KYC verification failed.
-            </div>
-          </div>
-        </div>
+                      {/* 1 */}
+                      <div className="c-seq" style={{ animationDelay: "0.5s" }}>
+                        <div className="c-message-wrap c-user-wrap">
+                          <div className="c-message c-user">
+                            Hi, my KYC verification failed.
+                          </div>
+                        </div>
+                      </div>
 
-        {/* typing */}
-        <div
-          className="c-typing-seq"
-          style={{
-            "--show-delay":"1.8s",
-            "--hide-delay":"2.7s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-typing c-bot-typing">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
+                      {/* typing */}
+                      <div
+                        className="c-typing-seq"
+                        style={{
+                          "--show-delay": "1.8s",
+                          "--hide-delay": "2.7s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-typing c-bot-typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </div>
+                      </div>
 
-        {/* 2 */}
-        <div
-          className="c-msg-seq"
-          style={{
-            "--msg-delay":"3s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-row">
+                      {/* 2 */}
+                      <div
+                        className="c-msg-seq"
+                        style={{
+                          "--msg-delay": "3s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-row">
 
-              <div className="c-message c-bot">
-                Sorry about that. Which step failed?
+                            <div className="c-message c-bot">
+                              Sorry about that. Which step failed?
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 3 */}
+                      <div className="c-seq" style={{ animationDelay: "4.4s" }}>
+                        <div className="c-message-wrap c-user-wrap">
+                          <div className="c-message c-user">
+                            Face verification.
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* typing */}
+                      <div
+                        className="c-typing-seq"
+                        style={{
+                          "--show-delay": "5.4s",
+                          "--hide-delay": "6.3s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-typing c-bot-typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 4 */}
+                      <div
+                        className="c-msg-seq"
+                        style={{
+                          "--msg-delay": "6.6s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-row">
+
+                            <div className="c-message c-bot">
+                              Please retry in good lighting without glasses.
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 5 */}
+                      <div className="c-seq" style={{ animationDelay: "8s" }}>
+                        <div className="c-message-wrap c-user-wrap">
+                          <div className="c-message c-user">
+                            Still not working.
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* typing */}
+                      <div
+                        className="c-typing-seq"
+                        style={{
+                          "--show-delay": "9s",
+                          "--hide-delay": "9.9s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-typing c-bot-typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 6 */}
+                      <div
+                        className="c-msg-seq"
+                        style={{
+                          "--msg-delay": "10.2s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-row">
+
+                            <div className="c-message c-bot">
+                              I’ll escalate this for manual review.
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 7 */}
+                      <div className="c-seq" style={{ animationDelay: "11.8s" }}>
+                        <div className="c-message-wrap c-user-wrap">
+                          <div className="c-message c-user">
+                            Okay, thanks.
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* typing */}
+                      <div
+                        className="c-typing-seq"
+                        style={{
+                          "--show-delay": "12.8s",
+                          "--hide-delay": "13.7s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-typing c-bot-typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 8 */}
+                      <div
+                        className="c-msg-seq"
+                        style={{
+                          "--msg-delay": "14s"
+                        }}
+                      >
+                        <div className="c-message-wrap c-bot-wrap">
+                          <div className="c-row">
+
+                            <div className="c-message c-bot">
+                              You’re welcome.
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="c-stats">
+
+                  <div className="c-stat">
+                    <span className="c-stat-val">1,248</span>
+                    <span className="c-stat-lbl">Resolved</span>
+                  </div>
+
+                  <div className="c-stat">
+                    <span className="c-stat-val">98%</span>
+                    <span className="c-stat-lbl">CSAT</span>
+                  </div>
+
+                  <div className="c-stat">
+                    <span className="c-stat-val">&lt;1.2s</span>
+                    <span className="c-stat-lbl">Response</span>
+                  </div>
+
+                </div>
               </div>
 
             </div>
-          </div>
-        </div>
-
-        {/* 3 */}
-        <div className="c-seq" style={{animationDelay:"4.4s"}}>
-          <div className="c-message-wrap c-user-wrap">
-            <div className="c-message c-user">
-              Face verification.
-            </div>
-          </div>
-        </div>
-
-        {/* typing */}
-        <div
-          className="c-typing-seq"
-          style={{
-            "--show-delay":"5.4s",
-            "--hide-delay":"6.3s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-typing c-bot-typing">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-
-        {/* 4 */}
-        <div
-          className="c-msg-seq"
-          style={{
-            "--msg-delay":"6.6s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-row">
-
-              <div className="c-message c-bot">
-                Please retry in good lighting without glasses.
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* 5 */}
-        <div className="c-seq" style={{animationDelay:"8s"}}>
-          <div className="c-message-wrap c-user-wrap">
-            <div className="c-message c-user">
-              Still not working.
-            </div>
-          </div>
-        </div>
-
-        {/* typing */}
-        <div
-          className="c-typing-seq"
-          style={{
-            "--show-delay":"9s",
-            "--hide-delay":"9.9s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-typing c-bot-typing">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-
-        {/* 6 */}
-        <div
-          className="c-msg-seq"
-          style={{
-            "--msg-delay":"10.2s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-row">
-
-              <div className="c-message c-bot">
-                I’ll escalate this for manual review.
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* 7 */}
-        <div className="c-seq" style={{animationDelay:"11.8s"}}>
-          <div className="c-message-wrap c-user-wrap">
-            <div className="c-message c-user">
-              Okay, thanks.
-            </div>
-          </div>
-        </div>
-
-        {/* typing */}
-        <div
-          className="c-typing-seq"
-          style={{
-            "--show-delay":"12.8s",
-            "--hide-delay":"13.7s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-typing c-bot-typing">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-
-        {/* 8 */}
-        <div
-          className="c-msg-seq"
-          style={{
-            "--msg-delay":"14s"
-          }}
-        >
-          <div className="c-message-wrap c-bot-wrap">
-            <div className="c-row">
-
-              <div className="c-message c-bot">
-                You’re welcome.
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="c-stats">
-
-        <div className="c-stat">
-          <span className="c-stat-val">1,248</span>
-          <span className="c-stat-lbl">Resolved</span>
-        </div>
-
-        <div className="c-stat">
-          <span className="c-stat-val">98%</span>
-          <span className="c-stat-lbl">CSAT</span>
-        </div>
-
-        <div className="c-stat">
-          <span className="c-stat-val">&lt;1.2s</span>
-          <span className="c-stat-lbl">Response</span>
-        </div>
-
-      </div>
-
-    </div>
-  </>
-)}        
+          </>
+        )}
 
         {isLeadQualificationAgent && (
           <>
@@ -1610,9 +1645,9 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
               {/* Funnel stages */}
               <div className="lq-funnel">
                 {[
-                  { label: 'New Leads',   count: '2,346', pct: '100%', color: '#22c693' },
-                  { label: 'Qualified',   count: '842',   pct: '36%',  color: '#16a97f' },
-                  { label: 'Sales Ready', count: '278',   pct: '12%',  color: '#0d7a5f' },
+                  { label: 'New Leads', count: '2,346', pct: '100%', color: '#22c693' },
+                  { label: 'Qualified', count: '842', pct: '36%', color: '#16a97f' },
+                  { label: 'Sales Ready', count: '278', pct: '12%', color: '#0d7a5f' },
                 ].map(({ label, count, pct, color }) => (
                   <div key={label} className="lq-stage">
                     <span className="lq-label">{label}</span>
