@@ -1897,12 +1897,21 @@ const products = [
 
 const ProductCard = ({ icon, title, desc, no, index }) => {
   const [hovered, setHovered] = useState(false);
+  const [activeBookingIndex, setActiveBookingIndex] = useState(0);
   const containerRef = useRef(null);
   const isCallAgent = title.includes("Call Handling");
   const isAppointmentAgent = title.includes("Appointment Booking");
   const isCustomerSupportAgent = title.includes("Customer Support");
   const isLeadQualificationAgent = title.includes("Lead Qualification");
   const isDoctorTranscriptionAgent = title.includes("Doctor Transcription");
+
+  const bookings = [
+    { initials: 'SR', name: 'Sarah Reynolds', day: 'Wed', date: 22, time: '10:30 AM' },
+    { initials: 'JM', name: 'John Mitchell', day: 'Mon', date: 20, time: '9:00 AM' },
+    { initials: 'EW', name: 'Emma Wilson', day: 'Tue', date: 21, time: '2:30 PM' },
+    { initials: 'MC', name: 'Michael Chen', day: 'Thu', date: 23, time: '12:00 PM' },
+    { initials: 'LT', name: 'Lisa Thompson', day: 'Fri', date: 24, time: '10:30 AM' },
+  ];
 
   useEffect(() => {
     if (isCallAgent) {
@@ -1921,6 +1930,17 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }
     }
   }, [isCallAgent]);
+
+  useEffect(() => {
+    if (isAppointmentAgent) {
+      let idx = 0;
+      const interval = setInterval(() => {
+        setActiveBookingIndex(idx);
+        idx = (idx + 1) % bookings.length;
+      }, 1800);
+      return () => clearInterval(interval);
+    }
+  }, [isAppointmentAgent, bookings.length]);
 
   return (
     <motion.div
@@ -2089,8 +2109,8 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
 
               {/* Day picker */}
               <div className="bk-days">
-                {[{ d: 'MON', n: 20 }, { d: 'TUE', n: 21 }, { d: 'WED', n: 22, active: true }, { d: 'THU', n: 23 }, { d: 'FRI', n: 24 }].map(({ d, n, active }) => (
-                  <div key={n} className={`bk-day${active ? ' bk-active' : ''}`}>
+                {[{ d: 'MON', n: 20 }, { d: 'TUE', n: 21 }, { d: 'WED', n: 22 }, { d: 'THU', n: 23 }, { d: 'FRI', n: 24 }].map(({ d, n }) => (
+                  <div key={n} className={`bk-day${n === bookings[activeBookingIndex].date ? ' bk-active' : ''}`}>
                     <span className="bk-day-name">{d}</span>
                     <span className="bk-day-num">{n}</span>
                   </div>
@@ -2100,16 +2120,16 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
               {/* Time slots */}
               <div className="bk-times">
                 {['9:00 AM', '10:30 AM', '12:00 PM', '2:30 PM'].map((t, i) => (
-                  <div key={t} className={`bk-time${i === 1 ? ' bk-time-active' : ''}`}>{t}</div>
+                  <div key={t} className={`bk-time${t === bookings[activeBookingIndex].time ? ' bk-time-active' : ''}`}>{t}</div>
                 ))}
               </div>
 
               {/* Confirmed booking */}
               <div className="bk-confirmed">
-                <div className="bk-conf-avatar">SR</div>
+                <div className="bk-conf-avatar">{bookings[activeBookingIndex].initials}</div>
                 <div className="bk-conf-info">
-                  <span className="bk-conf-name">Sarah Reynolds</span>
-                  <span className="bk-conf-time">Wed 22 · 10:30 AM · 30 min</span>
+                  <span className="bk-conf-name">{bookings[activeBookingIndex].name}</span>
+                  <span className="bk-conf-time">{bookings[activeBookingIndex].day} {bookings[activeBookingIndex].date} · {bookings[activeBookingIndex].time} · 30 min</span>
                 </div>
                 <span className="bk-conf-badge">✓ BOOKED</span>
               </div>
