@@ -44,15 +44,15 @@ const timelineSteps = [
 ];
 
 const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   .lf-root {
     background: #ffffff;
     color: #111;
-    font-family: 'Instrument Sans', sans-serif;
-    font-weight: 300;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -71,11 +71,12 @@ const styles = `
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #999;
-    font-weight: 400;
+    font-weight: 500;
     margin-bottom: 24px;
   }
 
@@ -86,9 +87,9 @@ const styles = `
   }
 
   .lf-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-size: clamp(40px, 6vw, 68px);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.02em;
     color: #0a0a0a;
@@ -101,10 +102,11 @@ const styles = `
   }
 
   .lf-subtitle {
+    font-family: 'Inter', sans-serif;
     font-size: 15px;
     line-height: 1.75;
     color: #888;
-    font-weight: 300;
+    font-weight: 400;
     max-width: 420px;
     margin: 0 auto;
   }
@@ -202,7 +204,7 @@ const styles = `
   .lf-card {
     background: #ffffff;
     border: 1px solid #e8e8e8;
-    border-radius: 2px;
+    border-radius: 20px;
     padding: 40px 44px 36px;
     position: relative;
     box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.04);
@@ -229,10 +231,11 @@ const styles = `
   }
 
   .lf-step-num {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 11px;
     letter-spacing: 0.15em;
     color: #bbb;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .lf-step-slash {
@@ -243,11 +246,12 @@ const styles = `
   }
 
   .lf-step-name {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #aaa;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .lf-icon-wrap {
@@ -261,9 +265,9 @@ const styles = `
 
   /* Card title */
   .lf-card-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-size: clamp(22px, 2.8vw, 30px);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: #0a0a0a;
@@ -271,10 +275,11 @@ const styles = `
   }
 
   .lf-card-desc {
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     line-height: 1.8;
     color: #888;
-    font-weight: 300;
+    font-weight: 400;
     margin-bottom: 28px;
   }
 
@@ -301,19 +306,20 @@ const styles = `
   }
 
   .lf-stat-val {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 22px;
-    font-weight: 400;
+    font-weight: 500;
     color: #111;
     letter-spacing: -0.03em;
   }
 
   .lf-stat-label {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #bbb;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .lf-tags {
@@ -324,6 +330,7 @@ const styles = `
   }
 
   .lf-tag {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -331,7 +338,7 @@ const styles = `
     background: #f7f7f7;
     border-radius: 2px;
     padding: 3px 9px;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   /* ── FOOTER ── */
@@ -351,9 +358,9 @@ const styles = `
   }
 
   .lf-footer-val {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-size: clamp(24px, 3vw, 36px);
-    font-weight: 400;
+    font-weight: 700;
     letter-spacing: -0.03em;
     color: #111;
     line-height: 1;
@@ -361,11 +368,12 @@ const styles = `
   }
 
   .lf-footer-label {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 10px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: #bbb;
-    font-weight: 400;
+    font-weight: 500;
   }
 `;
 

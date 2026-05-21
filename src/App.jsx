@@ -7,6 +7,8 @@ import InteractiveMissionDiagram, { ProcessFlow } from "./components/Interactive
 import DotGrid from "./components/DotGrid";
 import VariableProximity from "./components/VariableProximity";
 import { LogicFlow } from "./components/LogicFlow";
+import UseCases from "./components/UseCases";
+import { WhyDifferent } from "./components/WhyDifferent";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -1829,150 +1831,7 @@ const ProductGrid = () => {
   );
 };
 
-// ─── Rest of sections (unchanged) ────────────────────────────────────────────
-const UseCases = () => (
-  <section style={{ borderBottom: "1px solid #000" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gap: "24px", padding: "48px" }}>
-      <div style={{ gridColumn: "span 8", background: "#fff", border: "1px solid #000", padding: "32px", display: "flex", flexDirection: "column", justifyContent: "center", minHeight: 300 }}>
-        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,4vw,48px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em" }}>Applied Intelligence</h2>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", color: "rgba(20,27,43,.6)", marginTop: "16px", maxWidth: 480, lineHeight: 1.6 }}>Deploying specialized voice agents across critical industries to optimize workflow and customer experience.</p>
-      </div>
-      {[{ n: "01", t: "Healthcare", d: "Automated appointment handling and transcription for clinics and hospitals." }, { n: "02", t: "Real Estate", d: "Lead qualification calls that filter serious buyers from cold traffic." }].map((uc) => (
-        <div key={uc.n} style={{ gridColumn: "span 4", background: "#fff", border: "1px solid #000", padding: "32px" }}>
-          <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "12px", color: "rgba(20,27,43,.3)", marginBottom: "16px" }}>{uc.n}</div>
-          <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>{uc.t}</h3>
-          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(20,27,43,.6)", lineHeight: 1.5 }}>{uc.d}</p>
-        </div>
-      ))}
-      <div style={{ gridColumn: "span 4", background: "#fff", border: "1px solid #000", padding: "32px" }}>
-        <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "12px", color: "rgba(20,27,43,.3)", marginBottom: "16px" }}>03</div>
-        <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", marginBottom: "8px" }}>E-commerce</h3>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(20,27,43,.6)", lineHeight: 1.5 }}>Order support and tracking updates handled via conversational voice agents.</p>
-      </div>
-      <div style={{ gridColumn: "span 4", background: "#000", border: "1px solid #000", padding: "32px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", minHeight: 250 }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.1 }}>
-          <svg width="100%" height="100%"><defs><pattern id="gb" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs><rect fill="url(#gb)" width="100%" height="100%" /></svg>
-        </div>
-        <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-          <div style={{ width: 48, height: 48, border: "1px solid #80f9c8", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-            <div className="animate-pulse" style={{ width: 24, height: 24, background: "#80f9c8" }} />
-          </div>
-          <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "9px", color: "#80f9c8", textTransform: "uppercase", letterSpacing: "0.2em" }}>Core_v4_Live</div>
-        </div>
-      </div>
-      <div style={{ gridColumn: "span 8", background: "#80f9c8", border: "1px solid #000", padding: "32px" }}>
-        <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: "22px", fontWeight: 600, textTransform: "uppercase", color: "#007353", marginBottom: "8px" }}>Case Study: SaaS</h4>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", color: "rgba(0,115,83,.8)", lineHeight: 1.5, maxWidth: 600 }}>90% reduction in customer onboarding friction through proactive agent-led setup calls, resulting in a 15% increase in month-one retention.</p>
-      </div>
-    </div>
-  </section>
-);
-
-const comparisonRows = [
-  { feature: "Response Latency", legacy: ">2,000ms", nexov: "<200ms", detail: "10× faster end-to-end", icon: "speed" },
-  { feature: "Reasoning Model", legacy: "Static decision tree", nexov: "Real-time LLM", detail: "Adapts to any conversation", icon: "neurology" },
-  { feature: "Interface", legacy: "Text & chat only", nexov: "Voice-first + omnichannel", detail: "Phone, web, API, SMS", icon: "settings_voice" },
-  { feature: "CRM Integration", legacy: "Manual export / CSV", nexov: "Live bidirectional sync", detail: "Salesforce, HubSpot & more", icon: "sync_alt" },
-  { feature: "Personality", legacy: "Fixed, scripted tone", nexov: "Modular AI personas", detail: "Tune per brand & use-case", icon: "face" },
-  { feature: "Scale", legacy: "Limited concurrency", nexov: "10,000+ simultaneous calls", detail: "Auto-scales with demand", icon: "lan" },
-];
-
-const ComparisonRow = ({ row, index }) => {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", background: hovered ? "#000" : index % 2 === 0 ? "#fff" : "#fafafa", transition: "background 0.2s", cursor: "default" }}>
-      <div style={{ padding: "28px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "14px" }}>
-        <div style={{ width: 36, height: 36, background: hovered ? "rgba(128,249,200,0.12)" : "#f1f3ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 18, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.icon}</span>
-        </div>
-        <div>
-          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: hovered ? "#fff" : "#141b2b", transition: "color 0.2s" }}>{row.feature}</div>
-          <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: hovered ? "rgba(128,249,200,0.7)" : "rgba(20,27,43,0.4)", marginTop: "2px", transition: "color 0.2s" }}>{row.detail}</div>
-        </div>
-      </div>
-      <div style={{ padding: "28px 32px", borderRight: "1px solid " + (hovered ? "rgba(255,255,255,0.1)" : "#000"), display: "flex", alignItems: "center", gap: "12px", transition: "border-color 0.2s" }}>
-        <div style={{ width: 22, height: 22, border: "1.5px solid rgba(20,27,43,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 14, color: "rgba(20,27,43,0.3)" }}>close</span>
-        </div>
-        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", color: hovered ? "rgba(255,255,255,0.3)" : "rgba(20,27,43,0.4)", textDecoration: "line-through", textDecorationColor: hovered ? "rgba(255,255,255,0.15)" : "rgba(20,27,43,0.2)", transition: "color 0.2s" }}>{row.legacy}</span>
-      </div>
-      <div style={{ padding: "28px 32px", display: "flex", alignItems: "center", gap: "12px" }}>
-        <div style={{ width: 22, height: 22, background: hovered ? "#80f9c8" : "#141b2b", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 14, color: hovered ? "#000" : "#80f9c8", transition: "color 0.2s" }}>check</span>
-        </div>
-        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", fontWeight: 600, color: hovered ? "#80f9c8" : "#141b2b", transition: "color 0.2s" }}>{row.nexov}</span>
-      </div>
-    </div>
-  );
-};
-
-const WhyDifferent = () => (
-  <section style={{ border: "1px solid #000", borderTop: "none", background: "#fff", overflow: "hidden" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #000" }}>
-      <div style={{ padding: "64px 48px", borderRight: "1px solid #000" }}>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)", marginBottom: "20px" }}>Competitive Analysis</div>
-        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(52px,6vw,96px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", lineHeight: 0.92, marginBottom: "28px" }}>Why Our<br />Agents Are<br />Different</h2>
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "16px", lineHeight: 1.7, color: "rgba(20,27,43,0.55)", maxWidth: "380px" }}>Legacy chatbots were built for text. Nexov was built for the full complexity of live human voice — a fundamentally harder problem, solved.</p>
-      </div>
-      <div style={{ background: "#000", padding: "64px 48px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.06 }}>
-          <svg width="100%" height="100%"><defs><pattern id="wd-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#80f9c8" strokeWidth="0.8" /></pattern></defs><rect fill="url(#wd-grid)" width="100%" height="100%" /></svg>
-        </div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,0.6)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "16px" }}>Performance delta</div>
-          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(72px,9vw,120px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, color: "#80f9c8" }}>10×</div>
-          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "-0.01em", color: "#fff", marginTop: "8px" }}>Faster than legacy</div>
-          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "14px", color: "rgba(255,255,255,0.4)", marginTop: "8px" }}>Sub-200ms vs. industry avg. 2,000ms+</div>
-        </div>
-        <div style={{ position: "relative", zIndex: 1, borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "32px", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0" }}>
-          {[{ v: "99.9%", l: "Uptime SLA" }, { v: "SOC2", l: "Compliant" }, { v: "<48h", l: "Deployment" }].map((s, i) => (
-            <div key={s.l} style={{ borderRight: i < 2 ? "1px solid rgba(255,255,255,0.1)" : "none", paddingRight: i < 2 ? "16px" : 0, paddingLeft: i > 0 ? "16px" : 0 }}>
-              <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(18px,2vw,24px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#fff" }}>{s.v}</div>
-              <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "9px", color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px" }}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #000", padding: "64px 48px", background: "#fff" }}>
-      <div style={{ textAlign: "center", maxWidth: 800 }}>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Feature Matrix</div>
-        <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(32px,4vw,48px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.04em" }}>Head-to-Head Comparison</h3>
-      </div>
-    </div>
-    <div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #000", borderTop: "1px solid #000", background: "#f9f9ff" }}>
-        <div style={{ padding: "16px 32px", borderRight: "1px solid #000", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>Capability</div>
-        <div style={{ padding: "16px 32px", borderRight: "1px solid #000", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.35)" }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13 }}>history</span>Legacy Chatbots
-        </div>
-        <div style={{ padding: "16px 32px", display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Space Grotesk',monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#006c4e", fontWeight: 700 }}>
-          <span className="material-symbols-outlined" style={{ fontFamily: "Material Symbols Outlined", fontSize: 13, color: "#006c4e" }}>bolt</span>Nexov Voice Agents
-        </div>
-      </div>
-      {comparisonRows.map((row, i) => <ComparisonRow key={row.feature} row={row} index={i} />)}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 32px", background: "#141b2b", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.3)" }}>
-        {["Architecture: Neural-Flash", "//", "Security: SOC2 Type II", "//", "Regions: 14 Global PoPs", "//", "Latency: <200ms p99"].map((t, i) => (
-          <span key={i} style={{ color: t === "//" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.3)" }}>{t}</span>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
-const Metrics = () => (
-  <section style={{ borderBottom: "1px solid #000", marginTop: "100px" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
-      {[{ val: "90%", label: "Reduction in Wait Times", dark: false }, { val: "10K+", label: "Daily Concurrent Calls", dark: true }, { val: "<200ms", label: "End-to-End Latency", dark: false }].map(({ val, label, dark }) => (
-        <div key={label} style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: dark ? "#000" : "#fff", borderRight: "1px solid #000" }}>
-          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,6vw,72px)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "16px", color: dark ? "#80f9c8" : "#000" }}>{val}</div>
-          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)" }}>{label}</div>
-        </div>
-      ))}
-    </div>
-  </section>
-);
+// ─── Rest of sections ────────────────────────────────────────────
 
 const Vision = () => (
   <section style={{ padding: "128px 48px", borderBottom: "1px solid #000", overflow: "hidden", position: "relative" }}>
@@ -2075,10 +1934,13 @@ export default function App() {
           <TalkToAgent />
           <Mission />
           <ProductGrid />
-          <LogicFlow />
-          <UseCases />
+          <div style={{ marginBottom: "80px" }}>
+            <LogicFlow />
+          </div>
+          <div style={{ marginBottom: "80px" }}>
+            <UseCases />
+          </div>
           <WhyDifferent />
-          <Metrics />
           <Vision />
           <WallOfLove />
           <CTA />
