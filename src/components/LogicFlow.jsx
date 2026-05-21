@@ -97,7 +97,7 @@ const styles = `
   }
 
   .lf-title em {
-    font-style: italic;
+    font-style: normal;
     color: #555;
   }
 

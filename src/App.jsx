@@ -9,6 +9,8 @@ import VariableProximity from "./components/VariableProximity";
 import { LogicFlow } from "./components/LogicFlow";
 import UseCases from "./components/UseCases";
 import { WhyDifferent } from "./components/WhyDifferent";
+import ScrollFloat from "./components/ScrollFloat";
+import WallOfLove from "./components/WallOfLove";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -285,7 +287,7 @@ const ScaleInText = ({
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true, margin: "-5%" }}
                 transition={{
-                  delay: (wordStartOffset + charIdx + delayOffset) * 0.007,
+                  delay: (wordStartOffset + charIdx + delayOffset) * 0.015,
                   type: 'spring',
                   stiffness: 200,
                   damping: 18,
@@ -1834,43 +1836,37 @@ const ProductGrid = () => {
 // ─── Rest of sections ────────────────────────────────────────────
 
 const Vision = () => (
-  <section style={{ padding: "128px 48px", borderBottom: "1px solid #000", overflow: "hidden", position: "relative" }}>
+  <section style={{ padding: "128px 48px", overflow: "hidden", position: "relative" }}>
     <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
       <Icon name="format_quote" style={{ fontSize: 48, color: "#006c4e", display: "block", marginBottom: "48px" }} />
-      <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>"We believe AI agents will replace repetitive human workflows. We're building the infrastructure for that future."</blockquote>
+      <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>
+        <ScaleInText text={`"We believe AI agents will replace repetitive human workflows. We're building the infrastructure for that future."`} />
+      </blockquote>
       <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase" }}>— Nexov Core Vision</div>
     </div>
-    <div style={{ position: "absolute", bottom: "-80px", left: "-40px", fontFamily: "'Inter',sans-serif", fontSize: "20vw", fontWeight: 900, color: "rgba(0,0,0,.05)", textTransform: "uppercase", lineHeight: 1, pointerEvents: "none", userSelect: "none" }}>FUTURE</div>
-  </section>
-);
-
-const testimonials = [
-  { quote: "The latency is actually unbelievable. We've replaced our entire front-line phone support with Nexov agents and customer satisfaction hasn't dropped a single point.", name: "Sarah Jenkins", role: "CTO, Global Logistics Inc.", stars: 5, dark: false },
-  { quote: "Integrating the API was straightforward. We had a working prototype in three days. The human-like inflection is the best in the industry.", name: "Marcus Thorne", role: "Product Lead, FinTech Pro", stars: 4, dark: true },
-  { quote: "Nexov solved our scalability problem overnight. We can now handle seasonal spikes without hiring temporary staff. Revolutionary for retail.", name: "Elena Rodriguez", role: "Head of Ops, Retail Stream", stars: 5, dark: false },
-];
-
-const WallOfLove = () => (
-  <section style={{ borderBottom: "1px solid #000", background: "#fff" }}>
-    <div style={{ borderBottom: "1px solid #000", padding: "48px", textAlign: "center" }}>
-      <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,6vw,64px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em" }}>Wall of Love</h2>
-    </div>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
-      {testimonials.map((t) => (
-        <div key={t.name} style={{ padding: "48px", background: t.dark ? "#000" : "#fff", borderRight: "1px solid #000", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", gap: "4px", marginBottom: "32px" }}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} style={{ width: 16, height: 16, background: i < t.stars ? "#80f9c8" : t.dark ? "rgba(255,255,255,.2)" : "#dce2f7" }} />
-            ))}
-          </div>
-          <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontStyle: "italic", lineHeight: 1.6, color: t.dark ? "#fff" : "#141b2b", marginBottom: "48px" }}>"{t.quote}"</blockquote>
-          <div style={{ marginTop: "auto" }}>
-            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: t.dark ? "#fff" : "#141b2b" }}>{t.name}</div>
-            <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: t.dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)", textTransform: "uppercase" }}>{t.role}</div>
-          </div>
-        </div>
-      ))}
-    </div>
+    {/* <div style={{ position: "absolute", bottom: "-80px", left: "-40px", pointerEvents: "none", userSelect: "none" }}>
+      <ScrollFloat
+        animationDuration={1}
+        ease='back.inOut(2)'
+        scrollStart='bottom bottom+=50%'
+        scrollEnd='top bottom'
+        stagger={0.03}
+        containerClassName=''
+        textClassName=''
+      >
+        FUTURE
+      </ScrollFloat>
+    </div> */}
+    <div style={{ position: "absolute", bottom: "-90px", left: "-40px", pointerEvents: "none", userSelect: "none" }}>
+    <ScrollFloat
+      animationDuration={1}
+      ease='back.inOut(2)'
+      
+      stagger={0.03}
+    >
+      FUTURE
+    </ScrollFloat>
+  </div>
   </section>
 );
 
@@ -1941,8 +1937,12 @@ export default function App() {
             <UseCases />
           </div>
           <WhyDifferent />
-          <Vision />
-          <WallOfLove />
+          <div style={{ marginBottom: "80px" }}>
+            <Vision />
+          </div>
+          <div style={{ marginBottom: "80px" }}>
+            <WallOfLove />
+          </div>
           <CTA />
         </main>
       </div>
