@@ -240,9 +240,9 @@ const Hero = () => (
       <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>V4.2.0 STABLE RELEASE</div>
       <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
       {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
-      <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)" }}>
-        <button style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer" }}>Start Building</button>
-        <button style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>View Docs</button>
+      <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
+        <button style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer", transition: "all 0.3s ease", transform: "none" }} onMouseEnter={(e) => { e.target.style.background = "#5ff3a6"; e.target.style.transform = "scale(1.02)"; }} onMouseLeave={(e) => { e.target.style.background = "#80f9c8"; e.target.style.transform = "scale(1)"; }}>Start Building</button>
+        <button style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s ease" }} onMouseEnter={(e) => { e.target.style.background = "rgba(128,249,200,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>View Docs</button>
       </div>
     </div>
   </motion.section>
@@ -1836,7 +1836,7 @@ const ProductGrid = () => {
 // ─── Rest of sections ────────────────────────────────────────────
 
 const Vision = () => (
-  <section style={{ padding: "128px 48px", overflow: "hidden", position: "relative" }}>
+  <section style={{ padding: "128px 48px", position: "relative" }}>
     <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
       <Icon name="format_quote" style={{ fontSize: 48, color: "#006c4e", display: "block", marginBottom: "48px" }} />
       <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>
@@ -1859,10 +1859,10 @@ const Vision = () => (
     </div> */}
     <div style={{ position: "absolute", bottom: "-90px", left: "-40px", pointerEvents: "none", userSelect: "none" }}>
     <ScrollFloat
-      animationDuration={1}
+      animationDuration={2.5}
       ease='back.inOut(2)'
-      
-      stagger={0.03}
+
+      stagger={0.1}
     >
       FUTURE
     </ScrollFloat>
@@ -1874,9 +1874,9 @@ const CTA = () => (
   <section style={{ borderBottom: "1px solid #000", background: "#6EE7B7" }}>
     <div style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
       <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,7vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.9, letterSpacing: "-0.04em", marginBottom: "48px", maxWidth: "900px" }}>Start Automating Conversations Today</h2>
-      <div style={{ display: "flex", border: "1px solid #000", boxShadow: "8px 8px 0 #000" }}>
-        <button style={{ background: "#000", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid #000", cursor: "pointer" }}>Deploy Now</button>
-        <button style={{ background: "transparent", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }}>Talk to an Engineer</button>
+      <div style={{ display: "flex", border: "2px solid #000", boxShadow: "8px 8px 0 rgba(0,0,0,0.15)", borderRadius: "8px", overflow: "hidden" }}>
+        <button style={{ background: "#000", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid #000", cursor: "pointer", transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)", transform: "none" }} onMouseEnter={(e) => { e.target.style.background = "rgba(0,0,0,0.85)"; e.target.style.transform = "translateY(-2px)"; }} onMouseLeave={(e) => { e.target.style.background = "#000"; e.target.style.transform = "translateY(0)"; }}>Deploy Now</button>
+        <button style={{ background: "transparent", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)" }} onMouseEnter={(e) => { e.target.style.background = "rgba(0,0,0,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>Talk to an Engineer</button>
       </div>
     </div>
   </section>
@@ -1923,7 +1923,7 @@ export default function App() {
         <Hero />
       </div>
       <MarqueeBar />
-      <div style={{ margin: "0 200px", borderLeft: "1px solid #dddddd", borderRight: "1px solid #dddddd" }}>
+      <div style={{ margin: "0 200px"}}>
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
 
 

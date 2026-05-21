@@ -14,7 +14,7 @@ const ScrollFloat = ({
   animationDuration = 1,
   ease = 'back.inOut(2)',
   scrollStart = 'center bottom+=5s0%',
-  scrollEnd = 'bottom bottom-=5%',
+  scrollEnd = 'bottom bottom-=1%',
   stagger = 0.03
 }) => {
   const containerRef = useRef(null);
