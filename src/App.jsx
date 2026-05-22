@@ -11,6 +11,7 @@ import UseCases from "./components/UseCases";
 import { WhyDifferent } from "./components/WhyDifferent";
 import ScrollFloat from "./components/ScrollFloat";
 import WallOfLove from "./components/WallOfLove";
+import FullScreenSection from "./components/FullScreenSection";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -1923,6 +1924,7 @@ export default function App() {
         <Hero />
       </div>
       <MarqueeBar />
+      <FullScreenSection />
       <div style={{ margin: "0 200px"}}>
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
 

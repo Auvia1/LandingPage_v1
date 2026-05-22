@@ -1,57 +1,50 @@
-// const testimonials = [
-//   { quote: "The latency is actually unbelievable. We've replaced our entire front-line phone support with Nexov agents and customer satisfaction hasn't dropped a single point.", name: "Sarah Jenkins", role: "CTO, Global Logistics Inc.", stars: 5, dark: false },
-//   { quote: "Integrating the API was straightforward. We had a working prototype in three days. The human-like inflection is the best in the industry.", name: "Marcus Thorne", role: "Product Lead, FinTech Pro", stars: 4, dark: true },
-//   { quote: "Nexov solved our scalability problem overnight. We can now handle seasonal spikes without hiring temporary staff. Revolutionary for retail.", name: "Elena Rodriguez", role: "Head of Ops, Retail Stream", stars: 5, dark: false },
-// ];
-
-// const WallOfLove = () => (
-//   <section style={{ borderBottom: "1px solid #000", background: "#fff" }}>
-//     <div style={{ borderBottom: "1px solid #000", padding: "48px", textAlign: "center" }}>
-//       <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,6vw,64px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em" }}>Wall of Love</h2>
-//     </div>
-//     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
-//       {testimonials.map((t) => (
-//         <div key={t.name} style={{ padding: "48px", background: t.dark ? "#000" : "#fff", borderRight: "1px solid #000", display: "flex", flexDirection: "column" }}>
-//           <div style={{ display: "flex", gap: "4px", marginBottom: "32px" }}>
-//             {Array.from({ length: 5 }).map((_, i) => (
-//               <div key={i} style={{ width: 16, height: 16, background: i < t.stars ? "#80f9c8" : t.dark ? "rgba(255,255,255,.2)" : "#dce2f7" }} />
-//             ))}
-//           </div>
-//           <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontStyle: "italic", lineHeight: 1.6, color: t.dark ? "#fff" : "#141b2b", marginBottom: "48px" }}>"{t.quote}"</blockquote>
-//           <div style={{ marginTop: "auto" }}>
-//             <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: t.dark ? "#fff" : "#141b2b" }}>{t.name}</div>
-//             <div style={{ fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: t.dark ? "rgba(255,255,255,.5)" : "rgba(20,27,43,.5)", textTransform: "uppercase" }}>{t.role}</div>
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   </section>
-// );
-
-// export default WallOfLove;
 
 import { useState, useEffect } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap');
 
+  @keyframes wl-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes wl-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   .wl-root {
     font-family: 'Inter', sans-serif;
     background: transparent;
     padding: 32px;
     box-sizing: border-box;
+    margin-bottom: 60px;
+    margin-top: 182px;
   }
 
-  /* ── Header card ── */
+  /* ───────────────── HEADER ───────────────── */
+
   .wl-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
     background: #fff;
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 40px 44px;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    animation: wl-fade-in-up 0.6s ease-out 0.1s both;
   }
 
   .wl-eyebrow {
@@ -65,49 +58,57 @@ const styles = `
   }
 
   .wl-title {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(30px, 4vw, 48px);
+    font-size: clamp(34px, 4vw, 52px);
     font-weight: 900;
-    line-height: 1.06;
-    letter-spacing: -0.04em;
+    line-height: 1;
+    letter-spacing: -0.05em;
     color: #141b2b;
     margin: 0;
   }
 
   .wl-subtitle {
-    font-family: 'Inter', sans-serif;
     font-size: 15px;
-    font-weight: 400;
     color: rgba(20,27,43,0.55);
-    line-height: 1.65;
-    max-width: 320px;
+    line-height: 1.7;
+    max-width: 340px;
     margin: 0;
   }
 
-  /* ── Grid ── */
-  .wl-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
+  /* ───────────────── CARD ───────────────── */
 
-  /* ── Testimonial card ── */
   .wl-card {
     background: #fff;
     border: 1px solid rgba(20,27,43,0.08);
-    border-radius: 20px;
-    padding: 32px 32px 28px;
+    border-radius: 22px;
+    padding: 32px;
     display: flex;
     flex-direction: column;
     position: relative;
-    transition: box-shadow 0.2s, transform 0.2s;
-    cursor: default;
     overflow: hidden;
+    min-height: 310px;
+    transition:
+      transform .35s cubic-bezier(.34,1.56,.64,1),
+      box-shadow .35s ease,
+      border-color .35s ease;
+    animation: wl-fade-in-up 0.6s ease-out both;
   }
 
+  .wl-card-wrap {
+    animation: wl-fade-in-up 0.6s ease-out both;
+  }
+
+  .wl-card-wrap:nth-child(1) { animation-delay: 0.2s; }
+  .wl-card-wrap:nth-child(2) { animation-delay: 0.35s; }
+  .wl-card-wrap:nth-child(3) { animation-delay: 0.5s; }
+  .wl-card-wrap:nth-child(4) { animation-delay: 0.65s; }
+  .wl-card-wrap:nth-child(5) { animation-delay: 0.8s; }
+  .wl-card-wrap:nth-child(6) { animation-delay: 0.95s; }
+
   .wl-card:hover {
-    box-shadow: 0 8px 32px rgba(20,27,43,0.07);
-    transform: translateY(-2px);
+    transform: translateY(-6px);
+    box-shadow:
+      0 12px 40px rgba(20,27,43,0.08),
+      0 2px 10px rgba(20,27,43,0.05);
   }
 
   .wl-card.dark {
@@ -115,111 +116,159 @@ const styles = `
     border-color: transparent;
   }
 
-  .wl-card.dark:hover {
-    box-shadow: 0 8px 32px rgba(20,27,43,0.22);
-  }
-
   .wl-card.featured {
     background: #0F6E56;
     border-color: transparent;
   }
 
-  .wl-card.featured:hover {
-    box-shadow: 0 8px 32px rgba(15,110,86,0.25);
-  }
-
-  /* dot bg for dark/featured cards */
   .wl-card-bg {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.07;
+    opacity: .07;
     pointer-events: none;
   }
 
-  /* ── Stars ── */
+  /* ───────────────── STARS ───────────────── */
+
   .wl-stars {
     display: flex;
-    gap: 4px;
+    gap: 5px;
     margin-bottom: 24px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   .wl-star {
     width: 14px;
     height: 14px;
-    border-radius: 3px;
-    flex-shrink: 0;
-    transition: background 0.2s;
+    border-radius: 4px;
   }
 
-  /* ── Quote ── */
+  /* ───────────────── QUOTE ───────────────── */
+
   .wl-quote {
-    font-family: 'Inter', sans-serif;
     font-size: 15px;
+    line-height: 1.8;
     font-style: italic;
-    line-height: 1.7;
     color: #141b2b;
-    margin: 0 0 28px;
+    margin: 0 0 30px;
     flex: 1;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
-  .wl-card.dark .wl-quote  { color: rgba(255,255,255,0.85); }
-  .wl-card.featured .wl-quote { color: #E1F5EE; }
+  .wl-card.dark .wl-quote {
+    color: rgba(255,255,255,.88);
+  }
 
-  /* ── Author ── */
+  .wl-card.featured .wl-quote {
+    color: #E8FFF7;
+  }
+
+  /* ───────────────── AUTHOR ───────────────── */
+
   .wl-author {
-    margin-top: auto;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    margin-top: auto;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   .wl-avatar {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
     font-weight: 800;
+    font-size: 13px;
+    letter-spacing: -0.03em;
     flex-shrink: 0;
-    letter-spacing: -0.02em;
   }
 
   .wl-author-name {
-    font-family: 'Inter', sans-serif;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.04em;
     text-transform: uppercase;
+    letter-spacing: .08em;
     color: #141b2b;
   }
 
-  .wl-card.dark .wl-author-name  { color: #fff; }
-  .wl-card.featured .wl-author-name { color: #E1F5EE; }
+  .wl-card.dark .wl-author-name {
+    color: #fff;
+  }
+
+  .wl-card.featured .wl-author-name {
+    color: #fff;
+  }
 
   .wl-author-role {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 10px;
-    color: rgba(20,27,43,0.45);
+    letter-spacing: .08em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 2px;
+    margin-top: 4px;
+    color: rgba(20,27,43,.45);
   }
 
-  .wl-card.dark .wl-author-role  { color: rgba(255,255,255,0.4); }
-  .wl-card.featured .wl-author-role { color: #9FE1CB; }
+  .wl-card.dark .wl-author-role {
+    color: rgba(255,255,255,.45);
+  }
 
+  .wl-card.featured .wl-author-role {
+    color: rgba(255,255,255,.7);
+  }
 
+  /* ───────────────── NAVIGATION DOTS ───────────────── */
+
+  .wl-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 22px;
+    animation: wl-fade-in 0.6s ease-out 1.1s both;
+  }
+
+  .wl-dot {
+    border: none;
+    height: 6px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .4s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* ───────────────── RESPONSIVE ───────────────── */
+
+  .wl-helper {
+    animation: wl-fade-in 0.6s ease-out 1.2s both;
+  }
+
+  @media (max-width: 1100px) {
+    .wl-card-wrap {
+      min-width: calc(50% - 8px) !important;
+      flex: 0 0 calc(50% - 8px) !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .wl-root {
+      padding: 18px;
+    }
+
+    .wl-header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 28px;
+    }
+
+    .wl-card-wrap {
+      min-width: 100% !important;
+      flex: 0 0 100% !important;
+    }
+  }
 `;
 
 const testimonials = [
@@ -265,7 +314,7 @@ const testimonials = [
     variant: "featured",
     initials: "JO",
     avatarBg: "rgba(255,255,255,0.15)",
-    avatarColor: "#E1F5EE",
+    avatarColor: "#fff",
   },
   {
     quote:
@@ -296,28 +345,32 @@ const DotPattern = ({ id }) => (
     className="wl-card-bg"
     viewBox="0 0 400 300"
     preserveAspectRatio="xMidYMid slice"
-    aria-hidden="true"
   >
     <defs>
       <pattern id={id} width="24" height="24" patternUnits="userSpaceOnUse">
         <circle cx="1.5" cy="1.5" r="1.5" fill="#9FE1CB" />
       </pattern>
     </defs>
+
     <rect width="400" height="300" fill={`url(#${id})`} />
   </svg>
 );
 
 const StarIcon = ({ filled, dark, featured }) => {
   const filledColor = "#80f9c8";
+
   const emptyColor = featured
-    ? "rgba(255,255,255,0.2)"
+    ? "rgba(255,255,255,.22)"
     : dark
-    ? "rgba(255,255,255,0.15)"
+    ? "rgba(255,255,255,.15)"
     : "#dce2f7";
+
   return (
     <div
       className="wl-star"
-      style={{ background: filled ? filledColor : emptyColor }}
+      style={{
+        background: filled ? filledColor : emptyColor,
+      }}
     />
   );
 };
@@ -325,10 +378,13 @@ const StarIcon = ({ filled, dark, featured }) => {
 const TestimonialCard = ({ t }) => {
   const isDark = t.variant === "dark";
   const isFeatured = t.variant === "featured";
-  const cardClass = `wl-card${isDark ? " dark" : ""}${isFeatured ? " featured" : ""}`;
 
   return (
-    <div className={cardClass}>
+    <div
+      className={`wl-card ${isDark ? "dark" : ""} ${
+        isFeatured ? "featured" : ""
+      }`}
+    >
       {(isDark || isFeatured) && (
         <DotPattern id={`dots-${t.name.replace(/\s/g, "")}`} />
       )}
@@ -344,15 +400,21 @@ const TestimonialCard = ({ t }) => {
         ))}
       </div>
 
-      <blockquote className="wl-quote">"{t.quote}"</blockquote>
+      <blockquote className="wl-quote">
+        "{t.quote}"
+      </blockquote>
 
       <div className="wl-author">
         <div
           className="wl-avatar"
-          style={{ background: t.avatarBg, color: t.avatarColor }}
+          style={{
+            background: t.avatarBg,
+            color: t.avatarColor,
+          }}
         >
           {t.initials}
         </div>
+
         <div>
           <div className="wl-author-name">{t.name}</div>
           <div className="wl-author-role">{t.role}</div>
@@ -364,143 +426,119 @@ const TestimonialCard = ({ t }) => {
 
 const WallOfLove = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(null);
 
-  const goTo = (newIdx) => {
-    const maxIndex = testimonials.length - 3;
-    const nextIdx = Math.max(0, Math.min(maxIndex, newIdx));
-    setActiveIndex(nextIdx);
+  const visibleCards =
+    window.innerWidth < 768
+      ? 1
+      : window.innerWidth < 1100
+      ? 2
+      : 3;
+
+  const maxIndex =
+    testimonials.length - visibleCards;
+
+  const goTo = (idx) => {
+    const next = Math.max(
+      0,
+      Math.min(maxIndex, idx)
+    );
+
+    setActiveIndex(next);
   };
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft") goTo(activeIndex - 1);
-      if (e.key === "ArrowRight") goTo(activeIndex + 1);
+    const handleKey = (e) => {
+      if (e.key === "ArrowLeft")
+        goTo(activeIndex - 1);
+
+      if (e.key === "ArrowRight")
+        goTo(activeIndex + 1);
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+
+    window.addEventListener("keydown", handleKey);
+
+    return () =>
+      window.removeEventListener(
+        "keydown",
+        handleKey
+      );
   }, [activeIndex]);
 
-  const handleMouseDown = (e) => {
-    setDragStartX(e.clientX);
-    setIsDragging(false);
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) =>
+        prevIndex === maxIndex ? 0 : prevIndex + 1
+      );
+    }, 4000);
 
-  const handleMouseMove = (e) => {
-    if (dragStartX !== null && Math.abs(e.clientX - dragStartX) > 8) {
-      setIsDragging(true);
-    }
-  };
-
-  const handleMouseUp = (e) => {
-    if (isDragging && dragStartX !== null) {
-      const dx = e.clientX - dragStartX;
-      if (Math.abs(dx) > 60) {
-        goTo(activeIndex + (dx < 0 ? 1 : -1));
-      }
-    }
-    setTimeout(() => setIsDragging(false), 50);
-    setDragStartX(null);
-  };
-
-  const handleTouchStart = (e) => setDragStartX(e.touches[0].clientX);
-
-  const handleTouchEnd = (e) => {
-    const dx = e.changedTouches[0].clientX - dragStartX;
-    if (Math.abs(dx) > 50) {
-      goTo(activeIndex + (dx < 0 ? 1 : -1));
-    }
-    setDragStartX(null);
-  };
-
-  const ArrowButton = ({ direction, onClick }) => (
-    <button
-      onClick={onClick}
-      style={{
-        position: "absolute",
-        top: "50%",
-        [direction === "left" ? "left" : "right"]: "16px",
-        transform: "translateY(-50%)",
-        zIndex: 10,
-        width: 48,
-        height: 48,
-        borderRadius: "50%",
-        background: "rgba(20,27,43,0.1)",
-        border: "none",
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        transition: "all 0.2s",
-        color: "#141b2b",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "rgba(20,27,43,0.15)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "rgba(20,27,43,0.1)";
-      }}
-    >
-      {direction === "left" ? "←" : "→"}
-    </button>
-  );
+    return () => clearInterval(interval);
+  }, [maxIndex]);
 
   return (
     <>
       <style>{styles}</style>
 
       <section className="wl-root">
-        {/* ── Header ── */}
+        {/* HEADER */}
+
         <div className="wl-header">
           <div>
-            <div className="wl-eyebrow">Customer stories</div>
-            <p className="wl-title">
-              Wall of<br />
+            <div className="wl-eyebrow">
+              Customer stories
+            </div>
+
+            <h2 className="wl-title">
+              Wall of
+              <br />
               love
-            </p>
+            </h2>
           </div>
+
           <p className="wl-subtitle">
-            Real teams, real results. See how businesses across industries are
-            replacing legacy call centres with Nexov voice agents.
+            Real teams, real results. See how
+            businesses across industries are
+            replacing legacy call centres with
+            Nexov voice agents.
           </p>
         </div>
 
-        {/* ── Carousel wrapper ── */}
-        <div style={{ position: "relative", paddingBottom: 24 }}>
-          {/* ── Carousel container ── */}
+        {/* CAROUSEL */}
+
+        <div
+          style={{
+            position: "relative",
+          }}
+        >
           <div
             style={{
-              position: "relative",
-              width: "100%",
               overflow: "hidden",
-              cursor: isDragging ? "grabbing" : "grab",
             }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           >
-            {/* ── Carousel track ── */}
             <div
               style={{
                 display: "flex",
-                width: "100%",
-                transform: `translateX(calc(-${activeIndex * 33.33}% - ${activeIndex * 16}px))`,
-                transition: isDragging ? "none" : "transform 0.65s cubic-bezier(0.34, 1.2, 0.64, 1)",
-                gap: "16px",
-                paddingLeft: "16px",
-                paddingRight: "16px",
+                gap: 16,
+
+                transform: `translateX(calc(-${
+                  activeIndex * 33.33
+                }% - ${activeIndex * 16}px))`,
+
+                transition:
+                  "transform .8s cubic-bezier(.22,1,.36,1)",
+
+                padding: "4px",
               }}
             >
               {testimonials.map((t) => (
                 <div
                   key={t.name}
+                  className="wl-card-wrap"
                   style={{
-                    flex: "0 0 calc(33.333% - 11px)",
-                    minWidth: "calc(33.333% - 11px)",
+                    flex:
+                      "0 0 calc(33.333% - 11px)",
+
+                    minWidth:
+                      "calc(33.333% - 11px)",
                   }}
                 >
                   <TestimonialCard t={t} />
@@ -508,63 +546,49 @@ const WallOfLove = () => {
               ))}
             </div>
           </div>
-
-          {/* ── Arrow buttons ── */}
-          <ArrowButton
-            direction="left"
-            onClick={() => goTo(activeIndex - 1)}
-          />
-          <ArrowButton
-            direction="right"
-            onClick={() => goTo(activeIndex + 1)}
-          />
         </div>
 
-        {/* ── Navigation dots ── */}
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            justifyContent: "center",
-            paddingBottom: 16,
-          }}
-        >
-          {Array.from({ length: testimonials.length - 2 }).map((_, i) => (
+        {/* DOTS */}
+
+        <div className="wl-dots">
+          {Array.from({
+            length: maxIndex + 1,
+          }).map((_, i) => (
             <button
               key={i}
+              className="wl-dot"
               onClick={() => goTo(i)}
-              aria-label={`Go to testimonial group ${i + 1}`}
               style={{
-                width: i === activeIndex ? 24 : 6,
-                height: 6,
-                borderRadius: 99,
+                width:
+                  activeIndex === i
+                    ? 28
+                    : 6,
+
                 background:
-                  i === activeIndex
+                  activeIndex === i
                     ? "#80f9c8"
-                    : "rgba(20,27,43,0.2)",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                transition: "all 0.4s cubic-bezier(0.34,1.3,0.64,1)",
+                    : "rgba(20,27,43,.18)",
               }}
             />
           ))}
         </div>
 
-        {/* ── Helper text ── */}
+        {/* HELPER */}
+
         <p
+          className="wl-helper"
           style={{
-            marginTop: 8,
-            fontSize: 11,
-            color: "rgba(20,27,43,0.35)",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontWeight: 500,
             textAlign: "center",
+            marginTop: 18,
+            fontSize: 11,
+            letterSpacing: ".14em",
+            textTransform: "uppercase",
+            color: "rgba(20,27,43,.38)",
+            fontFamily:
+              "'Space Grotesk', sans-serif",
           }}
         >
-          swipe or use arrows to browse
+          Swipe or use arrows to browse
         </p>
       </section>
     </>
