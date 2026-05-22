@@ -126,6 +126,7 @@
 
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import SplitText from "./SplitText";
 
 const features = [
   {
@@ -153,14 +154,6 @@ const features = [
       "Coordinate multiple AI agents simultaneously to handle complex workflows, parallel tasks, and autonomous decision-making.",
   },
 ];
-
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
-
-function easeInCubic(t) {
-  return t * t * t;
-}
 
 export default function FullScreenSection() {
   const rootRef = useRef(null);
@@ -206,56 +199,19 @@ export default function FullScreenSection() {
   }, [compute]);
 
   function getSlideStyle(i, currentIndex, localProgress) {
-    const INTRO_END = 0.15;
-    const OUTRO_START = 0.72;
-    const isLastSlide = i === features.length - 1;
-
     if (i === currentIndex) {
-      if (localProgress < INTRO_END) {
-        const t = easeOutCubic(localProgress / INTRO_END);
-        return {
-          opacity: t,
-          transform: `translateY(${(1 - t) * 48}px)`,
-          filter: `blur(${(1 - t) * 6}px)`,
-          pointerEvents: "none",
-        };
-      } else if (localProgress < OUTRO_START || isLastSlide) {
-        return {
-          opacity: 1,
-          transform: "translateY(0px)",
-          filter: "blur(0px)",
-          pointerEvents: "auto",
-        };
-      } else {
-        const t = easeInCubic(
-          (localProgress - OUTRO_START) / (1 - OUTRO_START)
-        );
-        return {
-          opacity: 1 - t,
-          transform: `translateY(${-t * 48}px)`,
-          filter: `blur(${t * 6}px)`,
-          pointerEvents: "none",
-        };
-      }
-    }
-
-    // Next slide peeks in during outro
-    if (i === currentIndex + 1 && localProgress > OUTRO_START) {
-      const t = easeOutCubic(
-        (localProgress - OUTRO_START) / (1 - OUTRO_START)
-      );
       return {
-        opacity: t * 0.35,
-        transform: `translateY(${(1 - t) * 40}px)`,
-        filter: `blur(${(1 - t) * 5}px)`,
-        pointerEvents: "none",
+        opacity: 1,
+        transform: "translateY(0px)",
+        filter: "blur(0px)",
+        pointerEvents: "auto",
       };
     }
 
     return {
       opacity: 0,
-      transform: i < currentIndex ? "translateY(-48px)" : "translateY(48px)",
-      filter: "blur(6px)",
+      transform: "translateY(0px)",
+      filter: "blur(0px)",
       pointerEvents: "none",
     };
   }
@@ -494,10 +450,44 @@ export default function FullScreenSection() {
           <div className="fss-slides">
             {features.map((f, i) => {
               const style = getSlideStyle(i, currentIndex, localProgress);
+              const isActive = i === currentIndex;
               return (
                 <div key={i} className="fss-slide" style={style}>
-                  <h2 className="fss-title">{f.title}</h2>
-                  <p className="fss-desc">{f.description}</p>
+                  {isActive ? (
+                    <>
+                      <SplitText
+                        text={f.title}
+                        className="fss-title"
+                        delay={40}
+                        duration={1.2}
+                        ease="power3.out"
+                        splitType="chars"
+                        from={{ opacity: 0, y: 40 }}
+                        to={{ opacity: 1, y: 0 }}
+                        threshold={0.1}
+                        rootMargin="-100px"
+                        tag="h2"
+                      />
+                      <SplitText
+                        text={f.description}
+                        className="fss-desc"
+                        delay={30}
+                        duration={1.2}
+                        ease="power3.out"
+                        splitType="words"
+                        from={{ opacity: 0, y: 20 }}
+                        to={{ opacity: 1, y: 0 }}
+                        threshold={0.15}
+                        rootMargin="-80px"
+                        tag="p"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="fss-title">{f.title}</h2>
+                      <p className="fss-desc">{f.description}</p>
+                    </>
+                  )}
                   <div className="fss-ghost-number">{f.index}</div>
                 </div>
               );
