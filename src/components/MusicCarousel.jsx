@@ -736,6 +736,7 @@
 // }
 
 import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
+import { motion } from "framer-motion";
 
 // ─── Grainient (inlined from react-bits) ─────────────────────────────────────
 const hexToRgb = hex => {
@@ -1409,29 +1410,43 @@ export default function MusicCarousel() {
   const activeSong = SONGS[activeIndex];
 
   return (
-    <div style={{
-      position: "relative", width: "100%", minHeight: "100vh",
-      background: "transparent",
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      overflow: "hidden", padding: "40px 0",
-      fontFamily: "'DM Sans', sans-serif",
-    }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}
+      style={{
+        position: "relative", width: "100%", minHeight: "100vh",
+        background: "transparent",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        overflow: "hidden", padding: "40px 0",
+        fontFamily: "'DM Sans', sans-serif",
+      }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
       `}</style>
 
-      <h2 style={{
-        position: "relative", zIndex: 20, marginBottom: "60px",
-        fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px, 4vw, 48px)",
-        fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.02em",
-        lineHeight: 1.1, color: "#141b2b", textAlign: "center",
-        maxWidth: "600px", paddingTop: "40px",
-      }}>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.1, 0.25, 1.0] }}
+        style={{
+          position: "relative", zIndex: 20, marginBottom: "60px",
+          fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px, 4vw, 48px)",
+          fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.02em",
+          lineHeight: 1.1, color: "#141b2b", textAlign: "center",
+          maxWidth: "600px", paddingTop: "40px",
+        }}>
         Listen To Our Agent
-      </h2>
+      </motion.h2>
 
       {/* Carousel */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
         style={{
           position: "relative", width: "100%", maxWidth: 900, height: 560,
           display: "flex", alignItems: "center", justifyContent: "center",
@@ -1486,12 +1501,25 @@ export default function MusicCarousel() {
             </div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Dots */}
-      <div style={{ display: "flex", gap: 8, marginTop: 28, position: "relative", zIndex: 10 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        style={{ display: "flex", gap: 8, marginTop: 28, position: "relative", zIndex: 10 }}
+      >
         {SONGS.map((_, i) => (
-          <button key={i} onClick={() => goTo(i)} aria-label={`Go to song ${i + 1}`}
+          <motion.button
+            key={i}
+            onClick={() => goTo(i)}
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4, delay: 0.6 + (i * 0.08) }}
+            aria-label={`Go to song ${i + 1}`}
             style={{
               width: i === activeIndex ? 24 : 6, height: 6, borderRadius: 99,
               background: i === activeIndex ? activeSong.accentColor : "rgba(0,0,0,0.2)",
@@ -1500,16 +1528,21 @@ export default function MusicCarousel() {
             }}
           />
         ))}
-      </div>
+      </motion.div>
 
-      <p style={{
-        marginTop: 18, fontSize: 11, color: "rgba(0,0,0,0.35)",
-        letterSpacing: "0.12em", textTransform: "uppercase",
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-        position: "relative", zIndex: 10,
-      }}>
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, delay: 0.7 }}
+        style={{
+          marginTop: 18, fontSize: 11, color: "rgba(0,0,0,0.35)",
+          letterSpacing: "0.12em", textTransform: "uppercase",
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          position: "relative", zIndex: 10,
+        }}>
         ← swipe or click cards · arrow keys supported →
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 }
