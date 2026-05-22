@@ -66,6 +66,7 @@ const styles = `
     max-width: 680px;
     text-align: center;
     padding: 96px 24px 72px;
+    margin-bottom: 75px;
   }
 
   .lf-eyebrow {

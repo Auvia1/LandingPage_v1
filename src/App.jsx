@@ -12,6 +12,7 @@ import { WhyDifferent } from "./components/WhyDifferent";
 import ScrollFloat from "./components/ScrollFloat";
 import WallOfLove from "./components/WallOfLove";
 import FullScreenSection from "./components/FullScreenSection";
+import CTA from "./components/CTA";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -1868,18 +1869,6 @@ const Vision = () => (
       FUTURE
     </ScrollFloat>
   </div>
-  </section>
-);
-
-const CTA = () => (
-  <section style={{ borderBottom: "1px solid #000", background: "#6EE7B7" }}>
-    <div style={{ padding: "96px 48px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-      <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(40px,7vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.9, letterSpacing: "-0.04em", marginBottom: "48px", maxWidth: "900px" }}>Start Automating Conversations Today</h2>
-      <div style={{ display: "flex", border: "2px solid #000", boxShadow: "8px 8px 0 rgba(0,0,0,0.15)", borderRadius: "8px", overflow: "hidden" }}>
-        <button style={{ background: "#000", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid #000", cursor: "pointer", transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)", transform: "none" }} onMouseEnter={(e) => { e.target.style.background = "rgba(0,0,0,0.85)"; e.target.style.transform = "translateY(-2px)"; }} onMouseLeave={(e) => { e.target.style.background = "#000"; e.target.style.transform = "translateY(0)"; }}>Deploy Now</button>
-        <button style={{ background: "transparent", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)" }} onMouseEnter={(e) => { e.target.style.background = "rgba(0,0,0,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>Talk to an Engineer</button>
-      </div>
-    </div>
   </section>
 );
 
