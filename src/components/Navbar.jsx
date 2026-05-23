@@ -88,7 +88,7 @@ const Navbar = () => {
 
           {/* Actions */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <a href="#" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none" }}>Log in</a>
+            {/* <a href="#" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none" }}>Log in</a> */}
             <a href="#" style={{ padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#fff", background: "#141b2b", textDecoration: "none" }}>Get started →</a>
           </div>
         </div>
