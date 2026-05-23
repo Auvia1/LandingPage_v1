@@ -251,7 +251,7 @@ const Hero = () => (
 );
 
 const MarqueeBar = () => {
-  const LOGOS = ["SALESFORCE", "SLACK", "STRIPE", "GITHUB", "TWILIO", "HUBSPOT"];
+  const LOGOS = ["Call Handling Agent", "Appointment Booking Agent", "Customer Support Agent", "Lead Qualification Agent", "Doctor Transcription Tool", "Voice Agents"];
   return (
     <section style={{ borderTop: "1px solid #000", borderBottom: "1px solid #000", background: "#fff", overflow: "hidden", height: 50, display: "flex", alignItems: "center", maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
       <div className="marquee-track">
