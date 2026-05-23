@@ -205,12 +205,12 @@ const styles = `
   }
 
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; flex-wrap: nowrap; }
   .marquee-item {
     display: flex; align-items: center; justify-content: center;
     padding: 0 64px; height: 50px;
     font-family: 'Inter', sans-serif; font-weight: 400; font-size: 16px;
-    letter-spacing: -0.02em; position: relative;
+    letter-spacing: -0.02em; position: relative; white-space: nowrap;
   }
   .marquee-item::after {
     content: ''; position: absolute; right: 0; top: 0; bottom: 0;
