@@ -991,7 +991,7 @@ const SONGS = [
     g1: "#ffb478", g2: "#00ffc8", g3: "#0f766e",
     ambientColor: "rgba(0, 255, 200, 0.12)",
     langTag: "ENGLISH",
-    audioSrc: "/assets/audio/english final.mp4",
+    audioSrc: "/audio/english final.mp4",
     warpFrequency: 4, blendAngle: 15, rotationAmount: 380,
   },
   {
@@ -1002,7 +1002,7 @@ const SONGS = [
     g1: "#7dd3fc", g2: "#3b82f6", g3: "#102a43",
     ambientColor: "rgba(59, 130, 246, 0.12)",
     langTag: "HINDI",
-    audioSrc: "/assets/audio/hindi final.mp4",
+    audioSrc: "/audio/hindi final.mp4",
     warpFrequency: 5, blendAngle: 30, rotationAmount: 420,
   },
   {
@@ -1013,7 +1013,7 @@ const SONGS = [
     g1: "#a7ffe9", g2: "#7877ff", g3: "#0f6b5d",
     ambientColor: "rgba(120, 119, 255, 0.12)",
     langTag: "TELUGU",
-    audioSrc: "/assets/audio/telugu final.mp4",
+    audioSrc: "/audio/telugu final.mp4",
     warpFrequency: 3.5, blendAngle: -10, rotationAmount: 350,
   },
 ];
