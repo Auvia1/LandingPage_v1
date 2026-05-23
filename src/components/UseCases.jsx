@@ -317,25 +317,25 @@ const styles = `
 
 const CASES = [
   {
-    num: "01 — Healthcare",
+    num: "01 — Our Mission",
     iconClass: "icon-bg-health",
-    icon: "stethoscope",
-    title: "Appointment & triage",
-    desc: "Automated scheduling, reminders, and clinical transcription for clinics and hospital networks.",
+    icon: "target",
+    title: "Intelligent conversations",
+    desc: "We build AI-powered voice agents that understand and speak in Indian languages, delivering human-like conversations at scale.",
   },
   {
-    num: "02 — Real estate",
+    num: "02 — Our Strength",
     iconClass: "icon-bg-realestate",
-    icon: "apartment",
-    title: "Lead qualification",
-    desc: "Outbound qualification calls that filter serious buyers from cold traffic before your team lifts a finger.",
+    icon: "verified",
+    title: "Purpose-built for India",
+    desc: "Our platform is designed for Indian businesses with deep understanding of local languages, cultural nuances, and market dynamics.",
   },
   {
-    num: "03 — E-commerce",
+    num: "03 — Our Impact",
     iconClass: "icon-bg-ecommerce",
-    icon: "package_2",
-    title: "Order & support",
-    desc: "Conversational agents handling order tracking, returns, and status updates at any hour.",
+    icon: "trending_up",
+    title: "Business transformation",
+    desc: "We help Indian companies reduce operational costs by 60%, improve customer satisfaction, and scale customer interactions effortlessly.",
   },
 ];
 
@@ -370,12 +370,13 @@ const UseCases = () => {
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1.0] }}
         >
           <div>
-            <div className="uc-eyebrow">Applied intelligence</div>
-            <p className="uc-title">Voice agents<br />for every sector</p>
+            <div className="uc-eyebrow">About us</div>
+            <p className="uc-title">Who we are<br />& what we do</p>
           </div>
           <p className="uc-subtitle">
-            Specialized voice agents deployed across critical industries to streamline
-            workflows and elevate customer experience.
+            Auvia provides enterprise-grade voice agents built specifically for Indian
+            businesses and markets. Our AI-powered conversational agents handle customer
+            interactions, support, and sales at scale.
           </p>
         </motion.div>
 
@@ -425,11 +426,11 @@ const UseCases = () => {
           >
             <DotPattern />
             <div className="uc-case-study-content">
-              <span className="uc-case-study-label">Case study — SaaS</span>
-              <div className="uc-case-study-stat">90% less friction</div>
+              <span className="uc-case-study-label">Case study — Indian D2C Brand</span>
+              <div className="uc-case-study-stat">3x faster support</div>
               <p className="uc-case-study-body">
-                Proactive agent-led onboarding calls eliminated setup drop-off,
-                yielding a 15% lift in month-one retention.
+                Voice agents handling customer inquiries in Hindi & English reduced response time
+                from 24 hours to 4 hours, increasing customer satisfaction by 40%.
               </p>
             </div>
           </motion.div>
@@ -448,11 +449,11 @@ const UseCases = () => {
           >
             <div className="uc-live-pulse">
               <div className="uc-pulse-dot" />
-              <span className="uc-live-label">Core v4 — live</span>
+              <span className="uc-live-label">India-focused AI agents</span>
             </div>
             <div>
               <div className="uc-live-metric">2.4M</div>
-              <div className="uc-live-sub">calls handled this month</div>
+              <div className="uc-live-sub">conversations this month</div>
             </div>
           </motion.div>
 

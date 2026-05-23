@@ -586,7 +586,7 @@ export const WhyDifferent = () => (
           </p>
         </div>
         <p className="wd-subtitle">
-          Legacy chatbots were built for text. Nexov was built for the full
+          Legacy chatbots were built for text. NexovAI was built for the full
           complexity of live human voice — a fundamentally harder problem, solved.
         </p>
       </motion.div>
@@ -670,7 +670,7 @@ export const WhyDifferent = () => (
             >
               bolt
             </span>
-            Nexov voice agents
+            NexovAI voice agents
           </div>
         </div>
 

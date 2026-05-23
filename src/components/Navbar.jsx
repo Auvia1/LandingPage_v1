@@ -66,22 +66,23 @@ const Navbar = () => {
           padding: "0 24px", height: 56, gap: 24,
         }}>
           {/* Logo */}
-          <a href="#" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", flexShrink: 0 }}>
-            <div style={{ width: 28, height: 28, borderRadius: 6, background: "#141b2b", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7h10M7 2l5 5-5 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span style={{ fontSize: 15, fontWeight: 500, color: "#141b2b", letterSpacing: "-0.02em" }}>Nexov AI</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold tracking-tight text-foreground">
+              Nexov
+<span style={{ color: "#6b8e23" }}>AI</span>  
+            </span>
+          </div>
 
           {/* Links */}
           <div style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
-            {[{ label: "Infrastructure", chevron: true }, { label: "Voice models", chevron: true }, { label: "API docs" }, { label: "Pricing" }]
-              .map(({ label, chevron }) => (
-                <a key={label} href="#" style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 12px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none", whiteSpace: "nowrap" }}>
-                  {label}{chevron && <span style={{ fontSize: 11, opacity: 0.5 }}>▾</span>}
-                </a>
+            {[{ label: "Try our agents", id: "agents" }, { label: "Products", id: "products" }, { label: "About us", id: "usecases" }, { label: "Contact us", id: "contact" }]
+              .map(({ label, id }) => (
+                <button key={label} onClick={() => {
+                  const element = document.getElementById(id);
+                  if (element) element.scrollIntoView({ behavior: "smooth" });
+                }} style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 12px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none", whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer" }}>
+                  {label}
+                </button>
               ))}
           </div>
 

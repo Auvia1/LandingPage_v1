@@ -414,9 +414,9 @@ const styles = `
 `;
 
 const INFO_ITEMS = [
-  { icon: "mail",      label: "Email us",      val: "hello@nexov.ai"       },
-  { icon: "phone",     label: "Call us",       val: "+1 (800) 639-2682"    },
-  { icon: "location_on", label: "Headquarters", val: "San Francisco, CA"   },
+  { icon: "mail",      label: "Email us",      val: "nexovai12@gmail.com"       },
+  { icon: "phone",     label: "Call us",       val: "+91 7993357555"    },
+  { icon: "location_on", label: "Headquarters", val: "Hyderabad, Telangana"   },
   { icon: "schedule",  label: "Response time", val: "Under 2 business hours"},
 ];
 
@@ -549,11 +549,11 @@ const ContactSection = () => {
             <div className="ct-divider" />
             <div className="ct-info-title" style={{ fontSize: 14, marginBottom: 12 }}>Follow us</div>
             <div className="ct-socials">
-              {[{ icon: "alternate_email", label: "Twitter" }, { icon: "work", label: "LinkedIn" }, { icon: "code", label: "GitHub" }].map((s) => (
-                <button key={s.label} className="ct-social-btn">
+              {[{ icon: "work", label: "LinkedIn", link: "https://www.linkedin.com/company/nexovai1/" }].map((s) => (
+                <a key={s.label} href={s.link} target="_blank" rel="noopener noreferrer" className="ct-social-btn">
                   <span className="material-symbols-outlined">{s.icon}</span>
                   {s.label}
-                </button>
+                </a>
               ))}
             </div>
           </div>

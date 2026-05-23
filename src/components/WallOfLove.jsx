@@ -274,7 +274,7 @@ const styles = `
 const testimonials = [
   {
     quote:
-      "Nexov replaced an entire inbound team overnight. Call handling went from hours to seconds, and our CSAT scores actually went up.",
+      "NexovAI replaced an entire inbound team overnight. Call handling went from hours to seconds, and our CSAT scores actually went up.",
     name: "Priya Nair",
     role: "VP Operations · Healthbridge",
     stars: 5,
@@ -318,7 +318,7 @@ const testimonials = [
   },
   {
     quote:
-      "Our e-commerce returns process was a nightmare. Nexov agents handle every step end-to-end — customers love it.",
+      "Our e-commerce returns process was a nightmare. NexovAI agents handle every step end-to-end — customers love it.",
     name: "Rachel Kim",
     role: "COO · Drift Commerce",
     stars: 5,
@@ -498,7 +498,7 @@ const WallOfLove = () => {
             Real teams, real results. See how
             businesses across industries are
             replacing legacy call centres with
-            Nexov voice agents.
+            NexovAI voice agents.
           </p>
         </div>
 

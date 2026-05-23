@@ -239,7 +239,7 @@ const Hero = () => (
     <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.2} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={1.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 1 }} />
     <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
-      <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>V4.2.0 STABLE RELEASE</div>
+      <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>New Release</div>
       <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
       {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
       <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
@@ -488,6 +488,19 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       }}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ border: "none", borderRadius: "24px", padding: "28px", background: hovered ? "#80f9c8" : "#fff", transition: "background .3s ease, transform .3s ease, box-shadow .3s ease", boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "340px", cursor: "default", overflow: "hidden", position: "relative" }}>
+
+      {hovered && (
+        <div style={{ position: "absolute", top: "20px", right: "20px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#141b2b", transition: "opacity 0.2s ease", background: "#fff", padding: "6px 12px", borderRadius: "6px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "6px" }}>
+          {isAppointmentAgent ? (
+            <>
+              try it
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 10L10 2M10 2H3M10 2V9" stroke="#141b2b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </>
+          ) : "work in progress"}
+        </div>
+      )}
 
       <div style={{ marginBottom: "16px" }}><Icon name={icon} /></div>
 
@@ -1756,8 +1769,6 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
 };
 
 const ProductGrid = () => {
-  const infraRef = useRef(null);
-
   return (
     <motion.section
       initial={{ opacity: 0, y: 60 }}
@@ -1771,65 +1782,6 @@ const ProductGrid = () => {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
         {products.map((p, idx) => <ProductCard key={p.no} {...p} index={idx} />)}
-        <motion.div
-          ref={infraRef}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{
-            duration: 0.7,
-            delay: products.length * 0.12,
-            ease: [0.25, 0.1, 0.25, 1.0]
-          }}
-          style={{ border: "none", borderRadius: "24px", background: "#000", padding: "48px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", inset: 0, opacity: 0.2 }}>
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs><pattern id="pg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#80f9c8" strokeWidth=".5" /></pattern></defs>
-              <rect fill="url(#pg)" width="100%" height="100%" />
-            </svg>
-          </div>
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <span style={{ display: "inline-block", minHeight: "16px", lineHeight: "1", fontFamily: "'Inter',sans-serif", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#80f9c8", marginBottom: "16px" }}>
-              <VariableProximity
-                label="Infrastructure Node"
-                fromFontVariationSettings="'wght' 700, 'opsz' 9"
-                toFontVariationSettings="'wght' 900, 'opsz' 40"
-                containerRef={infraRef}
-                radius={100}
-                falloff="linear"
-              />
-            </span>
-            {[null, null, null].map((_, i) => (
-              <div key={i} style={{ height: 4, width: ["100%", "66%", "75%"][i], background: `rgba(128,249,200,${[.2, .4, .1][i]})`, marginBottom: 8 }} />
-            ))}
-          </div>
-          <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 8, fontFamily: "'Space Grotesk',monospace", fontSize: "10px", color: "rgba(128,249,200,.6)" }}>
-            <VariableProximity
-              label="// GLOBAL_MESH_ACTIVE"
-              fromFontVariationSettings="'wght' 400, 'opsz' 9"
-              toFontVariationSettings="'wght' 700, 'opsz' 40"
-              containerRef={infraRef}
-              radius={100}
-              falloff="linear"
-            />
-            <VariableProximity
-              label="// LATENCY_OPTIMIZED"
-              fromFontVariationSettings="'wght' 400, 'opsz' 9"
-              toFontVariationSettings="'wght' 700, 'opsz' 40"
-              containerRef={infraRef}
-              radius={100}
-              falloff="linear"
-            />
-            <VariableProximity
-              label="// 100% UPTIME_PROTOCOL"
-              fromFontVariationSettings="'wght' 400, 'opsz' 9"
-              toFontVariationSettings="'wght' 700, 'opsz' 40"
-              containerRef={infraRef}
-              radius={100}
-              falloff="linear"
-            />
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   );
@@ -1844,7 +1796,7 @@ const Vision = () => (
       <blockquote style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(28px,3.5vw,48px)", fontWeight: 700, textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "48px" }}>
         <ScaleInText text={`"We believe AI agents will replace repetitive human workflows. We're building the infrastructure for that future."`} />
       </blockquote>
-      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase" }}>— Nexov Core Vision</div>
+      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase" }}>— NexovAI Core Vision</div>
     </div>
     {/* <div style={{ position: "absolute", bottom: "-80px", left: "-40px", pointerEvents: "none", userSelect: "none" }}>
       <ScrollFloat
@@ -1876,8 +1828,8 @@ const Footer = () => (
   <footer style={{ background: "#fff", borderTop: "1px solid #000" }}>
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-end" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase" }}>Nexov AI</div>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>© 2024 NEXOV AI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS</div>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase" }}>NexovAI</div>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>© 2024 NEXOVAI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS</div>
       </div>
       <div style={{ display: "flex", gap: "32px", justifyContent: "flex-end", flexWrap: "wrap" }}>
         {["Documentation", "Privacy Policy", "System Status", "Twitter/X"].map((link) => (
@@ -1918,13 +1870,17 @@ export default function App() {
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
 
 
-          <TalkToAgent />
+          <div id="agents">
+            <TalkToAgent />
+          </div>
           <Mission />
-          <ProductGrid />
+          <div id="products">
+            <ProductGrid />
+          </div>
           <div style={{ marginBottom: "80px" }}>
             <LogicFlow />
           </div>
-          <div style={{ marginBottom: "80px" }}>
+          <div style={{ marginBottom: "80px" }} id="usecases">
             <UseCases />
           </div>
           <WhyDifferent />
@@ -1932,9 +1888,11 @@ export default function App() {
             <Vision />
           </div>
           <div style={{ marginBottom: "80px" }}>
-            <WallOfLove />
+            {/* <WallOfLove /> */}
           </div>
-          <CTA />
+          <div id="contact" style={{marginTop: "80px"}}>
+            <CTA />
+          </div>
         </main>
       </div>
       <Footer />
