@@ -632,10 +632,8 @@ import {
 
 /* ─── Fonts & global styles ──────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
-
-  .nexov-hero { font-family: 'DM Sans', sans-serif; }
-  .nexov-display { font-family: 'Instrument Serif', serif; }
+  .nexov-hero { font-family: 'Quicksand', sans-serif; }
+  .nexov-display { font-family: 'Merriweather', serif; }
 
   .grain-overlay {
     pointer-events: none;
@@ -673,9 +671,9 @@ const tabs = ["Dashboard", "Schedule", "Calls & Logs"];
 /* ─── Shared sidebar ─────────────────────────────────────── */
 function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: string) => void }) {
   const items = [
-    { label: "Dashboard",   icon: LayoutDashboard, group: "Clinic Ops"    },
-    { label: "Schedule",    icon: Calendar,         group: null            },
-    { label: "Calls & Logs",icon: Phone,            group: "Virtual Asst.", badge: 12 },
+    { label: "Dashboard", icon: LayoutDashboard, group: "Clinic Ops" },
+    { label: "Schedule", icon: Calendar, group: null },
+    { label: "Calls & Logs", icon: Phone, group: "Virtual Asst.", badge: 12 },
   ];
   let lastGroup = null;
 
@@ -684,7 +682,7 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
       {/* Logo */}
       <div className="mb-5 px-1 flex items-center gap-1.5">
         <span className="size-2 rounded-full bg-emerald-500 live-dot inline-block" />
-        <span style={{ fontFamily: "'DM Sans', sans-serif" }}
+        <span style={{ fontFamily: "'Quicksand', sans-serif" }}
           className="text-[11px] font-semibold tracking-tight text-slate-800">
           Nexov<span className="text-emerald-500">AI</span>
         </span>
@@ -705,11 +703,10 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
             <button
               type="button"
               onClick={() => onNavigate(item.label)}
-              className={`mb-0.5 flex w-full items-center gap-1.5 rounded-md px-1.5 py-[5px] text-left transition-all duration-150 ${
-                isActive
+              className={`mb-0.5 flex w-full items-center gap-1.5 rounded-md px-1.5 py-[5px] text-left transition-all duration-150 ${isActive
                   ? "bg-emerald-50 text-emerald-700"
                   : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-              }`}
+                }`}
             >
               <Icon className="size-[9px] shrink-0" />
               <span className="text-[9px] font-medium truncate">{item.label}</span>
@@ -757,10 +754,10 @@ function TopBar({ placeholder, statusLabel }: { placeholder: string; statusLabel
 /* ─── Dashboard screen ───────────────────────────────────── */
 function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
   const rows = [
-    { time: "09:00", name: "K. Sai Pallavi",     tag: "NEW", reason: "Annual Checkup",       initials: "SR", provider: "Dr. S. Rao",   status: "Checked In", sClass: "text-amber-600 bg-amber-50",   hi: false },
-    { time: "09:30", name: "Ch. Venkata Ramana", tag: "AI",  reason: "Follow-up: X-Ray",     initials: "AR", provider: "Dr. A. Reddy", status: "Confirmed",  sClass: "text-emerald-700 bg-emerald-50", hi: true  },
-    { time: "10:15", name: "Rahul Sharma",        tag: null,  reason: "Prescription Renewal", initials: "SR", provider: "Dr. S. Rao",   status: "Upcoming",   sClass: "text-slate-500 bg-slate-50",   hi: false },
-    { time: "11:00", name: "Ananya Verma",        tag: "AI",  reason: "Acute Knee Pain",      initials: "AR", provider: "Dr. A. Reddy", status: "Upcoming",   sClass: "text-slate-500 bg-slate-50",   hi: false },
+    { time: "09:00", name: "K. Sai Pallavi", tag: "NEW", reason: "Annual Checkup", initials: "SR", provider: "Dr. S. Rao", status: "Checked In", sClass: "text-amber-600 bg-amber-50", hi: false },
+    { time: "09:30", name: "Ch. Venkata Ramana", tag: "AI", reason: "Follow-up: X-Ray", initials: "AR", provider: "Dr. A. Reddy", status: "Confirmed", sClass: "text-emerald-700 bg-emerald-50", hi: true },
+    { time: "10:15", name: "Rahul Sharma", tag: null, reason: "Prescription Renewal", initials: "SR", provider: "Dr. S. Rao", status: "Upcoming", sClass: "text-slate-500 bg-slate-50", hi: false },
+    { time: "11:00", name: "Ananya Verma", tag: "AI", reason: "Acute Knee Pain", initials: "AR", provider: "Dr. A. Reddy", status: "Upcoming", sClass: "text-slate-500 bg-slate-50", hi: false },
   ];
 
   return (
@@ -794,9 +791,8 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
                 </div>
                 <div className="flex gap-1">
                   {["All", "Dr. Rao", "Dr. Reddy"].map((p, i) => (
-                    <span key={p} className={`rounded-full px-2 py-0.5 text-[7px] font-medium ${
-                      i === 0 ? "bg-slate-800 text-white" : "border border-slate-200 text-slate-400"
-                    }`}>{p}</span>
+                    <span key={p} className={`rounded-full px-2 py-0.5 text-[7px] font-medium ${i === 0 ? "bg-slate-800 text-white" : "border border-slate-200 text-slate-400"
+                      }`}>{p}</span>
                   ))}
                 </div>
               </div>
@@ -818,11 +814,10 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
                       <div className="flex items-center gap-1 min-w-0">
                         <span className="truncate text-[9px] font-semibold text-slate-800">{row.name}</span>
                         {row.tag && (
-                          <span className={`shrink-0 rounded px-1 py-0.5 text-[6px] font-bold ${
-                            row.tag === "AI"
+                          <span className={`shrink-0 rounded px-1 py-0.5 text-[6px] font-bold ${row.tag === "AI"
                               ? "bg-emerald-500 text-white"
                               : "border border-slate-300 text-slate-400"
-                          }`}>{row.tag === "AI" ? "✦ AI" : row.tag}</span>
+                            }`}>{row.tag === "AI" ? "✦ AI" : row.tag}</span>
                         )}
                       </div>
                       <span className="text-[7px] text-slate-400">{row.reason}</span>
@@ -867,9 +862,9 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
                 <span className="size-1.5 rounded-full bg-emerald-500 live-dot inline-block" />
               </div>
               {[
-                { ago: "2m ago",  text: "AI rescheduled B. Nagarjuna → Thu 2PM", color: "border-emerald-500" },
-                { ago: "14m ago", text: "K. Sai Pallavi checked in",              color: "border-slate-300"   },
-                { ago: "25m ago", text: "Missed call: Unknown number",            color: "border-red-400"     },
+                { ago: "2m ago", text: "AI rescheduled B. Nagarjuna → Thu 2PM", color: "border-emerald-500" },
+                { ago: "14m ago", text: "K. Sai Pallavi checked in", color: "border-slate-300" },
+                { ago: "25m ago", text: "Missed call: Unknown number", color: "border-red-400" },
               ].map((item) => (
                 <div key={item.ago} className={`mb-2 border-l-[2px] pl-2 ${item.color}`}>
                   <p className="text-[6.5px] font-semibold text-slate-400 uppercase tracking-wide">{item.ago}</p>
@@ -888,23 +883,23 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
 /* ─── Schedule screen ────────────────────────────────────── */
 function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
   const doctors = [
-    { initials: "SR", name: "Dr. Suresh Rao",  spec: "Cardiology" },
-    { initials: "AR", name: "Dr. A. Reddy",    spec: "General"    },
-    { initials: "KP", name: "Dr. K. Prasad",   spec: "Ortho"      },
+    { initials: "SR", name: "Dr. Suresh Rao", spec: "Cardiology" },
+    { initials: "AR", name: "Dr. A. Reddy", spec: "General" },
+    { initials: "KP", name: "Dr. K. Prasad", spec: "Ortho" },
   ];
   const slots = ["09:00", "10:00", "11:00", "12:00"];
   const appts = {
-    "09:00-SR": { name: "Jayanth Rao",     reason: "Annual Checkup",   status: "CHECKED IN",  color: "border-emerald-300 bg-emerald-50" },
-    "10:00-SR": { name: "Saranya Krishnan", reason: "Cardiology Consult",status: "LATE",        color: "border-red-300 bg-red-50"         },
-    "09:00-AR": { name: "Venkata Ramana",  reason: "Follow-up: X-Ray", status: "✦ AI BOOKED", color: "border-emerald-400 bg-emerald-50/80" },
-    "10:00-AR": { name: "Suresh Babu",     reason: "General Inquiry",  status: null,           color: "border-slate-200 bg-slate-50"     },
-    "10:00-KP": { name: "Meena Kumari",    reason: "Post-Op (Knee)",   status: "CONFIRMED",   color: "border-emerald-300 bg-emerald-50" },
+    "09:00-SR": { name: "Jayanth Rao", reason: "Annual Checkup", status: "CHECKED IN", color: "border-emerald-300 bg-emerald-50" },
+    "10:00-SR": { name: "Saranya Krishnan", reason: "Cardiology Consult", status: "LATE", color: "border-red-300 bg-red-50" },
+    "09:00-AR": { name: "Venkata Ramana", reason: "Follow-up: X-Ray", status: "✦ AI BOOKED", color: "border-emerald-400 bg-emerald-50/80" },
+    "10:00-AR": { name: "Suresh Babu", reason: "General Inquiry", status: null, color: "border-slate-200 bg-slate-50" },
+    "10:00-KP": { name: "Meena Kumari", reason: "Post-Op (Knee)", status: "CONFIRMED", color: "border-emerald-300 bg-emerald-50" },
   };
   const statusColor = {
-    "CHECKED IN":  "bg-emerald-500 text-white",
-    "LATE":        "bg-red-500 text-white",
+    "CHECKED IN": "bg-emerald-500 text-white",
+    "LATE": "bg-red-500 text-white",
     "✦ AI BOOKED": "bg-emerald-600 text-white",
-    "CONFIRMED":   "bg-emerald-500 text-white",
+    "CONFIRMED": "bg-emerald-500 text-white",
   };
 
   return (
@@ -922,8 +917,8 @@ function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void })
             </div>
             <div className="flex items-center gap-1.5">
               <div className="flex rounded-lg border border-slate-200 bg-white overflow-hidden">
-                {["Day","Week","Month"].map((v,i) => (
-                  <button key={v} className={`px-2 py-1 text-[8px] ${i===0 ? "bg-slate-800 text-white font-medium" : "text-slate-400"}`}>{v}</button>
+                {["Day", "Week", "Month"].map((v, i) => (
+                  <button key={v} className={`px-2 py-1 text-[8px] ${i === 0 ? "bg-slate-800 text-white font-medium" : "text-slate-400"}`}>{v}</button>
                 ))}
               </div>
               <button className="rounded-lg bg-emerald-500 px-2 py-1 text-[8px] font-medium text-white">+ New</button>
@@ -951,7 +946,7 @@ function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void })
                 <div key={slot} className="grid border-b border-slate-50"
                   style={{ gridTemplateColumns: "44px 1fr 1fr 1fr" }}>
                   <div className="px-1.5 py-3 text-[7px] text-slate-400 tabular-nums">{slot}</div>
-                  {["SR","AR","KP"].map((doc) => {
+                  {["SR", "AR", "KP"].map((doc) => {
                     const key = `${slot}-${doc}`;
                     const apt = appts[key];
                     return (
@@ -984,10 +979,10 @@ function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void })
 /* ─── Calls & Logs screen ────────────────────────────────── */
 function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
   const rows = [
-    { time: "10:45 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Anusha Rao",      agent: "✦ AI Agent",   agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "2m 14s", summary: "Rescheduled follow-up to Thursday 3 PM.",     tags: ["CONFIRMED","UPDATED"]  },
-    { time: "10:32 AM", type: "Outgoing",  typeColor: "text-blue-500",    caller: "Srinivas Reddy",  agent: "Receptionist", agentClass: "bg-slate-50 text-slate-500 border-slate-200",      dur: "4m 02s", summary: "Confirmed insurance for surgery tomorrow.",     tags: ["ADMIN"]                },
-    { time: "10:15 AM", type: "Missed",    typeColor: "text-red-500",     caller: "Unknown",          agent: "None",         agentClass: "bg-slate-50 text-slate-400 border-slate-200",      dur: "—",      summary: "",                                             tags: ["CALLBACK"]             },
-    { time: "09:12 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Priya Kavuri",     agent: "✦ AI Agent",   agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "3m 22s", summary: "New patient. Collected insurance + DOB.",        tags: ["NEW PATIENT","UPDATED"] },
+    { time: "10:45 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Anusha Rao", agent: "✦ AI Agent", agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "2m 14s", summary: "Rescheduled follow-up to Thursday 3 PM.", tags: ["CONFIRMED", "UPDATED"] },
+    { time: "10:32 AM", type: "Outgoing", typeColor: "text-blue-500", caller: "Srinivas Reddy", agent: "Receptionist", agentClass: "bg-slate-50 text-slate-500 border-slate-200", dur: "4m 02s", summary: "Confirmed insurance for surgery tomorrow.", tags: ["ADMIN"] },
+    { time: "10:15 AM", type: "Missed", typeColor: "text-red-500", caller: "Unknown", agent: "None", agentClass: "bg-slate-50 text-slate-400 border-slate-200", dur: "—", summary: "", tags: ["CALLBACK"] },
+    { time: "09:12 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Priya Kavuri", agent: "✦ AI Agent", agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "3m 22s", summary: "New patient. Collected insurance + DOB.", tags: ["NEW PATIENT", "UPDATED"] },
   ];
 
   return (
@@ -1013,8 +1008,8 @@ function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }
           <div className="flex gap-2 shrink-0">
             {[
               { label: "Calls Today", value: "128", sub: "98.5% answered", vc: "text-slate-800" },
-              { label: "AI Handled",  value: "84%", sub: "107 calls",       vc: "text-emerald-600" },
-              { label: "Time Saved",  value: "4.2h", sub: "vs. manual",     vc: "text-emerald-600" },
+              { label: "AI Handled", value: "84%", sub: "107 calls", vc: "text-emerald-600" },
+              { label: "Time Saved", value: "4.2h", sub: "vs. manual", vc: "text-emerald-600" },
             ].map((s) => (
               <div key={s.label} className="flex-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5">
                 <p className="text-[7px] text-slate-400 uppercase tracking-wider font-semibold">{s.label}</p>
@@ -1158,9 +1153,8 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative flex flex-1 items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium transition-colors duration-200 ${
-                  isActive ? "text-emerald-700" : "text-slate-400 hover:text-slate-600"
-                }`}
+                className={`relative flex flex-1 items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium transition-colors duration-200 ${isActive ? "text-emerald-700" : "text-slate-400 hover:text-slate-600"
+                  }`}
               >
                 <Icon className="size-2.5 shrink-0" />
                 <span className="truncate">{tab}</span>
@@ -1187,9 +1181,9 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
               transition={{ duration: 0.18 }}
               className="h-full"
             >
-              {activeTab === "Dashboard"   && <DashboardScreen onNavigate={setActiveTab} />}
-              {activeTab === "Schedule"    && <ScheduleScreen  onNavigate={setActiveTab} />}
-              {activeTab === "Calls & Logs"&& <CallsLogsScreen onNavigate={setActiveTab} />}
+              {activeTab === "Dashboard" && <DashboardScreen onNavigate={setActiveTab} />}
+              {activeTab === "Schedule" && <ScheduleScreen onNavigate={setActiveTab} />}
+              {activeTab === "Calls & Logs" && <CallsLogsScreen onNavigate={setActiveTab} />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -1263,11 +1257,11 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
               {/* Social proof */}
               <div className="mt-8 flex items-center gap-4">
                 <div className="flex -space-x-2">
-                  {["#4ade80","#34d399","#6ee7b7","#a7f3d0"].map((c, i) => (
+                  {["#4ade80", "#34d399", "#6ee7b7", "#a7f3d0"].map((c, i) => (
                     <div key={i}
                       className="size-7 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-bold text-slate-700 shadow-sm"
                       style={{ backgroundColor: c }}>
-                      {["SR","KP","AR","JR"][i]}
+                      {["SR", "KP", "AR", "JR"][i]}
                     </div>
                   ))}
                 </div>

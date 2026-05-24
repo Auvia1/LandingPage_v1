@@ -117,9 +117,8 @@ import {
 
 /* ── Fonts injected once ─────────────────────────────────── */
 const FONT_STYLE = `
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
-  .feat-root  { font-family: 'DM Sans', sans-serif; }
-  .feat-serif { font-family: 'Instrument Serif', serif; }
+  .feat-root  { font-family: 'Quicksand', sans-serif; }
+  .feat-serif { font-family: 'Merriweather', serif; }
 `;
 
 /* ── Feature data ────────────────────────────────────────── */
@@ -176,7 +175,7 @@ const FEATURES = [
 
 /* ── Individual card with tilt + border-glow ─────────────── */
 function FeatureCard({ feature, index }: { feature: any; index: number }) {
-  const cardRef   = useRef(null);
+  const cardRef = useRef(null);
   const [hovered, setHovered] = useState(false);
 
   /* smooth spring tilt */
@@ -193,12 +192,12 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
     const { left, top, width, height } = card.getBoundingClientRect();
     const cx = e.clientX - left;
     const cy = e.clientY - top;
-    const px = (cx / width  - 0.5) * 2;   // -1 → 1
+    const px = (cx / width - 0.5) * 2;   // -1 → 1
     const py = (cy / height - 0.5) * 2;
 
     rotateX.set(-py * 8);
-    rotateY.set( px * 8);
-    spotX.set((cx / width)  * 100);
+    rotateY.set(px * 8);
+    spotX.set((cx / width) * 100);
     spotY.set((cy / height) * 100);
   }, [rotateX, rotateY, spotX, spotY]);
 
@@ -287,12 +286,12 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
 
 /* ── Grid-level spotlight (follows mouse over entire grid) ── */
 function SpotlightGrid({ children }) {
-  const gridRef  = useRef(null);
-  const mouseX   = useMotionValue(-9999);
-  const mouseY   = useMotionValue(-9999);
+  const gridRef = useRef(null);
+  const mouseX = useMotionValue(-9999);
+  const mouseY = useMotionValue(-9999);
 
-  const springX  = useSpring(mouseX, { stiffness: 120, damping: 24 });
-  const springY  = useSpring(mouseY, { stiffness: 120, damping: 24 });
+  const springX = useSpring(mouseX, { stiffness: 120, damping: 24 });
+  const springY = useSpring(mouseY, { stiffness: 120, damping: 24 });
 
   const handleMouseMove = useCallback((e) => {
     const rect = gridRef.current?.getBoundingClientRect();
@@ -405,7 +404,7 @@ export function Features() {
               {["HIPAA Compliant", "99.9% Uptime SLA", "Live in 48 hrs"].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <svg className="size-3.5 text-emerald-500" fill="none" viewBox="0 0 16 16">
-                    <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   {t}
                 </span>
