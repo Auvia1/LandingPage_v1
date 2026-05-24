@@ -12,7 +12,7 @@ import { WhyDifferent } from "./components/WhyDifferent";
 import ScrollFloat from "./components/ScrollFloat";
 import WallOfLove from "./components/WallOfLove";
 import FullScreenSection from "./components/FullScreenSection";
-import CTA from "./components/CTA";
+import CTA, { CONTACT_ITEMS, SOCIAL_LINKS } from "./components/CTA";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -243,8 +243,8 @@ const Hero = () => (
       <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
       {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
       <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
-        <button style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer", transition: "all 0.3s ease", transform: "none" }} onMouseEnter={(e) => { e.target.style.background = "#5ff3a6"; e.target.style.transform = "scale(1.02)"; }} onMouseLeave={(e) => { e.target.style.background = "#80f9c8"; e.target.style.transform = "scale(1)"; }}>Start Building</button>
-        <button style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s ease" }} onMouseEnter={(e) => { e.target.style.background = "rgba(128,249,200,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>View Docs</button>
+        <button type="button" style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer", transition: "all 0.3s ease", transform: "none" }} onClick={() => { const el = document.getElementById('products'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "#5ff3a6"; e.target.style.transform = "scale(1.02)"; }} onMouseLeave={(e) => { e.target.style.background = "#80f9c8"; e.target.style.transform = "scale(1)"; }}>Get Started</button>
+        <button type="button" style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s ease" }} onClick={() => { const el = document.getElementById('contact'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "rgba(128,249,200,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>Contact Us</button>
       </div>
     </div>
   </motion.section>
@@ -1826,15 +1826,40 @@ const Vision = () => (
 
 const Footer = () => (
   <footer style={{ background: "#fff", borderTop: "1px solid #000" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-end" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-start" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase" }}>NexovAI</div>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>© 2024 NEXOVAI — MATHEMATICAL PRECISION IN AGENTIC WORKFLOWS</div>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>© 2026 NEXOVAI — SECURE, SCALABLE, REAL-TIME VOICE AI AGENTS</div>
       </div>
-      <div style={{ display: "flex", gap: "32px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-        {["Documentation", "Privacy Policy", "System Status", "Twitter/X"].map((link) => (
-          <a key={link} href="#" style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)", textDecoration: "none" }}>{link}</a>
-        ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.16em", color: "#000" }}>Contact information</div>
+        <div style={{ display: "grid", gap: "10px" }}>
+          {CONTACT_ITEMS.map((item) => (
+            <div key={item.label} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 18, color: "#000", opacity: 0.65 }}>{item.icon}</span>
+              <div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.16em", color: "rgba(0,0,0,.35)", marginBottom: "3px" }}>{item.label}</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", fontWeight: 600, color: "#000" }}>{item.val}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.16em", color: "#000" }}>Follow us</div>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          {SOCIAL_LINKS.map((social) => (
+            <a key={social.label} href={social.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "10px 14px", border: "1px solid rgba(0,0,0,.12)", borderRadius: "999px", fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.16em", color: "rgba(0,0,0,.65)", textDecoration: "none" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>{social.icon}</span>
+              {social.label}
+            </a>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: "28px", flexWrap: "wrap", paddingTop: "14px" }}>
+          {["Documentation", "Privacy Policy", "System Status", "Twitter/X"].map((link) => (
+            <a key={link} href="#" style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)", textDecoration: "none" }}>{link}</a>
+          ))}
+        </div>
       </div>
     </div>
   </footer>
