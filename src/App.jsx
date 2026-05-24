@@ -487,8 +487,10 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
         delay: index * 0.12,
         ease: [0.25, 0.1, 0.25, 1.0]
       }}
-      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ border: "none", borderRadius: "24px", padding: "28px", background: hovered ? "#80f9c8" : "#fff", transition: "background .3s ease, transform .3s ease, box-shadow .3s ease", boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "340px", cursor: "default", overflow: "hidden", position: "relative" }}>
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => { if (isAppointmentAgent) window.location.href = "/auvia"; }}
+      style={{ border: "none", borderRadius: "24px", padding: "28px", background: hovered ? "#80f9c8" : "#fff", transition: "background .3s ease, transform .3s ease, box-shadow .3s ease", boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "340px", cursor: isAppointmentAgent ? "pointer" : "default", overflow: "hidden", position: "relative" }}>
 
       {hovered && (
         <div style={{ position: "absolute", top: "20px", right: "20px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#141b2b", transition: "opacity 0.2s ease", background: "#fff", padding: "6px 12px", borderRadius: "6px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "6px" }}>

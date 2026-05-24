@@ -89,6 +89,7 @@ const Navbar = () => {
           {/* Actions */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             {/* <a href="#" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none" }}>Log in</a> */}
+            <a href="/auvia" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#0f766e", border: "1px solid rgba(15,118,110,0.2)", background: "rgba(15,118,110,0.05)", textDecoration: "none", transition: "all 0.2s" }}>Auvia</a>
             <a href="#" style={{ padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#fff", background: "#141b2b", textDecoration: "none" }}>Get started →</a>
           </div>
         </div>

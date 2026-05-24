@@ -483,11 +483,20 @@ const Footer = () => (
           <div className="ft-col">
             <div className="ft-col-title">Products</div>
             <nav className="ft-nav-list">
-              {PRODUCTS.map((p) => (
-                <div key={p.label} className="ft-nav-link">
-                  {p.label}
-                </div>
-              ))}
+              {PRODUCTS.map((p) => {
+                if (p.label === "Appointment Booking Agent") {
+                  return (
+                    <a key={p.label} href="/auvia" className="ft-nav-link" style={{ textDecoration: "none" }}>
+                      {p.label}
+                    </a>
+                  );
+                }
+                return (
+                  <div key={p.label} className="ft-nav-link">
+                    {p.label}
+                  </div>
+                );
+              })}
             </nav>
           </div>
 
