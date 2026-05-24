@@ -12,7 +12,8 @@ import { WhyDifferent } from "./components/WhyDifferent";
 import ScrollFloat from "./components/ScrollFloat";
 import WallOfLove from "./components/WallOfLove";
 import FullScreenSection from "./components/FullScreenSection";
-import CTA, { CONTACT_ITEMS, SOCIAL_LINKS } from "./components/CTA";
+import CTA from "./components/CTA";
+import Footer from "./components/Footer";
 
 // ─── Grainient (inlined from react-bits) ────────────────────────────────────
 const hexToRgb = hex => {
@@ -1822,47 +1823,6 @@ const Vision = () => (
     </ScrollFloat>
   </div>
   </section>
-);
-
-const Footer = () => (
-  <footer style={{ background: "#fff", borderTop: "1px solid #000" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr 1fr", gap: "32px", padding: "64px 48px", maxWidth: 1440, margin: "0 auto", alignItems: "flex-start" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "20px", fontWeight: 900, textTransform: "uppercase" }}>NexovAI</div>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)" }}>© 2026 NEXOVAI — SECURE, SCALABLE, REAL-TIME VOICE AI AGENTS</div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.16em", color: "#000" }}>Contact information</div>
-        <div style={{ display: "grid", gap: "10px" }}>
-          {CONTACT_ITEMS.map((item) => (
-            <div key={item.label} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 18, color: "#000", opacity: 0.65 }}>{item.icon}</span>
-              <div>
-                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.16em", color: "rgba(0,0,0,.35)", marginBottom: "3px" }}>{item.label}</div>
-                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", fontWeight: 600, color: "#000" }}>{item.val}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.16em", color: "#000" }}>Follow us</div>
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {SOCIAL_LINKS.map((social) => (
-            <a key={social.label} href={social.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "10px 14px", border: "1px solid rgba(0,0,0,.12)", borderRadius: "999px", fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.16em", color: "rgba(0,0,0,.65)", textDecoration: "none" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>{social.icon}</span>
-              {social.label}
-            </a>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "28px", flexWrap: "wrap", paddingTop: "14px" }}>
-          {["Documentation", "Privacy Policy", "System Status", "Twitter/X"].map((link) => (
-            <a key={link} href="#" style={{ fontFamily: "'Inter',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(0,0,0,.4)", textDecoration: "none" }}>{link}</a>
-          ))}
-        </div>
-      </div>
-    </div>
-  </footer>
 );
 
 // ─── App ──────────────────────────────────────────────────────────────────────

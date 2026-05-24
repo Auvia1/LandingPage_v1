@@ -546,7 +546,7 @@ const CSS = `
 /* ── Root ── */
 .cf-root {
   font-family: 'Inter', sans-serif;
-  background: #f0f0f2;
+  background: transparent;
   padding: 32px;
   min-height: 100vh;
   display: flex;

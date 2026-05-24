@@ -102,7 +102,7 @@ const styles = `
 
   .wd-root {
     font-family: 'Inter', sans-serif;
-    background: #f5f5f7;
+    background: transparent;
     padding: 32px;
     box-sizing: border-box;
   }
