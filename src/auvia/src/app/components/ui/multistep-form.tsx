@@ -41,7 +41,7 @@ export function MultiStepForm({ onClose }: MultiStepFormProps) {
     setSubmitError("");
 
     try {
-      const endpoint = (import.meta as any).env?.VITE_FORMSPREE_ENDPOINT as string | undefined;
+      const endpoint = ((import.meta as any).env?.VITE_FORMSPREE_ENDPOINT as string | undefined) || "https://formspree.io/f/xvzvpwyn";
       if (!endpoint) {
         throw new Error("Missing Formspree endpoint.");
       }
@@ -84,10 +84,10 @@ export function MultiStepForm({ onClose }: MultiStepFormProps) {
     return (
       <div className="w-full max-w-sm mx-auto">
         <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-background via-background to-muted/20 p-12">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(46,125,50,0.12),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(107,142,35,0.12),transparent_60%)]" />
           <div className="relative flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-700">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/10">
-              <CheckIcon className="h-8 w-8 text-primary animate-in zoom-in duration-500 delay-200" strokeWidth={2.5} />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#6b8e23]/20 bg-[#6b8e23]/10">
+              <CheckIcon className="h-8 w-8 text-[#6b8e23] animate-in zoom-in duration-500 delay-200" strokeWidth={2.5} />
             </div>
             <div className="space-y-1 text-center">
               <h2 className="text-xl font-medium tracking-tight">We'll be in touch!</h2>
@@ -117,8 +117,8 @@ export function MultiStepForm({ onClose }: MultiStepFormProps) {
               className={cn(
                 "group relative flex h-9 w-9 items-center justify-center rounded-full transition-all duration-700 ease-out",
                 "disabled:cursor-not-allowed",
-                index < currentStep && "bg-primary/15 text-primary",
-                index === currentStep && "bg-primary text-primary-foreground shadow-[0_0_20px_-5px_rgba(46,125,50,0.5)]",
+                index < currentStep && "bg-[#6b8e23]/15 text-[#6b8e23]",
+                index === currentStep && "bg-[#6b8e23] text-white shadow-[0_0_20px_-5px_rgba(107,142,35,0.5)]",
                 index > currentStep && "bg-muted/50 text-muted-foreground/40",
               )}
             >
@@ -128,14 +128,14 @@ export function MultiStepForm({ onClose }: MultiStepFormProps) {
                 <span className="text-sm font-medium tabular-nums">{step.id}</span>
               )}
               {index === currentStep && (
-                <div className="absolute inset-0 rounded-full bg-primary/20 blur-md animate-pulse" />
+                <div className="absolute inset-0 rounded-full bg-[#6b8e23]/20 blur-md animate-pulse" />
               )}
             </button>
             {index < steps.length - 1 && (
               <div className="relative h-[1.5px] w-12">
                 <div className="absolute inset-0 bg-border/50" />
                 <div
-                  className="absolute inset-0 bg-primary/50 transition-all duration-700 ease-out origin-left"
+                  className="absolute inset-0 bg-[#6b8e23]/50 transition-all duration-700 ease-out origin-left"
                   style={{ transform: `scaleX(${index < currentStep ? 1 : 0})` }}
                 />
               </div>
@@ -147,7 +147,7 @@ export function MultiStepForm({ onClose }: MultiStepFormProps) {
       {/* Progress bar */}
       <div className="mb-8 overflow-hidden rounded-full bg-muted/30 h-[2px]">
         <div
-          className="h-full bg-gradient-to-r from-primary/60 to-primary transition-all duration-1000 ease-out"
+          className="h-full bg-gradient-to-r from-[#6b8e23]/60 to-[#6b8e23] transition-all duration-1000 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -176,14 +176,14 @@ export function MultiStepForm({ onClose }: MultiStepFormProps) {
             }}
             inputMode={currentStepData.field === "phone" ? "tel" : undefined}
             autoFocus
-            className="h-14 text-base transition-all duration-500 border-border/50 focus:border-primary/30 bg-background/50"
+            className="h-14 text-base transition-all duration-500 border-border/50 focus:border-[#6b8e23]/30 bg-background/50"
           />
         </div>
 
         <Button
           onClick={() => void handleNext()}
           disabled={!formData[currentStepData.field]?.trim() || isSubmitting}
-          className="w-full h-12 group relative bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+          className="w-full h-12 group relative bg-[#6b8e23] hover:bg-[#6b8e23]/90 text-white transition-all duration-300 hover:shadow-lg hover:shadow-[#6b8e23]/20"
         >
           <span className="flex items-center justify-center gap-2 font-medium">
             {currentStep === steps.length - 1 ? (
