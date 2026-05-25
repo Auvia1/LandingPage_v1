@@ -377,6 +377,25 @@ const styles = `
     color: #bbb;
     font-weight: 500;
   }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .lf-footer { grid-template-columns: 1fr 1fr; }
+    .lf-footer-cell:nth-child(2) { border-right: none !important; }
+  }
+  @media (max-width: 600px) {
+    .lf-header { padding: 48px 16px 32px; margin-bottom: 32px; }
+    .lf-scene { padding: 0 16px 48px; gap: 16px; flex-direction: column; }
+    .lf-sidenav { display: none; }
+    .lf-card { padding: 24px; }
+    .lf-card-wrap { padding: 12px 0; }
+    .lf-card-wrap.state-before, .lf-card-wrap.state-after { transform: translateY(0) translateZ(0) rotateX(0) scale(1); opacity: 0.5; }
+    .lf-footer { grid-template-columns: 1fr; padding: 0 16px; }
+    .lf-footer-cell { border-right: none !important; border-bottom: 1px solid #f0f0f0; padding: 24px 16px; }
+    .lf-footer-cell:last-child { border-bottom: none; }
+    .lf-card-footer { flex-direction: column; align-items: flex-start; }
+    .lf-tags { justify-content: flex-start; }
+  }
 `;
 
 export const LogicFlow = () => {

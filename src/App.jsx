@@ -239,9 +239,9 @@ const Hero = () => (
     style={{ borderBottom: "1px solid #000", overflow: "hidden", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", position: "relative" }}>
     <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.2} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={1.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 1 }} />
-    <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
+    <div className="px-6 py-16 md:px-12 md:py-24" style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
       <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>New Release</div>
-      <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
+      <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
       {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
       <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
         <button type="button" style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer", transition: "all 0.3s ease", transform: "none" }} onClick={() => { const el = document.getElementById('products'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "#5ff3a6"; e.target.style.transform = "scale(1.02)"; }} onMouseLeave={(e) => { e.target.style.background = "#80f9c8"; e.target.style.transform = "scale(1)"; }}>Get Started</button>
@@ -320,13 +320,15 @@ const Mission = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
-      style={{ padding: "64px 48px", background: "#ffffff", borderRadius: "24px", marginTop: "100px", marginBottom: "40px", border: "1px solid #dddddd" }}>
+      className="px-6 py-10 md:px-12 md:py-16"
+      style={{ background: "#ffffff", borderRadius: "24px", marginTop: "100px", marginBottom: "40px", border: "1px solid #dddddd" }}>
       <div
         ref={containerRef}
-        style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start", position: "relative" }}
+        className="grid grid-cols-1 md:grid-cols-2"
+        style={{ maxWidth: 1440, margin: "0 auto", gap: "64px", alignItems: "start", position: "relative" }}
       >
         {/* Left: ProcessFlow Diagram */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+        <div className="hidden md:flex justify-center items-start">
           <div style={{ background: "transparent", padding: "48px", borderRadius: "8px", width: "100%", maxWidth: "400px" }}>
             <ProcessFlow />
           </div>
@@ -338,7 +340,7 @@ const Mission = () => {
 
           <div style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(22px, 3vw, 36px)",
+            fontSize: "clamp(18px, 4vw, 36px)",
             fontWeight: 800,
             textTransform: "uppercase",
             lineHeight: 1.4,
@@ -490,7 +492,8 @@ const ProductCard = ({ icon, title, desc, no, index }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => { if (isAppointmentAgent) window.location.href = "/auvia"; }}
-      style={{ border: "none", borderRadius: "24px", padding: "28px", background: hovered ? "#80f9c8" : "#fff", transition: "background .3s ease, transform .3s ease, box-shadow .3s ease", boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", minHeight: "340px", cursor: isAppointmentAgent ? "pointer" : "default", overflow: "hidden", position: "relative" }}>
+      className="p-5 md:p-7 flex flex-col min-h-fit md:min-h-[340px] relative overflow-hidden"
+      style={{ border: "none", borderRadius: "24px", background: hovered ? "#80f9c8" : "#fff", transition: "background .3s ease, transform .3s ease, box-shadow .3s ease", boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.1)" : "0 4px 20px rgba(0,0,0,0.04)", cursor: isAppointmentAgent ? "pointer" : "default" }}>
 
       {hovered && (
         <div style={{ position: "absolute", top: "20px", right: "20px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#141b2b", transition: "opacity 0.2s ease", background: "#fff", padding: "6px 12px", borderRadius: "6px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "6px" }}>
@@ -1783,7 +1786,7 @@ const ProductGrid = () => {
         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Innovation Pipeline</p>
         <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", color: "#141b2b", lineHeight: 1.1 }}>What we are working on</h2>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 md:auto-rows-fr gap-[15px]">
         {products.map((p, idx) => <ProductCard key={p.no} {...p} index={idx} />)}
       </div>
     </motion.section>
@@ -1814,7 +1817,7 @@ const Vision = () => (
         FUTURE
       </ScrollFloat>
     </div> */}
-    <div style={{ position: "absolute", bottom: "-90px", left: "-40px", pointerEvents: "none", userSelect: "none" }}>
+    <div style={{ position: "absolute", bottom: "-90px", left: "0", right: "0", display: "flex", justifyContent: "center", pointerEvents: "none", userSelect: "none", overflow: "hidden" }}>
       <ScrollFloat
         animationDuration={2.5}
         ease='back.inOut(2)'
@@ -1848,13 +1851,13 @@ export default function App() {
       </div>
       <Navbar />
 
-      <div className="mx-[40px] mt-[10px]">
+      <div className="mx-4 md:mx-[40px] mt-[10px]">
         <Hero />
       </div>
       <MarqueeBar />
       <FullScreenSection />
-      <div style={{ margin: "0 200px" }}>
-        <main style={{ margin: "0 15px", paddingTop: "15px" }}>
+      <div className="mx-4 md:mx-[100px] lg:mx-[200px]">
+        <main className="mx-0 md:mx-[15px] pt-[15px]">
 
 
           <div id="agents">

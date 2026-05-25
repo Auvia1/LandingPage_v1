@@ -74,38 +74,49 @@ const ScrollFloat = ({
 
     const charElements = el.querySelectorAll('.char');
 
-    const anim = gsap.fromTo(
-      charElements,
-      {
-        willChange: 'opacity, transform',
-        opacity: 0,
-        yPercent: 120,
-        scaleY: 2.3,
-        scaleX: 0.7,
-        transformOrigin: '50% 0%',
-      },
-      {
-        duration: animationDuration,
-        ease,
+    let ctx = gsap.matchMedia();
+
+    ctx.add("(min-width: 769px)", () => {
+      gsap.fromTo(
+        charElements,
+        {
+          willChange: 'opacity, transform',
+          opacity: 0,
+          yPercent: 120,
+          scaleY: 2.3,
+          scaleX: 0.7,
+          transformOrigin: '50% 0%',
+        },
+        {
+          duration: animationDuration,
+          ease,
+          opacity: 1,
+          yPercent: 0,
+          scaleY: 1,
+          scaleX: 1,
+          stagger,
+          scrollTrigger: {
+            trigger: el,
+            scroller,
+            start: scrollStart,
+            end: scrollEnd,
+            scrub: true,
+          },
+        }
+      );
+    });
+
+    ctx.add("(max-width: 768px)", () => {
+      gsap.set(charElements, {
         opacity: 1,
         yPercent: 0,
         scaleY: 1,
         scaleX: 1,
-        stagger,
-        scrollTrigger: {
-          trigger: el,
-          scroller,
-          start: scrollStart,
-          end: scrollEnd,
-          scrub: true,
-          // markers: true,  // ← uncomment temporarily to debug
-        },
-      }
-    );
+      });
+    });
 
     return () => {
-      anim.scrollTrigger?.kill();
-      anim.kill();
+      ctx.revert();
     };
   }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);
 

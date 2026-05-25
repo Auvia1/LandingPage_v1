@@ -41,59 +41,67 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div style={{
-      position: "sticky", top: 0, zIndex: 50,
-      padding: scrolled ? "10px 0" : "0",
-      marginBottom: "20px",
-      marginLeft: "20px",
-      marginRight: "20px",
-      transition: "padding 0.3s ease",
-    }}
-
-    >
-      <nav style={{
-        maxWidth: "100%",
-        
-        margin: "0 auto",
-        background: scrolled ? "#fff" : "transparent",
-        borderBottom: scrolled ? "none" : "0.5px solid rgba(0,0,0,0.1)",
-        borderRadius: scrolled ? "14px" : "0",
-        boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04)" : "none",
-        transition: "background 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease",
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .nav-links { display: none !important; }
+          .nav-container { padding: 0 12px !important; }
+          .nav-actions { gap: 4px !important; }
+          .nav-action-btn { padding: 6px 10px !important; font-size: 11px !important; }
+          .nav-logo-text { font-size: 18px !important; }
+        }
+      `}</style>
+      <div style={{
+        position: "sticky", top: 0, zIndex: 50,
+        padding: scrolled ? "10px 0" : "0",
+        marginBottom: "20px",
+        marginLeft: "20px",
+        marginRight: "20px",
+        transition: "padding 0.3s ease",
       }}>
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "0 24px", height: 56, gap: 24,
+        <nav style={{
+          maxWidth: "100%",
+          margin: "0 auto",
+          background: scrolled ? "#fff" : "transparent",
+          borderBottom: scrolled ? "none" : "0.5px solid rgba(0,0,0,0.1)",
+          borderRadius: scrolled ? "14px" : "0",
+          boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04)" : "none",
+          transition: "background 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease",
         }}>
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold tracking-tight text-foreground">
-              Nexov
-<span style={{ color: "#6b8e23" }}>AI</span>  
-            </span>
-          </div>
+          <div className="nav-container" style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            padding: "0 24px", height: 56, gap: 24,
+          }}>
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold tracking-tight text-foreground nav-logo-text">
+                Nexov
+                <span style={{ color: "#6b8e23" }}>AI</span>  
+              </span>
+            </div>
 
-          {/* Links */}
-          <div style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
-            {[{ label: "Try our agents", id: "agents" }, { label: "Products", id: "products" }, { label: "About us", id: "usecases" }, { label: "Contact us", id: "contact" }]
-              .map(({ label, id }) => (
-                <button key={label} onClick={() => {
-                  const element = document.getElementById(id);
-                  if (element) element.scrollIntoView({ behavior: "smooth" });
-                }} style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 12px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none", whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer" }}>
-                  {label}
-                </button>
-              ))}
-          </div>
+            {/* Links */}
+            <div className="nav-links" style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
+              {[{ label: "Try our agents", id: "agents" }, { label: "Products", id: "products" }, { label: "About us", id: "usecases" }, { label: "Contact us", id: "contact" }]
+                .map(({ label, id }) => (
+                  <button key={label} onClick={() => {
+                    const element = document.getElementById(id);
+                    if (element) element.scrollIntoView({ behavior: "smooth" });
+                  }} style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 12px", borderRadius: 8, fontSize: 13, color: "#6b7280", textDecoration: "none", whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer" }}>
+                    {label}
+                  </button>
+                ))}
+            </div>
 
-          {/* Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <a href="/auvia" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#0f766e", border: "1px solid rgba(15,118,110,0.2)", background: "rgba(15,118,110,0.05)", textDecoration: "none", transition: "all 0.2s" }}>Auvia</a>
-            <a href="#" style={{ padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#fff", background: "#141b2b", textDecoration: "none" }}>Get started →</a>
+            {/* Actions */}
+            <div className="nav-actions" style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+              <a href="/auvia" className="nav-action-btn" style={{ padding: "7px 14px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#0f766e", border: "1px solid rgba(15,118,110,0.2)", background: "rgba(15,118,110,0.05)", textDecoration: "none", transition: "all 0.2s" }}>Auvia</a>
+              <a href="#" className="nav-action-btn" style={{ padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#fff", background: "#141b2b", textDecoration: "none" }}>Get started →</a>
+            </div>
           </div>
-        </div>
-      </nav>
-    </div>
+        </nav>
+      </div>
+    </>
   );
 };
 
