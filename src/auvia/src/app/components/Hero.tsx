@@ -58,10 +58,10 @@
 //     <div className="flex w-[124px] shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-4">
 //       {/* Logo */}
 //       <div className="mb-5 px-1 flex items-center gap-1.5">
-//         <span className="size-2 rounded-full bg-emerald-500 live-dot inline-block" />
+//         <span className="size-2 rounded-full bg-[#84aca6] live-dot inline-block" />
 //         <span style={{ fontFamily: "'Quicksand', sans-serif" }}
 //           className="text-[11px] font-semibold tracking-tight text-slate-800">
-//           Nexov<span className="text-emerald-500">AI</span>
+//           Nexov<span className="text-[#84aca6]">AI</span>
 //         </span>
 //       </div>
 
@@ -81,14 +81,14 @@
 //               type="button"
 //               onClick={() => onNavigate(item.label)}
 //               className={`mb-0.5 flex w-full items-center gap-1.5 rounded-md px-1.5 py-[5px] text-left transition-all duration-150 ${isActive
-//                   ? "bg-emerald-50 text-emerald-700"
+//                   ? "bg-[#84aca6]/10 text-[#84aca6]"
 //                   : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
 //                 }`}
 //             >
 //               <Icon className="size-[9px] shrink-0" />
 //               <span className="text-[9px] font-medium truncate">{item.label}</span>
 //               {item.badge && (
-//                 <span className="ml-auto rounded-full bg-emerald-500 px-1.5 text-[7px] font-bold text-white leading-4 shrink-0">
+//                 <span className="ml-auto rounded-full bg-[#84aca6] px-1.5 text-[7px] font-bold text-white leading-4 shrink-0">
 //                   {item.badge}
 //                 </span>
 //               )}
@@ -100,8 +100,8 @@
 //       {/* Footer status */}
 //       <div className="mt-auto pt-3 border-t border-slate-100">
 //         <div className="flex items-center gap-1.5 px-1">
-//           <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
-//           <span className="text-[8px] text-emerald-600 font-medium">Agent Online</span>
+//           <span className="size-1.5 rounded-full bg-[#84aca6] animate-pulse inline-block" />
+//           <span className="text-[8px] text-[#84aca6] font-medium">Agent Online</span>
 //         </div>
 //         <p className="mt-0.5 px-1 text-[7px] text-slate-300">NexovAI v2.4.1</p>
 //       </div>
@@ -118,8 +118,8 @@
 //         <span className="text-[9px]">{placeholder}</span>
 //       </div>
 //       <div className="flex items-center gap-2">
-//         <span className="text-[9px] font-medium text-emerald-600">{statusLabel}</span>
-//         <div className="relative h-3.5 w-[22px] rounded-full bg-emerald-500">
+//         <span className="text-[9px] font-medium text-[#84aca6]">{statusLabel}</span>
+//         <div className="relative h-3.5 w-[22px] rounded-full bg-[#84aca6]">
 //           <div className="absolute right-0.5 top-0.5 size-2.5 rounded-full bg-white shadow" />
 //         </div>
 //         <Bell className="size-3 text-slate-400" />
@@ -132,7 +132,7 @@
 // function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
 //   const rows = [
 //     { time: "09:00", name: "K. Sai Pallavi", tag: "NEW", reason: "Annual Checkup", initials: "SR", provider: "Dr. S. Rao", status: "Checked In", sClass: "text-amber-600 bg-amber-50", hi: false },
-//     { time: "09:30", name: "Ch. Venkata Ramana", tag: "AI", reason: "Follow-up: X-Ray", initials: "AR", provider: "Dr. A. Reddy", status: "Confirmed", sClass: "text-emerald-700 bg-emerald-50", hi: true },
+//     { time: "09:30", name: "Ch. Venkata Ramana", tag: "AI", reason: "Follow-up: X-Ray", initials: "AR", provider: "Dr. A. Reddy", status: "Confirmed", sClass: "text-[#84aca6] bg-[#84aca6]/10", hi: true },
 //     { time: "10:15", name: "Rahul Sharma", tag: null, reason: "Prescription Renewal", initials: "SR", provider: "Dr. S. Rao", status: "Upcoming", sClass: "text-slate-500 bg-slate-50", hi: false },
 //     { time: "11:00", name: "Ananya Verma", tag: "AI", reason: "Acute Knee Pain", initials: "AR", provider: "Dr. A. Reddy", status: "Upcoming", sClass: "text-slate-500 bg-slate-50", hi: false },
 //   ];
@@ -163,7 +163,7 @@
 //               {/* Card header */}
 //               <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100 shrink-0">
 //                 <div className="flex items-center gap-1.5">
-//                   <Calendar className="size-2.5 text-emerald-500" />
+//                   <Calendar className="size-2.5 text-[#84aca6]" />
 //                   <span className="text-[9px] font-semibold text-slate-700">Today's Schedule</span>
 //                 </div>
 //                 <div className="flex gap-1">
@@ -184,15 +184,15 @@
 //               <div className="flex-1 overflow-hidden">
 //                 {rows.map((row) => (
 //                   <div key={row.name}
-//                     className={`grid items-center px-3 py-[7px] border-b border-slate-50 ${row.hi ? "bg-emerald-50/60 border-l-2 border-l-emerald-400 pl-[10px]" : ""}`}
+//                     className={`grid items-center px-3 py-[7px] border-b border-slate-50 ${row.hi ? "bg-[#84aca6]/10 border-l-2 border-l-[#84aca6] pl-[10px]" : ""}`}
 //                     style={{ gridTemplateColumns: "52px minmax(0,1.8fr) minmax(0,1fr) 68px" }}>
-//                     <span className={`text-[9px] font-medium tabular-nums ${row.hi ? "text-emerald-600" : "text-slate-500"}`}>{row.time}</span>
+//                     <span className={`text-[9px] font-medium tabular-nums ${row.hi ? "text-[#84aca6]" : "text-slate-500"}`}>{row.time}</span>
 //                     <div className="min-w-0 pr-1">
 //                       <div className="flex items-center gap-1 min-w-0">
 //                         <span className="truncate text-[9px] font-semibold text-slate-800">{row.name}</span>
 //                         {row.tag && (
 //                           <span className={`shrink-0 rounded px-1 py-0.5 text-[6px] font-bold ${row.tag === "AI"
-//                               ? "bg-emerald-500 text-white"
+//                               ? "bg-[#84aca6] text-white"
 //                               : "border border-slate-300 text-slate-400"
 //                             }`}>{row.tag === "AI" ? "✦ AI" : row.tag}</span>
 //                         )}
@@ -209,7 +209,7 @@
 //               </div>
 
 //               <div className="px-3 py-1.5 text-center border-t border-slate-50 shrink-0">
-//                 <span className="text-[8px] font-medium text-emerald-600">View all 18 appointments ↓</span>
+//                 <span className="text-[8px] font-medium text-[#84aca6]">View all 18 appointments ↓</span>
 //               </div>
 //             </div>
 //           </div>
@@ -222,12 +222,12 @@
 //               <div className="flex items-end gap-1.5">
 //                 <span className="text-[22px] font-bold leading-none text-slate-800">128</span>
 //                 <div className="mb-0.5 leading-tight">
-//                   <span className="text-[9px] font-semibold text-emerald-600">98.5%</span>
+//                   <span className="text-[9px] font-semibold text-[#84aca6]">98.5%</span>
 //                   <p className="text-[7px] text-slate-400">Answered</p>
 //                 </div>
 //               </div>
 //               <p className="mt-1.5 text-[7.5px] text-slate-500">
-//                 <span className="inline-block size-1.5 rounded-full bg-emerald-400 mr-1 align-middle" />
+//                 <span className="inline-block size-1.5 rounded-full bg-[#84aca6] mr-1 align-middle" />
 //                 84 handled by AI
 //               </p>
 //             </div>
@@ -236,10 +236,10 @@
 //             <div className="rounded-xl border border-slate-200 bg-white p-2.5 flex-1 min-h-0 overflow-hidden">
 //               <div className="flex items-center justify-between mb-2">
 //                 <span className="text-[9px] font-semibold text-slate-700">Live Activity</span>
-//                 <span className="size-1.5 rounded-full bg-emerald-500 live-dot inline-block" />
+//                 <span className="size-1.5 rounded-full bg-[#84aca6] live-dot inline-block" />
 //               </div>
 //               {[
-//                 { ago: "2m ago", text: "AI rescheduled B. Nagarjuna → Thu 2PM", color: "border-emerald-500" },
+//                 { ago: "2m ago", text: "AI rescheduled B. Nagarjuna → Thu 2PM", color: "border-[#84aca6]" },
 //                 { ago: "14m ago", text: "K. Sai Pallavi checked in", color: "border-slate-300" },
 //                 { ago: "25m ago", text: "Missed call: Unknown number", color: "border-red-400" },
 //               ].map((item) => (
@@ -266,17 +266,17 @@
 //   ];
 //   const slots = ["09:00", "10:00", "11:00", "12:00"];
 //   const appts = {
-//     "09:00-SR": { name: "Jayanth Rao", reason: "Annual Checkup", status: "CHECKED IN", color: "border-emerald-300 bg-emerald-50" },
+//     "09:00-SR": { name: "Jayanth Rao", reason: "Annual Checkup", status: "CHECKED IN", color: "border-[#84aca6]/40 bg-[#84aca6]/10" },
 //     "10:00-SR": { name: "Saranya Krishnan", reason: "Cardiology Consult", status: "LATE", color: "border-red-300 bg-red-50" },
-//     "09:00-AR": { name: "Venkata Ramana", reason: "Follow-up: X-Ray", status: "✦ AI BOOKED", color: "border-emerald-400 bg-emerald-50/80" },
+//     "09:00-AR": { name: "Venkata Ramana", reason: "Follow-up: X-Ray", status: "✦ AI BOOKED", color: "border-[#84aca6]/60 bg-[#84aca6]/10" },
 //     "10:00-AR": { name: "Suresh Babu", reason: "General Inquiry", status: null, color: "border-slate-200 bg-slate-50" },
-//     "10:00-KP": { name: "Meena Kumari", reason: "Post-Op (Knee)", status: "CONFIRMED", color: "border-emerald-300 bg-emerald-50" },
+//     "10:00-KP": { name: "Meena Kumari", reason: "Post-Op (Knee)", status: "CONFIRMED", color: "border-[#84aca6]/40 bg-[#84aca6]/10" },
 //   };
 //   const statusColor = {
-//     "CHECKED IN": "bg-emerald-500 text-white",
+//     "CHECKED IN": "bg-[#84aca6] text-white",
 //     "LATE": "bg-red-500 text-white",
-//     "✦ AI BOOKED": "bg-emerald-600 text-white",
-//     "CONFIRMED": "bg-emerald-500 text-white",
+//     "✦ AI BOOKED": "bg-[#84aca6] text-white",
+//     "CONFIRMED": "bg-[#84aca6] text-white",
 //   };
 
 //   return (
@@ -298,7 +298,7 @@
 //                   <button key={v} className={`px-2 py-1 text-[8px] ${i === 0 ? "bg-slate-800 text-white font-medium" : "text-slate-400"}`}>{v}</button>
 //                 ))}
 //               </div>
-//               <button className="rounded-lg bg-emerald-500 px-2 py-1 text-[8px] font-medium text-white">+ New</button>
+//               <button className="rounded-lg bg-[#84aca6] px-2 py-1 text-[8px] font-medium text-white">+ New</button>
 //             </div>
 //           </div>
 
@@ -356,10 +356,10 @@
 // /* ─── Calls & Logs screen ────────────────────────────────── */
 // function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
 //   const rows = [
-//     { time: "10:45 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Anusha Rao", agent: "✦ AI Agent", agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "2m 14s", summary: "Rescheduled follow-up to Thursday 3 PM.", tags: ["CONFIRMED", "UPDATED"] },
+//     { time: "10:45 AM", type: "Incoming", typeColor: "text-[#84aca6]", caller: "Anusha Rao", agent: "✦ AI Agent", agentClass: "bg-[#84aca6]/10 text-[#84aca6] border-[#84aca6]/30", dur: "2m 14s", summary: "Rescheduled follow-up to Thursday 3 PM.", tags: ["CONFIRMED", "UPDATED"] },
 //     { time: "10:32 AM", type: "Outgoing", typeColor: "text-blue-500", caller: "Srinivas Reddy", agent: "Receptionist", agentClass: "bg-slate-50 text-slate-500 border-slate-200", dur: "4m 02s", summary: "Confirmed insurance for surgery tomorrow.", tags: ["ADMIN"] },
 //     { time: "10:15 AM", type: "Missed", typeColor: "text-red-500", caller: "Unknown", agent: "None", agentClass: "bg-slate-50 text-slate-400 border-slate-200", dur: "—", summary: "", tags: ["CALLBACK"] },
-//     { time: "09:12 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Priya Kavuri", agent: "✦ AI Agent", agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "3m 22s", summary: "New patient. Collected insurance + DOB.", tags: ["NEW PATIENT", "UPDATED"] },
+//     { time: "09:12 AM", type: "Incoming", typeColor: "text-[#84aca6]", caller: "Priya Kavuri", agent: "✦ AI Agent", agentClass: "bg-[#84aca6]/10 text-[#84aca6] border-[#84aca6]/30", dur: "3m 22s", summary: "New patient. Collected insurance + DOB.", tags: ["NEW PATIENT", "UPDATED"] },
 //   ];
 
 //   return (
@@ -377,7 +377,7 @@
 //             </div>
 //             <div className="flex gap-1.5">
 //               <button className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[8px] text-slate-500">Export CSV</button>
-//               <button className="rounded-lg bg-emerald-500 px-2 py-1 text-[8px] font-medium text-white">+ Log Call</button>
+//               <button className="rounded-lg bg-[#84aca6] px-2 py-1 text-[8px] font-medium text-white">+ Log Call</button>
 //             </div>
 //           </div>
 
@@ -385,8 +385,8 @@
 //           <div className="flex gap-2 shrink-0">
 //             {[
 //               { label: "Calls Today", value: "128", sub: "98.5% answered", vc: "text-slate-800" },
-//               { label: "AI Handled", value: "84%", sub: "107 calls", vc: "text-emerald-600" },
-//               { label: "Time Saved", value: "4.2h", sub: "vs. manual", vc: "text-emerald-600" },
+//               { label: "AI Handled", value: "84%", sub: "107 calls", vc: "text-[#84aca6]" },
+//               { label: "Time Saved", value: "4.2h", sub: "vs. manual", vc: "text-[#84aca6]" },
 //             ].map((s) => (
 //               <div key={s.label} className="flex-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5">
 //                 <p className="text-[7px] text-slate-400 uppercase tracking-wider font-semibold">{s.label}</p>
@@ -418,7 +418,7 @@
 //                     {row.summary && <p className="text-[7.5px] text-slate-500 mb-0.5 truncate">{row.summary}</p>}
 //                     <div className="flex flex-wrap gap-0.5">
 //                       {row.tags.map((tag) => (
-//                         <span key={tag} className="rounded bg-emerald-50 border border-emerald-200 px-1 py-0.5 text-[6px] font-bold text-emerald-700">{tag}</span>
+//                         <span key={tag} className="rounded bg-[#84aca6]/10 border border-[#84aca6]/30 px-1 py-0.5 text-[6px] font-bold text-[#84aca6]">{tag}</span>
 //                       ))}
 //                     </div>
 //                   </div>
@@ -447,7 +447,7 @@
 //   }, [shouldReduceMotion, idx]);
 
 //   if (shouldReduceMotion) {
-//     return <span className="italic text-emerald-600">Intelligent</span>;
+//     return <span className="italic text-[#84aca6]">Intelligent</span>;
 //   }
 
 //   return (
@@ -455,7 +455,7 @@
 //       {rotatingTitles.map((title, i) => (
 //         <motion.span
 //           key={title}
-//           className="absolute left-0 top-0 italic text-emerald-600"
+//           className="absolute left-0 top-0 italic text-[#84aca6]"
 //           initial={{ opacity: 0, y: 60 }}
 //           animate={i === idx ? { y: 0, opacity: 1 } : { y: i < idx ? -60 : 60, opacity: 0 }}
 //           transition={{ type: "spring", stiffness: 55, damping: 17 }}
@@ -481,10 +481,10 @@
 // function Ticker() {
 //   const doubled = [...tickerItems, ...tickerItems];
 //   return (
-//     <div className="relative overflow-hidden border-y border-emerald-100 bg-emerald-50/60 py-2">
+//     <div className="relative overflow-hidden border-y border-emerald-100 bg-[#84aca6]/10 py-2">
 //       <div className="ticker-track">
 //         {doubled.map((item, i) => (
-//           <span key={i} className="mx-6 text-[10px] font-medium text-emerald-600/70 whitespace-nowrap">
+//           <span key={i} className="mx-6 text-[10px] font-medium text-[#84aca6]/70 whitespace-nowrap">
 //             {item}
 //           </span>
 //         ))}
@@ -505,7 +505,7 @@
 //       className="relative demo-panel"
 //     >
 //       {/* Subtle glow */}
-//       <div className="absolute -inset-4 rounded-3xl bg-emerald-400/10 blur-2xl pointer-events-none" />
+//       <div className="absolute -inset-4 rounded-3xl bg-[#84aca6]/10 blur-2xl pointer-events-none" />
 
 //       <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_64px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.04)]">
 
@@ -514,7 +514,7 @@
 //           <div className="flex gap-1.5">
 //             <div className="size-2.5 rounded-full bg-red-400/70" />
 //             <div className="size-2.5 rounded-full bg-amber-400/70" />
-//             <div className="size-2.5 rounded-full bg-emerald-400/70" />
+//             <div className="size-2.5 rounded-full bg-[#84aca6]/70" />
 //           </div>
 //           <div className="mx-auto flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[9px] text-slate-400">
 //             <span>🔒</span> app.nexovai.ai/dashboard
@@ -530,7 +530,7 @@
 //               <button
 //                 key={tab}
 //                 onClick={() => setActiveTab(tab)}
-//                 className={`relative flex flex-1 items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium transition-colors duration-200 ${isActive ? "text-emerald-700" : "text-slate-400 hover:text-slate-600"
+//                 className={`relative flex flex-1 items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium transition-colors duration-200 ${isActive ? "text-[#84aca6]" : "text-slate-400 hover:text-slate-600"
 //                   }`}
 //               >
 //                 <Icon className="size-2.5 shrink-0" />
@@ -538,7 +538,7 @@
 //                 {isActive && (
 //                   <motion.div
 //                     layoutId="activeTab"
-//                     className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500"
+//                     className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#84aca6]"
 //                     transition={{ type: "spring", stiffness: 400, damping: 35 }}
 //                   />
 //                 )}
@@ -576,8 +576,8 @@
 
 //         {/* Very subtle background tint */}
 //         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-//           <div className="absolute -top-40 left-1/3 size-[560px] rounded-full bg-emerald-100/50 blur-[100px]" />
-//           <div className="absolute bottom-0 -right-20 size-[380px] rounded-full bg-emerald-50/80 blur-[80px]" />
+//           <div className="absolute -top-40 left-1/3 size-[560px] rounded-full bg-[#84aca6]/20 blur-[100px]" />
+//           <div className="absolute bottom-0 -right-20 size-[380px] rounded-full bg-[#84aca6]/10 blur-[80px]" />
 //           <div className="grain-overlay" />
 //         </div>
 
@@ -596,10 +596,10 @@
 //                 initial={{ opacity: 0, scale: 0.9 }}
 //                 animate={{ opacity: 1, scale: 1 }}
 //                 transition={{ delay: 0.1, duration: 0.4 }}
-//                 className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5"
+//                 className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#84aca6]/30 bg-[#84aca6]/10 px-3 py-1.5"
 //               >
-//                 <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
-//                 <span className="text-[11px] font-medium text-emerald-700">Now live in 300+ Indian clinics</span>
+//                 <span className="size-1.5 rounded-full bg-[#84aca6] animate-pulse inline-block" />
+//                 <span className="text-[11px] font-medium text-[#84aca6]">Now live in 300+ Indian clinics</span>
 //               </motion.div>
 
 //               {/* Headline */}
@@ -620,7 +620,7 @@
 //                   whileHover={{ scale: 1.02 }}
 //                   whileTap={{ scale: 0.97 }}
 //                   onClick={onOpenForm}
-//                   className="nexov-hero flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-[15px] font-semibold text-white shadow-[0_4px_24px_rgba(16,185,129,0.35)] hover:bg-emerald-500 hover:shadow-[0_6px_32px_rgba(16,185,129,0.45)] transition-all duration-200"
+//                   className="nexov-hero flex items-center gap-2 rounded-xl bg-[#84aca6] px-6 py-3 text-[15px] font-semibold text-white shadow-[0_4px_24px_rgba(16,185,129,0.35)] hover:bg-[#84aca6] hover:shadow-[0_6px_32px_rgba(16,185,129,0.45)] transition-all duration-200"
 //                 >
 //                   Book a Demo
 //                   <ArrowRight className="size-4" />
@@ -693,9 +693,9 @@ const globalStyles = `
   }
 
   @keyframes pulse-ring {
-    0%   { box-shadow: 0 0 0 0   rgba(107,142,35,0.5); }
-    70%  { box-shadow: 0 0 0 7px rgba(107,142,35,0);   }
-    100% { box-shadow: 0 0 0 0   rgba(107,142,35,0);   }
+    0%   { box-shadow: 0 0 0 0   rgba(132,172,166,0.5); }
+    70%  { box-shadow: 0 0 0 7px rgba(132,172,166,0);   }
+    100% { box-shadow: 0 0 0 0   rgba(132,172,166,0);   }
   }
   .live-dot { animation: pulse-ring 2s ease-out infinite; }
 
@@ -727,10 +727,10 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
     <div className="flex w-[124px] shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-4">
       {/* Logo */}
       <div className="mb-5 px-1 flex items-center gap-1.5">
-        <span className="size-2 rounded-full bg-emerald-500 live-dot inline-block" />
+        <span className="size-2 rounded-full bg-[#84aca6] live-dot inline-block" />
         <span style={{ fontFamily: "'DM Sans', sans-serif" }}
           className="text-[11px] font-semibold tracking-tight text-slate-800">
-          Nexov<span className="text-emerald-500">AI</span>
+          Nexov<span className="text-[#84aca6]">AI</span>
         </span>
       </div>
 
@@ -750,14 +750,14 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
               type="button"
               onClick={() => onNavigate(item.label)}
               className={`mb-0.5 flex w-full items-center gap-1.5 rounded-md px-1.5 py-[5px] text-left transition-all duration-150 ${isActive
-                  ? "bg-emerald-50 text-emerald-700"
+                  ? "bg-[#84aca6]/10 text-[#84aca6]"
                   : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
                 }`}
             >
               <Icon className="size-[9px] shrink-0" />
               <span className="text-[9px] font-medium truncate">{item.label}</span>
               {item.badge && (
-                <span className="ml-auto rounded-full bg-emerald-500 px-1.5 text-[7px] font-bold text-white leading-4 shrink-0">
+                <span className="ml-auto rounded-full bg-[#84aca6] px-1.5 text-[7px] font-bold text-white leading-4 shrink-0">
                   {item.badge}
                 </span>
               )}
@@ -769,8 +769,8 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
       {/* Footer status */}
       <div className="mt-auto pt-3 border-t border-slate-100">
         <div className="flex items-center gap-1.5 px-1">
-          <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
-          <span className="text-[8px] text-emerald-600 font-medium">Agent Online</span>
+          <span className="size-1.5 rounded-full bg-[#84aca6] animate-pulse inline-block" />
+          <span className="text-[8px] text-[#84aca6] font-medium">Agent Online</span>
         </div>
         <p className="mt-0.5 px-1 text-[7px] text-slate-300">NexovAI v2.4.1</p>
       </div>
@@ -787,8 +787,8 @@ function TopBar({ placeholder, statusLabel }: { placeholder: string; statusLabel
         <span className="text-[9px]">{placeholder}</span>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-[9px] font-medium text-emerald-600">{statusLabel}</span>
-        <div className="relative h-3.5 w-[22px] rounded-full bg-emerald-500">
+        <span className="text-[9px] font-medium text-[#84aca6]">{statusLabel}</span>
+        <div className="relative h-3.5 w-[22px] rounded-full bg-[#84aca6]">
           <div className="absolute right-0.5 top-0.5 size-2.5 rounded-full bg-white shadow" />
         </div>
         <Bell className="size-3 text-slate-400" />
@@ -801,7 +801,7 @@ function TopBar({ placeholder, statusLabel }: { placeholder: string; statusLabel
 function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
   const rows = [
     { time: "09:00", name: "K. Sai Pallavi", tag: "NEW", reason: "Annual Checkup", initials: "SR", provider: "Dr. S. Rao", status: "Checked In", sClass: "text-amber-600 bg-amber-50", hi: false },
-    { time: "09:30", name: "Ch. Venkata Ramana", tag: "AI", reason: "Follow-up: X-Ray", initials: "AR", provider: "Dr. A. Reddy", status: "Confirmed", sClass: "text-emerald-700 bg-emerald-50", hi: true },
+    { time: "09:30", name: "Ch. Venkata Ramana", tag: "AI", reason: "Follow-up: X-Ray", initials: "AR", provider: "Dr. A. Reddy", status: "Confirmed", sClass: "text-[#84aca6] bg-[#84aca6]/10", hi: true },
     { time: "10:15", name: "Rahul Sharma", tag: null, reason: "Prescription Renewal", initials: "SR", provider: "Dr. S. Rao", status: "Upcoming", sClass: "text-slate-500 bg-slate-50", hi: false },
     { time: "11:00", name: "Ananya Verma", tag: "AI", reason: "Acute Knee Pain", initials: "AR", provider: "Dr. A. Reddy", status: "Upcoming", sClass: "text-slate-500 bg-slate-50", hi: false },
   ];
@@ -832,7 +832,7 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
               {/* Card header */}
               <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100 shrink-0">
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="size-2.5 text-emerald-500" />
+                  <Calendar className="size-2.5 text-[#84aca6]" />
                   <span className="text-[9px] font-semibold text-slate-700">Today's Schedule</span>
                 </div>
                 <div className="flex gap-1">
@@ -853,15 +853,15 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
               <div className="flex-1 overflow-hidden">
                 {rows.map((row) => (
                   <div key={row.name}
-                    className={`grid items-center px-3 py-[7px] border-b border-slate-50 ${row.hi ? "bg-emerald-50/60 border-l-2 border-l-emerald-400 pl-[10px]" : ""}`}
+                    className={`grid items-center px-3 py-[7px] border-b border-slate-50 ${row.hi ? "bg-[#84aca6]/10 border-l-2 border-l-[#84aca6] pl-[10px]" : ""}`}
                     style={{ gridTemplateColumns: "52px minmax(0,1.8fr) minmax(0,1fr) 68px" }}>
-                    <span className={`text-[9px] font-medium tabular-nums ${row.hi ? "text-emerald-600" : "text-slate-500"}`}>{row.time}</span>
+                    <span className={`text-[9px] font-medium tabular-nums ${row.hi ? "text-[#84aca6]" : "text-slate-500"}`}>{row.time}</span>
                     <div className="min-w-0 pr-1">
                       <div className="flex items-center gap-1 min-w-0">
                         <span className="truncate text-[9px] font-semibold text-slate-800">{row.name}</span>
                         {row.tag && (
                           <span className={`shrink-0 rounded px-1 py-0.5 text-[6px] font-bold ${row.tag === "AI"
-                              ? "bg-emerald-500 text-white"
+                              ? "bg-[#84aca6] text-white"
                               : "border border-slate-300 text-slate-400"
                             }`}>{row.tag === "AI" ? "✦ AI" : row.tag}</span>
                         )}
@@ -878,7 +878,7 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
               </div>
 
               <div className="px-3 py-1.5 text-center border-t border-slate-50 shrink-0">
-                <span className="text-[8px] font-medium text-emerald-600">View all 18 appointments ↓</span>
+                <span className="text-[8px] font-medium text-[#84aca6]">View all 18 appointments ↓</span>
               </div>
             </div>
           </div>
@@ -891,12 +891,12 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
               <div className="flex items-end gap-1.5">
                 <span className="text-[22px] font-bold leading-none text-slate-800">128</span>
                 <div className="mb-0.5 leading-tight">
-                  <span className="text-[9px] font-semibold text-emerald-600">98.5%</span>
+                  <span className="text-[9px] font-semibold text-[#84aca6]">98.5%</span>
                   <p className="text-[7px] text-slate-400">Answered</p>
                 </div>
               </div>
               <p className="mt-1.5 text-[7.5px] text-slate-500">
-                <span className="inline-block size-1.5 rounded-full bg-emerald-400 mr-1 align-middle" />
+                <span className="inline-block size-1.5 rounded-full bg-[#84aca6] mr-1 align-middle" />
                 84 handled by AI
               </p>
             </div>
@@ -905,10 +905,10 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
             <div className="rounded-xl border border-slate-200 bg-white p-2.5 flex-1 min-h-0 overflow-hidden">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[9px] font-semibold text-slate-700">Live Activity</span>
-                <span className="size-1.5 rounded-full bg-emerald-500 live-dot inline-block" />
+                <span className="size-1.5 rounded-full bg-[#84aca6] live-dot inline-block" />
               </div>
               {[
-                { ago: "2m ago", text: "AI rescheduled B. Nagarjuna → Thu 2PM", color: "border-emerald-500" },
+                { ago: "2m ago", text: "AI rescheduled B. Nagarjuna → Thu 2PM", color: "border-[#84aca6]" },
                 { ago: "14m ago", text: "K. Sai Pallavi checked in", color: "border-slate-300" },
                 { ago: "25m ago", text: "Missed call: Unknown number", color: "border-red-400" },
               ].map((item) => (
@@ -935,17 +935,17 @@ function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void })
   ];
   const slots = ["09:00", "10:00", "11:00", "12:00"];
   const appts = {
-    "09:00-SR": { name: "Jayanth Rao", reason: "Annual Checkup", status: "CHECKED IN", color: "border-emerald-300 bg-emerald-50" },
+    "09:00-SR": { name: "Jayanth Rao", reason: "Annual Checkup", status: "CHECKED IN", color: "border-[#84aca6]/40 bg-[#84aca6]/10" },
     "10:00-SR": { name: "Saranya Krishnan", reason: "Cardiology Consult", status: "LATE", color: "border-red-300 bg-red-50" },
-    "09:00-AR": { name: "Venkata Ramana", reason: "Follow-up: X-Ray", status: "✦ AI BOOKED", color: "border-emerald-400 bg-emerald-50/80" },
+    "09:00-AR": { name: "Venkata Ramana", reason: "Follow-up: X-Ray", status: "✦ AI BOOKED", color: "border-[#84aca6]/60 bg-[#84aca6]/10" },
     "10:00-AR": { name: "Suresh Babu", reason: "General Inquiry", status: null, color: "border-slate-200 bg-slate-50" },
-    "10:00-KP": { name: "Meena Kumari", reason: "Post-Op (Knee)", status: "CONFIRMED", color: "border-emerald-300 bg-emerald-50" },
+    "10:00-KP": { name: "Meena Kumari", reason: "Post-Op (Knee)", status: "CONFIRMED", color: "border-[#84aca6]/40 bg-[#84aca6]/10" },
   };
   const statusColor = {
-    "CHECKED IN": "bg-emerald-500 text-white",
+    "CHECKED IN": "bg-[#84aca6] text-white",
     "LATE": "bg-red-500 text-white",
-    "✦ AI BOOKED": "bg-emerald-600 text-white",
-    "CONFIRMED": "bg-emerald-500 text-white",
+    "✦ AI BOOKED": "bg-[#84aca6] text-white",
+    "CONFIRMED": "bg-[#84aca6] text-white",
   };
 
   return (
@@ -967,7 +967,7 @@ function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void })
                   <button key={v} className={`px-2 py-1 text-[8px] ${i === 0 ? "bg-slate-800 text-white font-medium" : "text-slate-400"}`}>{v}</button>
                 ))}
               </div>
-              <button className="rounded-lg bg-emerald-500 px-2 py-1 text-[8px] font-medium text-white">+ New</button>
+              <button className="rounded-lg bg-[#84aca6] px-2 py-1 text-[8px] font-medium text-white">+ New</button>
             </div>
           </div>
 
@@ -1025,10 +1025,10 @@ function ScheduleScreen({ onNavigate }: { onNavigate: (label: string) => void })
 /* ─── Calls & Logs screen ────────────────────────────────── */
 function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }) {
   const rows = [
-    { time: "10:45 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Anusha Rao", agent: "✦ AI Agent", agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "2m 14s", summary: "Rescheduled follow-up to Thursday 3 PM.", tags: ["CONFIRMED", "UPDATED"] },
+    { time: "10:45 AM", type: "Incoming", typeColor: "text-[#84aca6]", caller: "Anusha Rao", agent: "✦ AI Agent", agentClass: "bg-[#84aca6]/10 text-[#84aca6] border-[#84aca6]/30", dur: "2m 14s", summary: "Rescheduled follow-up to Thursday 3 PM.", tags: ["CONFIRMED", "UPDATED"] },
     { time: "10:32 AM", type: "Outgoing", typeColor: "text-blue-500", caller: "Srinivas Reddy", agent: "Receptionist", agentClass: "bg-slate-50 text-slate-500 border-slate-200", dur: "4m 02s", summary: "Confirmed insurance for surgery tomorrow.", tags: ["ADMIN"] },
     { time: "10:15 AM", type: "Missed", typeColor: "text-red-500", caller: "Unknown", agent: "None", agentClass: "bg-slate-50 text-slate-400 border-slate-200", dur: "—", summary: "", tags: ["CALLBACK"] },
-    { time: "09:12 AM", type: "Incoming", typeColor: "text-emerald-600", caller: "Priya Kavuri", agent: "✦ AI Agent", agentClass: "bg-emerald-50 text-emerald-700 border-emerald-200", dur: "3m 22s", summary: "New patient. Collected insurance + DOB.", tags: ["NEW PATIENT", "UPDATED"] },
+    { time: "09:12 AM", type: "Incoming", typeColor: "text-[#84aca6]", caller: "Priya Kavuri", agent: "✦ AI Agent", agentClass: "bg-[#84aca6]/10 text-[#84aca6] border-[#84aca6]/30", dur: "3m 22s", summary: "New patient. Collected insurance + DOB.", tags: ["NEW PATIENT", "UPDATED"] },
   ];
 
   return (
@@ -1046,7 +1046,7 @@ function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }
             </div>
             <div className="flex gap-1.5">
               <button className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[8px] text-slate-500">Export CSV</button>
-              <button className="rounded-lg bg-emerald-500 px-2 py-1 text-[8px] font-medium text-white">+ Log Call</button>
+              <button className="rounded-lg bg-[#84aca6] px-2 py-1 text-[8px] font-medium text-white">+ Log Call</button>
             </div>
           </div>
 
@@ -1054,8 +1054,8 @@ function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }
           <div className="flex gap-2 shrink-0">
             {[
               { label: "Calls Today", value: "128", sub: "98.5% answered", vc: "text-slate-800" },
-              { label: "AI Handled", value: "84%", sub: "107 calls", vc: "text-emerald-600" },
-              { label: "Time Saved", value: "4.2h", sub: "vs. manual", vc: "text-emerald-600" },
+              { label: "AI Handled", value: "84%", sub: "107 calls", vc: "text-[#84aca6]" },
+              { label: "Time Saved", value: "4.2h", sub: "vs. manual", vc: "text-[#84aca6]" },
             ].map((s) => (
               <div key={s.label} className="flex-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5">
                 <p className="text-[7px] text-slate-400 uppercase tracking-wider font-semibold">{s.label}</p>
@@ -1087,7 +1087,7 @@ function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }
                     {row.summary && <p className="text-[7.5px] text-slate-500 mb-0.5 truncate">{row.summary}</p>}
                     <div className="flex flex-wrap gap-0.5">
                       {row.tags.map((tag) => (
-                        <span key={tag} className="rounded bg-emerald-50 border border-emerald-200 px-1 py-0.5 text-[6px] font-bold text-emerald-700">{tag}</span>
+                        <span key={tag} className="rounded bg-[#84aca6]/10 border border-[#84aca6]/30 px-1 py-0.5 text-[6px] font-bold text-[#84aca6]">{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -1150,7 +1150,7 @@ const tickerItems = [
 function Ticker() {
   const doubled = [...tickerItems, ...tickerItems];
   return (
-    <div className="relative overflow-hidden border-y border-emerald-100 bg-emerald-50/60 py-2">
+    <div className="relative overflow-hidden border-y border-emerald-100 bg-[#84aca6]/10 py-2">
       <div className="ticker-track">
         {doubled.map((item, i) => (
           <span key={i} className="mx-6 text-[10px] font-medium text-[#6b8e23] whitespace-nowrap">
@@ -1174,7 +1174,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
       className="relative demo-panel"
     >
       {/* Subtle glow */}
-      <div className="absolute -inset-4 rounded-3xl bg-emerald-400/10 blur-2xl pointer-events-none" />
+      <div className="absolute -inset-4 rounded-3xl bg-[#84aca6]/5 blur-2xl pointer-events-none" />
 
       <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_64px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.04)]">
 
@@ -1183,7 +1183,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
           <div className="flex gap-1.5">
             <div className="size-2.5 rounded-full bg-red-400/70" />
             <div className="size-2.5 rounded-full bg-amber-400/70" />
-            <div className="size-2.5 rounded-full bg-emerald-400/70" />
+            <div className="size-2.5 rounded-full bg-[#84aca6]/70" />
           </div>
           <div className="mx-auto flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[9px] text-slate-400">
             <span>🔒</span> app.nexovai.ai/dashboard
@@ -1199,7 +1199,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative flex flex-1 items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium transition-colors duration-200 ${isActive ? "text-emerald-700" : "text-slate-400 hover:text-slate-600"
+                className={`relative flex flex-1 items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium transition-colors duration-200 ${isActive ? "text-[#84aca6]" : "text-slate-400 hover:text-slate-600"
                   }`}
               >
                 <Icon className="size-2.5 shrink-0" />
@@ -1207,7 +1207,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
                 {isActive && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#84aca6]"
                     transition={{ type: "spring", stiffness: 400, damping: 35 }}
                   />
                 )}
@@ -1245,8 +1245,8 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
 
         {/* Very subtle background tint */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 left-1/3 size-[560px] rounded-full bg-emerald-100/50 blur-[100px]" />
-          <div className="absolute bottom-0 -right-20 size-[380px] rounded-full bg-emerald-50/80 blur-[80px]" />
+          <div className="absolute -top-40 left-1/3 size-[560px] rounded-full bg-[#84aca6]/5 blur-[100px]" />
+          <div className="absolute bottom-0 -right-20 size-[380px] rounded-full bg-[#84aca6]/5 blur-[80px]" />
           <div className="grain-overlay" />
         </div>
 
@@ -1289,7 +1289,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={onOpenForm}
-                  className="nexov-hero flex items-center gap-2 rounded-xl bg-[#6b8e23] px-6 py-3 text-[15px] font-semibold text-white shadow-[0_4px_24px_rgba(107,142,35,0.35)] hover:bg-[#6b8e23]/90 hover:shadow-[0_6px_32px_rgba(107,142,35,0.45)] transition-all duration-200"
+                  className="nexov-hero flex items-center gap-2 rounded-xl bg-[#6b8e23] px-6 py-3 text-[15px] font-semibold text-white shadow-[0_4px_24px_rgba(132,172,166,0.35)] hover:bg-[#6b8e23]/90 hover:shadow-[0_6px_32px_rgba(132,172,166,0.45)] transition-all duration-200"
                 >
                   Book a Demo
                   <ArrowRight className="size-4" />
