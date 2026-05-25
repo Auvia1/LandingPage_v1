@@ -724,7 +724,7 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
   let lastGroup = null;
 
   return (
-    <div className="flex w-[124px] shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-4">
+    <div className="hidden md:flex w-[124px] shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-4">
       {/* Logo */}
       <div className="mb-5 px-1 flex items-center gap-1.5">
         <span className="size-2 rounded-full bg-[#84aca6] live-dot inline-block" />
@@ -884,7 +884,7 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
           </div>
 
           {/* Right panel */}
-          <div className="flex w-[118px] shrink-0 flex-col gap-2 min-h-0">
+          <div className="hidden md:flex w-[118px] shrink-0 flex-col gap-2 min-h-0">
             {/* Inbound calls */}
             <div className="rounded-xl border border-slate-200 bg-white p-2.5 shrink-0">
               <p className="text-[7px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Inbound Calls</p>
@@ -1051,7 +1051,7 @@ function CallsLogsScreen({ onNavigate }: { onNavigate: (label: string) => void }
           </div>
 
           {/* Stat pills */}
-          <div className="flex gap-2 shrink-0">
+          <div className="flex flex-col sm:flex-row gap-2 shrink-0">
             {[
               { label: "Calls Today", value: "128", sub: "98.5% answered", vc: "text-slate-800" },
               { label: "AI Handled", value: "84%", sub: "107 calls", vc: "text-[#84aca6]" },
