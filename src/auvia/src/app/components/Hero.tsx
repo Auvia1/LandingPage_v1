@@ -1165,6 +1165,7 @@ function Ticker() {
 /* ─── Hero ───────────────────────────────────────────────── */
 export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
   const [activeTab, setActiveTab] = useState<string>("Dashboard");
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const demoPanel = useMemo(() => (
     <motion.div
@@ -1294,7 +1295,10 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
                   Book a Demo
                   <ArrowRight className="size-4" />
                 </motion.button>
-                <button className="nexov-hero flex items-center gap-1.5 text-[14px] font-medium text-slate-400 hover:text-slate-700 transition-colors">
+                <button 
+                  onClick={() => setIsVideoOpen(true)}
+                  className="nexov-hero flex items-center gap-1.5 text-[14px] font-medium text-slate-400 hover:text-slate-700 transition-colors"
+                >
                   Watch 2-min overview
                   <ChevronRight className="size-3.5" />
                 </button>
@@ -1328,6 +1332,40 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
 
         <Ticker />
       </section>
+
+      {/* Video Popup */}
+      <AnimatePresence>
+        {isVideoOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4"
+            onClick={() => setIsVideoOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+            >
+              <button
+                className="absolute top-4 right-4 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+                onClick={() => setIsVideoOpen(false)}
+              >
+                ✕
+              </button>
+              <video
+                src="https://res.cloudinary.com/dmwyetecd/video/upload/v1779711691/websire_demo_video_84mb_udtpvn.mp4"
+                autoPlay
+                controls
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
