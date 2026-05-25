@@ -54,7 +54,9 @@ export default {
         "on-error": "#ffffff",
         "surface-variant": "#dce2f7",
         "error": "#ba1a1a",
-        "nexov-mint": "#80f9c8"
+        "nexov-mint": "#80f9c8",
+        "emerald": { "400": "#6b8e23", "500": "#6b8e23", "600": "#6b8e23", "700": "#6b8e23" },
+        "green": { "400": "#6b8e23", "500": "#6b8e23", "600": "#6b8e23", "700": "#6b8e23" }
       },
       borderRadius: {
         "DEFAULT": "0px",

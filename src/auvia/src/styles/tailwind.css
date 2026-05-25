@@ -3,6 +3,12 @@
 
 @import 'tw-animate-css';
 
+@theme {
+  --color-emerald-600: #6b8e23;
+  --color-green-600: #6b8e23;
+  --color-primary: #6b8e23;
+}
+
 /* Aurora background — CSS variable aliases for Tailwind v4 color tokens */
 :root {
   --white: #ffffff;
@@ -19,6 +25,7 @@
   from {
     background-position: 50% 50%, 50% 50%;
   }
+
   to {
     background-position: 350% 50%, 350% 50%;
   }

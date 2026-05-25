@@ -102,7 +102,7 @@ export function HeroNew() {
 
                 {/* Floating emoji/character */}
                 <motion.div
-                  animate={{ 
+                  animate={{
                     y: [0, -20, 0],
                     rotate: [0, 5, -5, 0]
                   }}

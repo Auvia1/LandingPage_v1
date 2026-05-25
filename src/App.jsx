@@ -185,6 +185,8 @@ const injectTailwindConfig = () => {
             "on-secondary-container": "#007353", "nexov-mint": "#80f9c8",
             "surface-container-low": "#f1f3ff", "surface-container-highest": "#dce2f7",
             "on-surface": "#141b2b",
+            emerald: { 400: "#6b8e23", 500: "#6b8e23", 600: "#6b8e23", 700: "#6b8e23" },
+            green: { 400: "#6b8e23", 500: "#6b8e23", 600: "#6b8e23", 700: "#6b8e23" },
           },
         },
       },
@@ -196,32 +198,173 @@ const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #f4f4f4; color: #141b2b; }
+  /* All landing page styles are scoped to .nexov-landing so they don't affect the Auvia sub-app */
+  .nexov-landing * { box-sizing: border-box; margin: 0; padding: 0; }
+  .nexov-landing { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #f4f4f4; color: #141b2b; }
 
-  .material-symbols-outlined {
+  .nexov-landing .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
     font-size: 20px;
     font-family: 'Material Symbols Outlined';
   }
 
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; flex-wrap: nowrap; }
-  .marquee-item {
+  .nexov-landing .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; flex-wrap: nowrap; }
+  .nexov-landing .marquee-item {
     display: flex; align-items: center; justify-content: center;
     padding: 0 64px; height: 50px;
     font-family: 'Inter', sans-serif; font-weight: 400; font-size: 16px;
     letter-spacing: -0.02em; position: relative; white-space: nowrap;
   }
-  .marquee-item::after {
+  .nexov-landing .marquee-item::after {
     content: ''; position: absolute; right: 0; top: 0; bottom: 0;
     width: 1px; background: linear-gradient(to bottom, transparent, #000 50%, transparent);
   }
 
-  nav a, nav button { cursor: pointer; }
+  .nexov-landing nav a, .nexov-landing nav button { cursor: pointer; }
 
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-  .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+  .nexov-landing .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+
+  .nexov-landing .app-container {
+    margin: 0 200px;
+    transition: margin 0.3s ease;
+  }
+  @media (max-width: 1200px) {
+    .nexov-landing .app-container {
+      margin: 0 40px;
+    }
+  }
+  @media (max-width: 768px) {
+    .nexov-landing .app-container {
+      margin: 0 16px;
+    }
+  }
+
+  /* Hero Responsive Styles */
+  .nexov-landing .hero-section {
+    border-bottom: 1px solid #000;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .nexov-landing .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 96px 48px;
+  }
+  @media (max-width: 768px) {
+    .nexov-landing .hero-content {
+      padding: 80px 20px;
+    }
+  }
+
+  .nexov-landing .hero-buttons {
+    display: flex;
+    border: 1px solid rgba(128,249,200,0.6);
+    box-shadow: 0 0 32px rgba(128,249,200,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  @media (max-width: 480px) {
+    .nexov-landing .hero-buttons {
+      flex-direction: column;
+      border-radius: 12px;
+      width: 100%;
+    }
+    .nexov-landing .hero-buttons button {
+      width: 100%;
+      border-right: none !important;
+      border-bottom: 1px solid rgba(0,0,0,0.2);
+      padding: 16px 20px !important;
+    }
+    .nexov-landing .hero-buttons button:last-child {
+      border-bottom: none;
+    }
+  }
+
+  /* ProductGrid Responsive Styles */
+  .nexov-landing .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 15px;
+  }
+  @media (max-width: 900px) {
+    .nexov-landing .product-grid {
+      grid-template-columns: 1fr;
+      grid-auto-rows: auto;
+    }
+  }
+
+  /* Mission Responsive Styles */
+  .nexov-landing .mission-section {
+    padding: 64px 48px;
+    background: #ffffff;
+    border-radius: 24px;
+    margin-top: 100px;
+    margin-bottom: 40px;
+    border: 1px solid #dddddd;
+  }
+  .nexov-landing .mission-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+    position: relative;
+  }
+  .nexov-landing .mission-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding-top: 28px;
+    border-top: 1px solid #000;
+    width: 100%;
+  }
+  .nexov-landing .mission-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nexov-landing .mission-stat-label {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(20,27,43,0.4);
+  }
+  .nexov-landing .mission-stat-val {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #141b2b;
+  }
+  @media (max-width: 900px) {
+    .nexov-landing .mission-section {
+      padding: 40px 24px;
+      margin-top: 60px;
+    }
+    .nexov-landing .mission-container {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+  @media (max-width: 600px) {
+    .nexov-landing .mission-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
 
 `;
 
@@ -236,14 +379,14 @@ const Hero = () => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-100px" }}
     transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
-    style={{ borderBottom: "1px solid #000", overflow: "hidden", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", position: "relative" }}>
+    className="hero-section"
+  >
     <Grainient color1="#80f9c8" color2="#006c4e" color3="#90EE90" timeSpeed={0.2} colorBalance={0.1} warpStrength={1.2} warpFrequency={4} warpSpeed={1.0} warpAmplitude={60} blendAngle={20} blendSoftness={0.08} rotationAmount={400} noiseScale={2.5} grainAmount={0.08} grainScale={2} grainAnimated={false} contrast={1.4} gamma={1} saturation={0.9} centerX={0} centerY={0} zoom={0.85} />
     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 1 }} />
-    <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "96px 48px" }}>
+    <div className="hero-content">
       <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>New Release</div>
       <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(48px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
-      {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
-      <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
+      <div className="hero-buttons">
         <button type="button" style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer", transition: "all 0.3s ease", transform: "none" }} onClick={() => { const el = document.getElementById('products'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "#5ff3a6"; e.target.style.transform = "scale(1.02)"; }} onMouseLeave={(e) => { e.target.style.background = "#80f9c8"; e.target.style.transform = "scale(1)"; }}>Get Started</button>
         <button type="button" style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s ease" }} onClick={() => { const el = document.getElementById('contact'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "rgba(128,249,200,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>Contact Us</button>
       </div>
@@ -320,10 +463,11 @@ const Mission = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
-      style={{ padding: "64px 48px", background: "#ffffff", borderRadius: "24px", marginTop: "100px", marginBottom: "40px", border: "1px solid #dddddd" }}>
+      className="mission-section"
+    >
       <div
         ref={containerRef}
-        style={{ maxWidth: 1440, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start", position: "relative" }}
+        className="mission-container"
       >
         {/* Left: ProcessFlow Diagram */}
         <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
@@ -333,7 +477,7 @@ const Mission = () => {
         </div>
 
         {/* Right: Mission Text & Stats */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%" }}>
           <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "24px" }}>The Mission</p>
 
           <div style={{
@@ -356,22 +500,16 @@ const Mission = () => {
             <ScaleInText text=" business operations." delayOffset={90} />
           </div>
 
-          <div style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "24px",
-            paddingTop: "28px",
-            borderTop: "1px solid #000",
-          }}>
+          <div className="mission-stats">
             {[
               { label: "Founded", val: "2024" },
               { label: "Agents deployed", val: "5+" },
               { label: "Industries served", val: "Healthcare · SaaS · RE" },
               { label: "Infrastructure", val: "14 Global PoPs" },
-            ].map((stat, i, arr) => (
-              <div key={stat.label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontFamily: "'Space Grotesk', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)" }}>{stat.label}</span>
-                <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, letterSpacing: "-0.01em", color: "#141b2b" }}>{stat.val}</span>
+            ].map((stat, i) => (
+              <div key={stat.label} className="mission-stat-item">
+                <span className="mission-stat-label">{stat.label}</span>
+                <span className="mission-stat-val">{stat.val}</span>
               </div>
             ))}
           </div>
@@ -1783,7 +1921,7 @@ const ProductGrid = () => {
         <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(20,27,43,.5)", marginBottom: "16px" }}>Innovation Pipeline</p>
         <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.04em", color: "#141b2b", lineHeight: 1.1 }}>What we are working on</h2>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridAutoRows: "1fr", gap: "15px" }}>
+      <div className="product-grid">
         {products.map((p, idx) => <ProductCard key={p.no} {...p} index={idx} />)}
       </div>
     </motion.section>
@@ -1815,15 +1953,15 @@ const Vision = () => (
       </ScrollFloat>
     </div> */}
     <div style={{ position: "absolute", bottom: "-90px", left: "-40px", pointerEvents: "none", userSelect: "none" }}>
-    <ScrollFloat
-      animationDuration={2.5}
-      ease='back.inOut(2)'
+      <ScrollFloat
+        animationDuration={2.5}
+        ease='back.inOut(2)'
 
-      stagger={0.1}
-    >
-      FUTURE
-    </ScrollFloat>
-  </div>
+        stagger={0.1}
+      >
+        FUTURE
+      </ScrollFloat>
+    </div>
   </section>
 );
 
@@ -1831,7 +1969,7 @@ const Vision = () => (
 export default function App() {
   useEffect(() => { injectTailwindConfig(); }, []);
   return (
-    <>
+    <div className="nexov-landing">
       <style>{styles}</style>
       <div style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
         <DotGrid
@@ -1848,12 +1986,12 @@ export default function App() {
       </div>
       <Navbar />
 
-      <div className="mx-[40px] mt-[10px]">
+      <div className="mx-4 md:mx-10 mt-[10px]">
         <Hero />
       </div>
       <MarqueeBar />
       <FullScreenSection />
-      <div style={{ margin: "0 200px"}}>
+      <div className="app-container">
         <main style={{ margin: "0 15px", paddingTop: "15px" }}>
 
 
@@ -1877,12 +2015,12 @@ export default function App() {
           <div style={{ marginBottom: "80px" }}>
             {/* <WallOfLove /> */}
           </div>
-          <div id="contact" style={{marginTop: "80px"}}>
+          <div id="contact" style={{ marginTop: "80px" }}>
             <CTA />
           </div>
         </main>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

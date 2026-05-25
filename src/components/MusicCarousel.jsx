@@ -1356,13 +1356,16 @@ export const PlayerCard = forwardRef(
 PlayerCard.displayName = "PlayerCard";
 
 // ─── Carousel slot positioning ─────────────────────────────────────────────────
-function getSlotStyle(rel) {
+// ─── Carousel slot positioning ─────────────────────────────────────────────────
+function getSlotStyle(rel, isMobile) {
+  const xOffset = isMobile ? 180 : 340;
+  const xFarOffset = isMobile ? 260 : 480;
   const configs = {
-    "-2": { x: -480, z: -120, scale: 0.80, opacity: 0,    rot: -10 },
-    "-1": { x: -340, z: -80,  scale: 0.96, opacity: 0.55, rot: -5  },
-    "0":  { x: 0,    z: 0,    scale: 1,    opacity: 1,    rot: 0   },
-    "1":  { x: 340,  z: -80,  scale: 0.96, opacity: 0.55, rot: 5   },
-    "2":  { x: 480,  z: -120, scale: 0.80, opacity: 0,    rot: 10  },
+    "-2": { x: -xFarOffset, z: -120, scale: 0.80, opacity: 0,    rot: -10 },
+    "-1": { x: -xOffset,    z: -80,  scale: 0.96, opacity: isMobile ? 0.3 : 0.55, rot: -5  },
+    "0":  { x: 0,           z: 0,    scale: 1,    opacity: 1,    rot: 0   },
+    "1":  { x: xOffset,     z: -80,  scale: 0.96, opacity: isMobile ? 0.3 : 0.55, rot: 5   },
+    "2":  { x: xFarOffset,  z: -120, scale: 0.80, opacity: 0,    rot: 10  },
   };
   return configs[String(Math.max(-2, Math.min(2, rel)))];
 }
@@ -1373,12 +1376,20 @@ export default function MusicCarousel() {
   const [dragStartX, setDragStartX] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const audioRefs = useRef({});
+  const [isMobile, setIsMobile] = useState(false);
 
   const stopAll = () => Object.values(audioRefs.current).forEach(a => a && a.pause());
 
   const goTo = useCallback((newIdx) => {
     stopAll();
     setActiveIndex(((newIdx % SONGS.length) + SONGS.length) % SONGS.length);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -1416,7 +1427,7 @@ export default function MusicCarousel() {
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6 }}
       style={{
-        position: "relative", width: "100%", minHeight: "100vh",
+        position: "relative", width: "100%", minHeight: isMobile ? "80vh" : "100vh",
         background: "transparent",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
         overflow: "hidden", padding: "40px 0",
@@ -1432,7 +1443,7 @@ export default function MusicCarousel() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.1, 0.25, 1.0] }}
         style={{
-          position: "relative", zIndex: 20, marginBottom: "60px",
+          position: "relative", zIndex: 20, marginBottom: isMobile ? "30px" : "60px",
           fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px, 4vw, 48px)",
           fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.02em",
           lineHeight: 1.1, color: "#141b2b", textAlign: "center",
@@ -1448,7 +1459,7 @@ export default function MusicCarousel() {
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
         style={{
-          position: "relative", width: "100%", maxWidth: 900, height: 560,
+          position: "relative", width: "100%", maxWidth: 900, height: isMobile ? 480 : 560,
           display: "flex", alignItems: "center", justifyContent: "center",
           perspective: 1200,
           cursor: isDragging ? "grabbing" : "grab",
@@ -1463,7 +1474,7 @@ export default function MusicCarousel() {
         {SONGS.map((song, i) => {
           const rel = ((i - activeIndex + SONGS.length * 5) % SONGS.length);
           const adjRel = rel > SONGS.length / 2 ? rel - SONGS.length : rel;
-          const cfg = getSlotStyle(adjRel);
+          const cfg = getSlotStyle(adjRel, isMobile);
           const isCenter = adjRel === 0;
 
           return (
@@ -1471,7 +1482,7 @@ export default function MusicCarousel() {
               key={i}
               onClick={() => { if (!isDragging && !isCenter) goTo(i); }}
               style={{
-                position: "absolute", width: 290,
+                position: "absolute", width: isMobile ? 260 : 290,
                 background: "#fff",
                 borderRadius: 28,
                 transform: `translateX(${cfg.x}px) translateZ(${cfg.z}px) scale(${cfg.scale}) rotateY(${cfg.rot}deg)`,

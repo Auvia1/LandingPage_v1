@@ -48,39 +48,7 @@
   --sidebar-border: #e5e7eb;
   --sidebar-ring: #6b8e23;
 
-  /* Override default Tailwind emerald/green/blue scales so existing utilities follow this palette */
-  --color-emerald-50: #f3f8f6;
-  --color-emerald-100: #e6efec;
-  --color-emerald-200: #d6e4df;
-  --color-emerald-300: #c3d8d1;
-  --color-emerald-400: #9dbeb9;
-  --color-emerald-500: #84aca6;
-  --color-emerald-600: #6b8e23;
-  --color-emerald-700: #5c7a1e;
-  --color-emerald-800: #4f6a1b;
-  --color-emerald-900: #415816;
 
-  --color-green-50: #f3f8f6;
-  --color-green-100: #e6efec;
-  --color-green-200: #d6e4df;
-  --color-green-300: #c3d8d1;
-  --color-green-400: #9dbeb9;
-  --color-green-500: #84aca6;
-  --color-green-600: #6b8e23;
-  --color-green-700: #5c7a1e;
-  --color-green-800: #4f6a1b;
-  --color-green-900: #415816;
-
-  --color-blue-50: #f4f7fb;
-  --color-blue-100: #e2e8f0;
-  --color-blue-200: #d1dbe8;
-  --color-blue-300: #b9c8dc;
-  --color-blue-400: #9aaec8;
-  --color-blue-500: #7b93b3;
-  --color-blue-600: #5f789a;
-  --color-blue-700: #4e6482;
-  --color-blue-800: #43556f;
-  --color-blue-900: #38475e;
 }
 
 .dark {
@@ -161,6 +129,40 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Override default Tailwind emerald/green/blue scales so existing utilities follow this palette */
+  --color-emerald-50: #f3f8f6;
+  --color-emerald-100: #e6efec;
+  --color-emerald-200: #d6e4df;
+  --color-emerald-300: #c3d8d1;
+  --color-emerald-400: #9dbeb9;
+  --color-emerald-500: #84aca6;
+  --color-emerald-600: #6b8e23;
+  --color-emerald-700: #5c7a1e;
+  --color-emerald-800: #4f6a1b;
+  --color-emerald-900: #415816;
+
+  --color-green-50: #f3f8f6;
+  --color-green-100: #e6efec;
+  --color-green-200: #d6e4df;
+  --color-green-300: #c3d8d1;
+  --color-green-400: #9dbeb9;
+  --color-green-500: #84aca6;
+  --color-green-600: #6b8e23;
+  --color-green-700: #5c7a1e;
+  --color-green-800: #4f6a1b;
+  --color-green-900: #415816;
+
+  --color-blue-50: #f4f7fb;
+  --color-blue-100: #e2e8f0;
+  --color-blue-200: #d1dbe8;
+  --color-blue-300: #b9c8dc;
+  --color-blue-400: #9aaec8;
+  --color-blue-500: #7b93b3;
+  --color-blue-600: #5f789a;
+  --color-blue-700: #4e6482;
+  --color-blue-800: #43556f;
+  --color-blue-900: #38475e;
 }
 
 @keyframes drawPath {
@@ -170,6 +172,7 @@
 }
 
 @keyframes pulseAIGlow {
+
   0%,
   100% {
     text-shadow: 0 0 10px rgba(103, 252, 198, 0.4), 0 0 20px rgba(0, 96, 100, 0.2);
@@ -183,6 +186,7 @@
 }
 
 @keyframes etherealGlow {
+
   0%,
   100% {
     filter: drop-shadow(0 0 10px rgba(103, 252, 198, 0.4));

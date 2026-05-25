@@ -439,6 +439,62 @@ const styles = `
 
   .wd-footer-sep { color: rgba(255,255,255,0.1); }
 
+  /* ── Responsive table scrolling ── */
+  .wd-table-scroll-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .wd-table-inner {
+    min-width: 600px;
+  }
+
+  @media (max-width: 768px) {
+    .wd-header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 32px 24px;
+      gap: 14px;
+    }
+    .wd-subtitle {
+      max-width: 100%;
+    }
+    .wd-stats-dark {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 32px 24px;
+      gap: 24px;
+    }
+    .wd-sla-grid {
+      border-left: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-left: 0;
+      padding-top: 24px;
+      width: 100%;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .wd-sla-item {
+      padding: 0 8px;
+    }
+    .wd-sla-item:first-child {
+      padding-left: 0;
+    }
+  }
+  @media (max-width: 480px) {
+    .wd-root {
+      padding: 16px;
+    }
+    .wd-sla-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .wd-sla-item {
+      padding: 0;
+      border-right: none;
+    }
+  }
+
+
   /* ── Material Symbols ── */
   .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
@@ -651,45 +707,50 @@ export const WhyDifferent = () => (
           ease: [0.25, 0.1, 0.25, 1.0]
         }}
       >
-        {/* Column headers */}
-        <div className="wd-col-header">
-          <div className="wd-col-lbl">Capability</div>
-          <div className="wd-col-lbl">
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 13 }}
-            >
-              history
-            </span>
-            Legacy chatbots
-          </div>
-          <div className="wd-col-lbl nexov">
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 13 }}
-            >
-              bolt
-            </span>
-            NexovAI voice agents
+        <div className="wd-table-scroll-wrap">
+          <div className="wd-table-inner">
+            {/* Column headers */}
+            <div className="wd-col-header">
+              <div className="wd-col-lbl">Capability</div>
+              <div className="wd-col-lbl">
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: 13 }}
+                >
+                  history
+                </span>
+                Legacy chatbots
+              </div>
+              <div className="wd-col-lbl nexov">
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: 13 }}
+                >
+                  bolt
+                </span>
+                NexovAI voice agents
+              </div>
+            </div>
+
+            {/* Rows */}
+            {comparisonRows.map((row, idx) => (
+              <motion.div
+                key={row.feature}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.36 + idx * 0.08,
+                  ease: [0.25, 0.1, 0.25, 1.0]
+                }}
+              >
+                <ComparisonRow row={row} />
+              </motion.div>
+            ))}
           </div>
         </div>
 
-        {/* Rows */}
-        {comparisonRows.map((row, idx) => (
-          <motion.div
-            key={row.feature}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{
-              duration: 0.5,
-              delay: 0.36 + idx * 0.08,
-              ease: [0.25, 0.1, 0.25, 1.0]
-            }}
-          >
-            <ComparisonRow row={row} />
-          </motion.div>
-        ))}
 
         {/* Footer bar */}
         <div className="wd-footer-bar">

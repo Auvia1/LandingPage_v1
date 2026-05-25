@@ -377,6 +377,19 @@ const styles = `
     color: #bbb;
     font-weight: 500;
   }
+
+  @media (max-width: 768px) {
+    .lf-header { padding: 48px 16px 36px; margin-bottom: 20px; }
+    .lf-scene { gap: 10px; padding: 0 16px 60px; }
+    .lf-sidenav { display: none; }
+    .lf-card { padding: 30px 24px 28px; }
+    .lf-card-footer { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .lf-tags { justify-content: flex-start; }
+    .lf-footer { grid-template-columns: repeat(2, 1fr); padding: 0 16px; }
+    .lf-footer-cell { padding: 24px 8px; }
+    .lf-footer-cell:nth-child(2n) { border-right: none !important; }
+    .lf-footer-cell:nth-child(n+3) { border-top: 1px solid #f0f0f0; }
+  }
 `;
 
 export const LogicFlow = () => {

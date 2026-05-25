@@ -1,119 +1,455 @@
-import { motion } from "motion/react";
-// Brand icons were removed in Lucide v1.0. We define custom inline SVG components to replace them.
-function Linkedin({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect width="4" height="12" x="2" y="9" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
+/* ─────────────────────────────────────────────
+   CONSTANTS (inlined – sourced from CTA.jsx)
+───────────────────────────────────────────── */
+const CONTACT_ITEMS = [
+  { icon: "mail", label: "Email us", val: "nexovai12@gmail.com" },
+  { icon: "phone", label: "Call us", val: "+91 7993357555" },
+  { icon: "location_on", label: "Headquarters", val: "Hyderabad, Telangana" },
+  { icon: "schedule", label: "Response time", val: "Under 2 business hours" },
+];
+
+const SOCIAL_LINKS = [
+  { icon: "work", label: "LinkedIn", link: "https://www.linkedin.com/company/nexovai1/" },
+  { icon: "camera_alt", label: "Instagram", link: "https://www.instagram.com/nexovai_pvt_limited/" },
+];
+
+const PRODUCTS = [
+  { label: "Appointment Booking Agent" },
+  { label: "Call Handling Agent" },
+  { label: "Customer Support Agent" },
+  { label: "Lead Qualification Agent" },
+  { label: "Doctor Transcription Tool" },
+];
+
+/* ─────────────────────────────────────────────
+   STYLES
+───────────────────────────────────────────── */
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+/* ── Root ── */
+.ft-root {
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
-function Instagram({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  );
+/* ── Top accent bar ── */
+.ft-accent-bar {
+  height: 3px;
+  background: linear-gradient(90deg, #0F6E56 0%, #5DCAA5 50%, #0F6E56 100%);
+  background-size: 200% 100%;
+  animation: ftShimmer 4s linear infinite;
 }
 
+@keyframes ftShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Background decoration ── */
+.ft-bg-glow {
+  position: absolute;
+  bottom: -120px;
+  left: -120px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(15,110,86,0.06) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+.ft-bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(93,202,165,0.08) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* ── Inner ── */
+.ft-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 64px 52px 0;
+}
+
+/* ── Top grid ── */
+.ft-top-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid rgba(20,27,43,0.08);
+}
+
+/* ── Brand column ── */
+.ft-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ft-logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #141b2b;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ft-logo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0F6E56;
+  animation: ftPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes ftPulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.4; transform:scale(0.7); }
+}
+
+.ft-tagline {
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(20,27,43,0.55);
+  max-width: 240px;
+}
+
+.ft-live-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(15,110,86,0.08);
+  border: 1px solid rgba(15,110,86,0.14);
+  border-radius: 99px;
+  padding: 7px 14px;
+  width: fit-content;
+}
+
+.ft-live-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0F6E56;
+  animation: ftPulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.ft-live-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0F6E56;
+}
+
+/* ── Section columns ── */
+.ft-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ft-col-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(20,27,43,0.45);
+  padding-bottom: 4px;
+  position: relative;
+}
+
+.ft-col-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  height: 1.5px;
+  background: #0F6E56;
+  border-radius: 2px;
+}
+
+/* ── Contact items ── */
+.ft-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ft-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+
+.ft-contact-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(15,110,86,0.08);
+  border: 1px solid rgba(15,110,86,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ft-contact-icon .material-symbols-outlined {
+  font-size: 14px !important;
+  color: #0F6E56;
+}
+
+.ft-contact-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(20,27,43,0.38);
+  margin-bottom: 2px;
+}
+
+.ft-contact-val {
+  font-size: 12px;
+  font-weight: 500;
+  color: #141b2b;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+/* ── Social links ── */
+.ft-social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ft-social-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 13px;
+  background: rgba(15,110,86,0.04);
+  border: 1px solid rgba(15,110,86,0.12);
+  border-radius: 11px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+}
+
+.ft-social-link:hover {
+  background: rgba(15,110,86,0.1);
+  border-color: rgba(15,110,86,0.2);
+  transform: translateX(4px);
+}
+
+.ft-social-link .material-symbols-outlined {
+  font-size: 15px !important;
+  color: #0F6E56;
+}
+
+.ft-social-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: rgba(20,27,43,0.65);
+  transition: color 0.18s;
+}
+
+.ft-social-link:hover .ft-social-label { color: #0F6E56; }
+
+.ft-social-arrow {
+  margin-left: auto;
+  font-size: 13px !important;
+  color: rgba(20,27,43,0.2);
+  transition: color 0.18s, transform 0.18s;
+}
+
+.ft-social-link:hover .ft-social-arrow {
+  color: #0F6E56;
+  transform: translateX(2px);
+}
+
+/* ── Nav links column ── */
+.ft-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.ft-nav-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(20,27,43,0.55);
+  text-decoration: none;
+  transition: color 0.18s, padding-left 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ft-nav-link::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 1px;
+  background: #0F6E56;
+  border-radius: 2px;
+  transition: width 0.2s ease;
+  flex-shrink: 0;
+}
+
+.ft-nav-link:hover {
+  color: #0F6E56;
+}
+
+.ft-nav-link:hover::before { width: 12px; }
+
+/* ── Bottom bar ── */
+.ft-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 0 28px;
+  flex-wrap: wrap;
+}
+
+.ft-copyright {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20,27,43,0.35);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .ft-top-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+}
+
+@media (max-width: 640px) {
+  .ft-inner { padding: 48px 24px 0; }
+  .ft-top-grid { grid-template-columns: 1fr; gap: 32px; }
+  .ft-bottom-bar { flex-direction: column; align-items: flex-start; gap: 14px; }
+}
+`;
+
+/* ─────────────────────────────────────────────
+   COMPONENT
+───────────────────────────────────────────── */
 export function Footer() {
-  const footerLinks = {
-    Product: ["Features", "Security", "Integrations"],
-    Company: ["About Us", "Contact Support", "LinkedIn"],
-    Legal: ["Privacy Policy", "Terms of Service"],
-  };
-
   return (
-    <footer className="border-t border-slate-200 bg-white px-6 py-16">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
-          {/* Brand Column */}
-          <div className="lg:col-span-2">
-            <div className="mb-4 flex items-center gap-2">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">
-                Nexov
-                <span className="text-primary drop-shadow-[0_0_10px_rgba(103,252,198,0.35)]">AI</span>
-              </span>
+    <>
+      <style>{CSS}</style>
+      <footer className="ft-root">
+        <div className="ft-accent-bar" />
+        <div className="ft-bg-dots" />
+        <div className="ft-bg-glow" />
+
+        <div className="ft-inner">
+          <div className="ft-top-grid">
+
+            {/* ── Brand ── */}
+            <div className="ft-brand">
+              <div className="ft-logo">
+                <div className="ft-logo-dot" />
+                NexovAI
+              </div>
+              <p className="ft-tagline">
+                Secure, scalable, real-time voice AI agents built for businesses that never sleep.
+              </p>
+              <div className="ft-live-chip">
+                <div className="ft-live-pulse" />
+                <span className="ft-live-text">All systems operational</span>
+              </div>
             </div>
-            <p className="mb-6 max-w-sm leading-relaxed text-slate-600">
-              AI receptionist software for hospitals and clinics. Automate patient calls and appointments with
-              intelligent voice agents.
-            </p>
-            <div className="flex gap-4">
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                href="https://www.linkedin.com/company/nexovai1/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="NexovAI LinkedIn"
-                className="flex size-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600"
-              >
-                <Linkedin className="size-5" />
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                href="https://www.instagram.com/nexovai_pvt_limited/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="NexovAI Instagram"
-                className="flex size-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600"
-              >
-                <Instagram className="size-5" />
-              </motion.a>
+
+            {/* ── Contact ── */}
+            <div className="ft-col">
+              <div className="ft-col-title">Contact</div>
+              <div className="ft-contact-list">
+                {CONTACT_ITEMS.map((item) => (
+                  <div key={item.label} className="ft-contact-item">
+                    <div className="ft-contact-icon">
+                      <span className="material-symbols-outlined">{item.icon}</span>
+                    </div>
+                    <div>
+                      <div className="ft-contact-label">{item.label}</div>
+                      <div className="ft-contact-val">{item.val}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* ── Social ── */}
+            <div className="ft-col">
+              <div className="ft-col-title">Follow us</div>
+              <div className="ft-social-list">
+                {SOCIAL_LINKS.map((s) => (
+                  <a
+                    key={s.label}
+                    className="ft-social-link"
+                    href={s.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="material-symbols-outlined">{s.icon}</span>
+                    <span className="ft-social-label">{s.label}</span>
+                    <span className="material-symbols-outlined ft-social-arrow">arrow_forward</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Products ── */}
+            <div className="ft-col">
+              <div className="ft-col-title">Products</div>
+              <nav className="ft-nav-list">
+                {PRODUCTS.map((p) => {
+                  if (p.label === "Appointment Booking Agent") {
+                    return (
+                      <a key={p.label} href="/auvia" className="ft-nav-link" style={{ textDecoration: "none" }}>
+                        {p.label}
+                      </a>
+                    );
+                  }
+                  return (
+                    <div key={p.label} className="ft-nav-link">
+                      {p.label}
+                    </div>
+                  );
+                })}
+              </nav>
+            </div>
+
           </div>
 
-          {/* Links Columns */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-900">{category}</h3>
-              <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-slate-600 transition-colors hover:text-emerald-600"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+          {/* ── Bottom bar ── */}
+          <div className="ft-bottom-bar">
+            <div className="ft-copyright">
+              © 2026 NexovAI — All rights reserved
             </div>
-          ))}
+          </div>
         </div>
-
-        {/* Bottom Bar */}
-        <div className="mt-12 border-t border-slate-200 pt-8 text-center">
-          <p className="text-sm text-slate-600">© 2026 NexovAI. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   );
 }

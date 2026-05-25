@@ -1,13 +1,16 @@
+/* ── Font imports ─────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
+/* ── Tailwind directives (for landing page only) ──────────────── */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
+/* ── Neutral global reset — safe for both apps ───────────────── */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -15,11 +18,16 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+/* ── All below styles scoped to landing page only ────────────── */
+
+.nexov-landing {
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  background: #f4f4f4;
+  color: #141b2b;
 }
 
-.material-symbols-outlined {
+.nexov-landing .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
@@ -34,7 +42,7 @@ body {
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
 }
 
-.swiss-grid-overlay {
+.nexov-landing .swiss-grid-overlay {
   background-size: 8.333333% 100%;
   background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px);
 }
@@ -48,13 +56,13 @@ body {
   }
 }
 
-.marquee-container {
+.nexov-landing .marquee-container {
   display: flex;
   width: max-content;
   animation: marquee 40s linear infinite;
 }
 
-.marquee-item {
+.nexov-landing .marquee-item {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +76,7 @@ body {
   position: relative;
 }
 
-.marquee-item::after {
+.nexov-landing .marquee-item::after {
   content: '';
   position: absolute;
   right: 0;
@@ -90,18 +98,18 @@ body {
   50% { opacity: 0.5; }
 }
 
-.viz-bar {
+.nexov-landing .viz-bar {
   animation: barGrow 1.5s ease-in-out infinite;
   transform-origin: bottom;
 }
 
 
 /* Parallax Timeline Styles */
-.timeline-container {
+.nexov-landing .timeline-container {
   position: relative;
 }
 
-.timeline-line {
+.nexov-landing .timeline-line {
   position: absolute;
   left: 50%;
   top: 0;
@@ -111,7 +119,7 @@ body {
   transform: translateX(-50%);
 }
 
-.timeline-line-progress {
+.nexov-landing .timeline-line-progress {
   position: absolute;
   left: 50%;
   top: 0;
@@ -122,7 +130,7 @@ body {
   box-shadow: 0 0 15px rgba(128, 249, 200, 0.5);
 }
 
-.timeline-node {
+.nexov-landing .timeline-node {
   position: sticky;
   top: 50%;
   left: 50%;
@@ -134,7 +142,7 @@ body {
   z-index: 20;
 }
 
-.timeline-step {
+.nexov-landing .timeline-step {
   min-height: 80vh;
   display: flex;
   align-items: center;
@@ -143,18 +151,14 @@ body {
   transform: translateY(20px);
 }
 
-.timeline-step.active {
+.nexov-landing .timeline-step.active {
   opacity: 1;
   transform: translateY(0);
 }
 
-.tech-dotted-bg {
+.nexov-landing .tech-dotted-bg {
   background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
   background-size: 24px 24px;
-}
-
-svg {
-  display: none;
 }
 
 @keyframes gradientShift {
@@ -163,12 +167,12 @@ svg {
   100% { opacity: 0.7; }
 }
 
-.grainy-gradient {
+.nexov-landing .grainy-gradient {
   position: relative;
   overflow: hidden;
 }
 
-.grainy-gradient::before {
+.nexov-landing .grainy-gradient::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -180,7 +184,7 @@ svg {
   opacity: 0.8;
 }
 
-.grainy-gradient::after {
+.nexov-landing .grainy-gradient::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -188,4 +192,3 @@ svg {
   pointer-events: none;
   opacity: 0.6;
 }
-

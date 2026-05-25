@@ -313,6 +313,19 @@ const styles = `
   .icon-bg-health     { background: #EEEDFE; color: #534AB7; }
   .icon-bg-realestate { background: #FAECE7; color: #993C1D; }
   .icon-bg-ecommerce  { background: #E6F1FB; color: #185FA5; }
+
+  @media (max-width: 900px) {
+    .uc-header { flex-direction: column; align-items: flex-start; gap: 14px; padding: 32px 24px; }
+    .uc-subtitle { max-width: 100%; }
+    .uc-top-row { grid-template-columns: 1fr; }
+    .uc-bottom-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .uc-root { padding: 16px; }
+    .uc-card { padding: 24px 24px 20px; }
+    .uc-case-study { padding: 32px 24px; }
+    .uc-live { padding: 32px 24px; }
+  }
 `;
 
 const CASES = [
