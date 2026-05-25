@@ -156,7 +156,7 @@ export function ProductShowcase() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 inline-block rounded-full bg-[#6b8e23]/10 px-4 py-1 text-sm font-medium text-[#6b8e23]">
-              For Administrators
+              Time-Based System
             </div>
             <h2 className="mb-4 text-4xl font-bold text-slate-900 md:text-5xl">Time-Slot Booking System</h2>
             <p className="mb-6 text-lg leading-relaxed text-slate-600">
@@ -242,7 +242,7 @@ export function ProductShowcase() {
             className="order-1 lg:order-2"
           >
             <div className="mb-4 inline-block rounded-full bg-[#6b8e23]/10 px-4 py-1 text-sm font-medium text-[#6b8e23]">
-              For Clinic Staff
+              Token-Based System
             </div>
             <h2 className="mb-4 text-4xl font-bold text-slate-900 md:text-5xl">Token-Based Patient Flow</h2>
             <p className="mb-6 text-lg leading-relaxed text-slate-600">

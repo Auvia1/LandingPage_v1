@@ -1295,7 +1295,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
                   Book a Demo
                   <ArrowRight className="size-4" />
                 </motion.button>
-                <button 
+                <button
                   onClick={() => setIsVideoOpen(true)}
                   className="nexov-hero flex items-center gap-1.5 text-[14px] font-medium text-slate-400 hover:text-slate-700 transition-colors"
                 >

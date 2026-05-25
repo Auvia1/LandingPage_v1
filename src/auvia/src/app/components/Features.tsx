@@ -823,7 +823,7 @@ export function Features() {
             <p className="text-[0.95rem] text-slate-400">
               All features available on every plan. No hidden limits.
             </p>
-            <div className="flex items-center gap-6 text-[13px] text-slate-400">
+            {/* <div className="flex items-center gap-6 text-[13px] text-slate-400">
               {["HIPAA Compliant", "99.9% Uptime SLA", "Live in 48 hrs"].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <svg className="size-3.5 text-[#6b8e23]" fill="none" viewBox="0 0 16 16">
@@ -832,7 +832,7 @@ export function Features() {
                   {t}
                 </span>
               ))}
-            </div>
+            </div> */}
           </motion.div>
 
         </div>
