@@ -243,7 +243,7 @@ const Hero = () => (
       <div style={{ display: "inline-block", border: "1px solid rgba(128,249,200,0.6)", background: "rgba(128,249,200,0.1)", padding: "4px 12px", fontFamily: "'Space Grotesk',monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "32px", color: "#80f9c8" }}>New Release</div>
       <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(36px,8vw,80px)", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.95, letterSpacing: "-0.04em", marginBottom: "32px", color: "#ffffff" }}>The infrastructure<br />for AI Voice<br />Agents</h1>
       {/* <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", lineHeight: 1.6, color: "rgba(255,255,255,0.75)", maxWidth: "480px", marginBottom: "48px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scaleable infrastructure required for enterprise-grade autonomous voice operations.</p> */}
-      <div style={{ display: "flex", border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
+      <div className="hidden md:flex" style={{ border: "1px solid rgba(128,249,200,0.6)", boxShadow: "0 0 32px rgba(128,249,200,0.15)", borderRadius: "8px", overflow: "hidden" }}>
         <button type="button" style={{ background: "#80f9c8", color: "#000", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.2)", cursor: "pointer", transition: "all 0.3s ease", transform: "none" }} onClick={() => { const el = document.getElementById('products'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "#5ff3a6"; e.target.style.transform = "scale(1.02)"; }} onMouseLeave={(e) => { e.target.style.background = "#80f9c8"; e.target.style.transform = "scale(1)"; }}>Get Started</button>
         <button type="button" style={{ background: "transparent", color: "#fff", padding: "20px 40px", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "all 0.3s ease" }} onClick={() => { const el = document.getElementById('contact'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onMouseEnter={(e) => { e.target.style.background = "rgba(128,249,200,0.1)"; }} onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>Contact Us</button>
       </div>
@@ -1855,6 +1855,17 @@ export default function App() {
         <Hero />
       </div>
       <MarqueeBar />
+      
+      {/* Mobile-only CTA in the blank space below MarqueeBar */}
+      <div className="flex md:hidden flex-col items-center justify-center px-6 py-16 w-full relative z-10 text-center">
+        <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontWeight: 800, color: "#141b2b", marginBottom: "12px", lineHeight: 1.2, letterSpacing: "-0.02em" }}>Deploy powerful agents instantly</h3>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "13px", color: "rgba(20,27,43,0.7)", lineHeight: 1.6, marginBottom: "24px" }}>Nexov AI provides the sub-100ms latency, human-like reasoning, and scalable infrastructure required for enterprise-grade autonomous voice operations.</p>
+        <div style={{ display: "flex", width: "100%", border: "1px solid rgba(0,0,0,0.1)", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", borderRadius: "8px", overflow: "hidden" }}>
+          <button type="button" style={{ flex: 1, background: "#80f9c8", color: "#000", padding: "16px 0", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(0,0,0,0.1)", cursor: "pointer" }} onClick={() => { const el = document.getElementById('products'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>Get Started</button>
+          <button type="button" style={{ flex: 1, background: "#fff", color: "#141b2b", padding: "16px 0", fontSize: "12px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer" }} onClick={() => { const el = document.getElementById('contact'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>Contact Us</button>
+        </div>
+      </div>
+
       <FullScreenSection />
       <div className="mx-4 md:mx-[100px] lg:mx-[200px]">
         <main className="mx-0 md:mx-[15px] pt-[15px]">
