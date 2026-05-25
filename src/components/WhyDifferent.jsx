@@ -466,13 +466,13 @@ const styles = `
     .wd-root { padding: 16px; }
     .wd-header { padding: 24px; }
     .wd-stats-dark { padding: 24px; }
-    .wd-col-header { grid-template-columns: 1fr; display: none; }
-    .wd-row { grid-template-columns: 1fr; border-bottom: 2px solid rgba(20,27,43,0.1); padding-bottom: 16px; margin-bottom: 16px; }
-    .wd-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .wd-cell { border-right: none; padding: 12px 16px; }
     .wd-table-header-card { padding: 20px; }
     .wd-footer-bar { flex-direction: column; align-items: flex-start; padding: 20px; }
     .wd-delta-num { font-size: 48px; }
+    
+    /* Enable horizontal scrolling for the table */
+    .wd-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .wd-col-header, .wd-row { min-width: 600px; }
   }
 `;
 

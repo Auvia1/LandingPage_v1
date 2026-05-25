@@ -1356,8 +1356,14 @@ export const PlayerCard = forwardRef(
 PlayerCard.displayName = "PlayerCard";
 
 // ─── Carousel slot positioning ─────────────────────────────────────────────────
-function getSlotStyle(rel) {
-  const configs = {
+function getSlotStyle(rel, isMobile) {
+  const configs = isMobile ? {
+    "-2": { x: -220, z: -120, scale: 0.80, opacity: 0,    rot: -10 },
+    "-1": { x: -160, z: -80,  scale: 0.85, opacity: 0.65, rot: -5  },
+    "0":  { x: 0,    z: 0,    scale: 1,    opacity: 1,    rot: 0   },
+    "1":  { x: 160,  z: -80,  scale: 0.85, opacity: 0.65, rot: 5   },
+    "2":  { x: 220,  z: -120, scale: 0.80, opacity: 0,    rot: 10  },
+  } : {
     "-2": { x: -480, z: -120, scale: 0.80, opacity: 0,    rot: -10 },
     "-1": { x: -340, z: -80,  scale: 0.96, opacity: 0.55, rot: -5  },
     "0":  { x: 0,    z: 0,    scale: 1,    opacity: 1,    rot: 0   },
@@ -1372,7 +1378,15 @@ export default function MusicCarousel() {
   const [activeIndex, setActiveIndex] = useState(1);
   const [dragStartX, setDragStartX] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const audioRefs = useRef({});
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const stopAll = () => Object.values(audioRefs.current).forEach(a => a && a.pause());
 
@@ -1452,6 +1466,7 @@ export default function MusicCarousel() {
           display: "flex", alignItems: "center", justifyContent: "center",
           perspective: 1200,
           cursor: isDragging ? "grabbing" : "grab",
+          touchAction: "pan-y",
         }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -1463,7 +1478,7 @@ export default function MusicCarousel() {
         {SONGS.map((song, i) => {
           const rel = ((i - activeIndex + SONGS.length * 5) % SONGS.length);
           const adjRel = rel > SONGS.length / 2 ? rel - SONGS.length : rel;
-          const cfg = getSlotStyle(adjRel);
+          const cfg = getSlotStyle(adjRel, isMobile);
           const isCenter = adjRel === 0;
 
           return (
