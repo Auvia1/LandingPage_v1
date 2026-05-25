@@ -366,10 +366,10 @@ const Mission = () => {
             borderTop: "1px solid #000",
           }}>
             {[
-              { label: "Founded", val: "2024" },
-              { label: "Agents deployed", val: "5+" },
-              { label: "Industries served", val: "Healthcare · SaaS · RE" },
-              { label: "Infrastructure", val: "14 Global PoPs" },
+              { label: "Founded", val: "2026" },
+              { label: "Agents deployed", val: "2" },
+              { label: "Industries served", val: "Healthcare · SaaS " },
+              { label: "Infrastructure", val: "Global" },
             ].map((stat, i, arr) => (
               <div key={stat.label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "4px" }}>
                 <span style={{ fontFamily: "'Space Grotesk', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(20,27,43,0.4)" }}>{stat.label}</span>
@@ -1855,7 +1855,7 @@ export default function App() {
         <Hero />
       </div>
       <MarqueeBar />
-      
+
       {/* Mobile-only CTA in the blank space below MarqueeBar */}
       <div className="flex md:hidden flex-col items-center justify-center px-6 py-16 w-full relative z-10 text-center">
         <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: "18px", fontWeight: 800, color: "#141b2b", marginBottom: "12px", lineHeight: 1.2, letterSpacing: "-0.02em" }}>Deploy powerful agents instantly</h3>

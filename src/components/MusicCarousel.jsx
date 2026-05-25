@@ -949,11 +949,11 @@ const Grainient = ({
     return () => {
       if (raf) cancelAnimationFrame(raf);
       if (ro) ro.disconnect();
-      try { renderer?._cleanup?.(); } catch {}
+      try { renderer?._cleanup?.(); } catch { }
       try {
         const canvas = containerRef.current?.querySelector('canvas');
         if (canvas && containerRef.current?.contains(canvas)) containerRef.current.removeChild(canvas);
-      } catch {}
+      } catch { }
     };
   }, [color1, color2, color3, timeSpeed, colorBalance, warpStrength, warpFrequency,
     warpSpeed, warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
@@ -984,7 +984,7 @@ const SEED_LG = [12, 22, 40, 18, 55, 30, 15, 60, 22, 48, 10, 38, 25, 55, 18, 30,
 
 const SONGS = [
   {
-    title: "Characters",
+    title: "ENGLISH",
     artist: "Voice Profiles v1.4",
     duration: 214,
     accentColor: "#00ffc8",
@@ -995,7 +995,7 @@ const SONGS = [
     warpFrequency: 4, blendAngle: 15, rotationAmount: 380,
   },
   {
-    title: "Narration",
+    title: "HINDI",
     artist: "Synthetic Storytelling v2.0",
     duration: 187,
     accentColor: "#3b82f6",
@@ -1006,7 +1006,7 @@ const SONGS = [
     warpFrequency: 5, blendAngle: 30, rotationAmount: 420,
   },
   {
-    title: "Conversational",
+    title: "TELUGU",
     artist: "Dynamic Interaction v3.2",
     duration: 243,
     accentColor: "#7877ff",
@@ -1102,7 +1102,7 @@ const CtrlBtn = ({ children, disabled, onClick }) => (
 // ─── PlayerCard ───────────────────────────────────────────────────────────────
 export const PlayerCard = forwardRef(
   ({ title, subtitle, langTag, g1, g2, g3, warpFrequency, blendAngle, rotationAmount,
-     isCenter, audioSrc, onPlay, accentColor = "#1db954" }, ref) => {
+    isCenter, audioSrc, onPlay, accentColor = "#1db954" }, ref) => {
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -1134,7 +1134,7 @@ export const PlayerCard = forwardRef(
       const audio = audioRef.current;
       if (!audio) return;
       if (isPlaying) { audio.pause(); setIsPlaying(false); }
-      else { onPlay?.(audio); audio.play().then(() => setIsPlaying(true)).catch(() => {}); }
+      else { onPlay?.(audio); audio.play().then(() => setIsPlaying(true)).catch(() => { }); }
     };
 
     const handleSeek = (e) => {
@@ -1358,17 +1358,17 @@ PlayerCard.displayName = "PlayerCard";
 // ─── Carousel slot positioning ─────────────────────────────────────────────────
 function getSlotStyle(rel, isMobile) {
   const configs = isMobile ? {
-    "-2": { x: -220, z: -120, scale: 0.80, opacity: 0,    rot: -10 },
-    "-1": { x: -160, z: -80,  scale: 0.85, opacity: 0.65, rot: -5  },
-    "0":  { x: 0,    z: 0,    scale: 1,    opacity: 1,    rot: 0   },
-    "1":  { x: 160,  z: -80,  scale: 0.85, opacity: 0.65, rot: 5   },
-    "2":  { x: 220,  z: -120, scale: 0.80, opacity: 0,    rot: 10  },
+    "-2": { x: -220, z: -120, scale: 0.80, opacity: 0, rot: -10 },
+    "-1": { x: -160, z: -80, scale: 0.85, opacity: 0.65, rot: -5 },
+    "0": { x: 0, z: 0, scale: 1, opacity: 1, rot: 0 },
+    "1": { x: 160, z: -80, scale: 0.85, opacity: 0.65, rot: 5 },
+    "2": { x: 220, z: -120, scale: 0.80, opacity: 0, rot: 10 },
   } : {
-    "-2": { x: -480, z: -120, scale: 0.80, opacity: 0,    rot: -10 },
-    "-1": { x: -340, z: -80,  scale: 0.96, opacity: 0.55, rot: -5  },
-    "0":  { x: 0,    z: 0,    scale: 1,    opacity: 1,    rot: 0   },
-    "1":  { x: 340,  z: -80,  scale: 0.96, opacity: 0.55, rot: 5   },
-    "2":  { x: 480,  z: -120, scale: 0.80, opacity: 0,    rot: 10  },
+    "-2": { x: -480, z: -120, scale: 0.80, opacity: 0, rot: -10 },
+    "-1": { x: -340, z: -80, scale: 0.96, opacity: 0.55, rot: -5 },
+    "0": { x: 0, z: 0, scale: 1, opacity: 1, rot: 0 },
+    "1": { x: 340, z: -80, scale: 0.96, opacity: 0.55, rot: 5 },
+    "2": { x: 480, z: -120, scale: 0.80, opacity: 0, rot: 10 },
   };
   return configs[String(Math.max(-2, Math.min(2, rel)))];
 }

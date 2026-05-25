@@ -750,8 +750,8 @@ function Sidebar({ active, onNavigate }: { active: string; onNavigate: (label: s
               type="button"
               onClick={() => onNavigate(item.label)}
               className={`mb-0.5 flex w-full items-center gap-1.5 rounded-md px-1.5 py-[5px] text-left transition-all duration-150 ${isActive
-                  ? "bg-[#84aca6]/10 text-[#84aca6]"
-                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                ? "bg-[#84aca6]/10 text-[#84aca6]"
+                : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
                 }`}
             >
               <Icon className="size-[9px] shrink-0" />
@@ -861,8 +861,8 @@ function DashboardScreen({ onNavigate }: { onNavigate: (label: string) => void }
                         <span className="truncate text-[9px] font-semibold text-slate-800">{row.name}</span>
                         {row.tag && (
                           <span className={`shrink-0 rounded px-1 py-0.5 text-[6px] font-bold ${row.tag === "AI"
-                              ? "bg-[#84aca6] text-white"
-                              : "border border-slate-300 text-slate-400"
+                            ? "bg-[#84aca6] text-white"
+                            : "border border-slate-300 text-slate-400"
                             }`}>{row.tag === "AI" ? "✦ AI" : row.tag}</span>
                         )}
                       </div>
@@ -1268,7 +1268,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
                 className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#6b8e23]/20 bg-[#6b8e23]/10 px-3 py-1.5"
               >
                 <span className="size-1.5 rounded-full bg-[#6b8e23] animate-pulse inline-block" />
-                <span className="text-[11px] font-medium text-[#6b8e23]">Now live in 300+ Indian clinics</span>
+                <span className="text-[11px] font-medium text-[#6b8e23]">Latest Release</span>
               </motion.div>
 
               {/* Headline */}
@@ -1301,7 +1301,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
               </div>
 
               {/* Social proof */}
-              <div className="mt-8 flex items-center gap-4">
+              {/* <div className="mt-8 flex items-center gap-4">
                 <div className="flex -space-x-2">
                   {["#4ade80", "#34d399", "#6ee7b7", "#a7f3d0"].map((c, i) => (
                     <div key={i}
@@ -1315,7 +1315,7 @@ export function Hero({ onOpenForm }: { onOpenForm: () => void }) {
                   <div className="text-amber-400 text-[11px]">★★★★★</div>
                   <p className="text-[11px] text-slate-400">Loved by 300+ clinic teams</p>
                 </div>
-              </div>
+              </div> */}
             </motion.div>
 
             {/* Right: demo panel */}

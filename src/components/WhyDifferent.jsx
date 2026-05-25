@@ -713,7 +713,7 @@ export const WhyDifferent = () => (
         ))}
 
         {/* Footer bar */}
-        <div className="wd-footer-bar">
+        {/* <div className="wd-footer-bar">
           {[
             "Architecture: Neural-Flash",
             "//",
@@ -730,7 +730,7 @@ export const WhyDifferent = () => (
               {t}
             </span>
           ))}
-        </div>
+        </div> */}
       </motion.div>
 
     </section>
